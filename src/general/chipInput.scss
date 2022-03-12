@@ -1,0 +1,34 @@
+.ui.dropdown.chip-input .menu .selected.item, 
+.ui.dropdown.chip-input.selected {
+  border: none;
+  display: none;
+}
+
+.ui.active.selection.dropdown.chip-input {
+  border-radius: 4px !important;
+	box-shadow: none;
+
+  &:hover {
+	  box-shadow: none;
+  }
+
+  .menu {
+    border: none;
+
+    .item {
+      display: none;
+    }
+
+    .message {
+      display: none;
+      border: none;
+    }
+  }
+  i {
+    display: none;
+  }
+}
+
+.ui.selection.dropdown.chip-input i {
+  display: none;
+};

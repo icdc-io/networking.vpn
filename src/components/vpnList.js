@@ -1,0 +1,148 @@
+
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import { Input, Table } from 'semantic-ui-react';
+import { injectIntl } from 'react-intl';
+import messages from '../Messages';
+import _ from 'lodash';
+import './vpnList.scss';
+// import DeleteModal from '../../GeneralComponents/deleteModal';
+import { Link } from 'react-router-dom';
+import { longDash } from './tools';
+import searchMethod from '../utilities/searchFunction';
+import CustomPagination from '../general/customPagination';
+import svgNetwork from '../static/svgNetwork.svg';
+import { vpnGatewayPath } from '../constants/routes';
+import { formatVpnGatewaysData } from './tools';
+import OptionsMenu from '../general/optionsMenu';
+
+const VpnList = ({ intl, items: gatewaysData }) => {
+    const [direction, setDirection] = useState('ascending');
+    const [column, setColumn] = useState(null);
+    const [gateways, setGateways] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [activePageNumber, setActivePageNumber] = useState(1);
+    const totalPaginationPages = 8;
+    const pageViseted = totalPaginationPages * (activePageNumber - 1);
+
+    useEffect(() => {
+        setGateways(formatVpnGatewaysData(gatewaysData));
+    }, [gatewaysData]);
+
+    const headers = [
+        { name: 'name', headerName: (messages.name), sortable: true },
+        { name: 'publicKey', headerName: (messages.publicKey), sortable: false },
+        { name: 'hostname', headerName: (messages.publicHostnameVpn), sortable: false },
+        { name: 'natSubnet', headerName: (messages.natSubnet), sortable: false },
+        { name: 'menu', headerName: '', sortable: false }
+    ];
+
+    const handleSort = columnName => {
+        if (column !== columnName) {
+            setColumn(columnName);
+            setGateways(_.sortBy(gateways, [columnName]));
+            setDirection('ascending');
+            return;
+        }
+
+        direction === 'ascending' ? setDirection('descending') : setDirection('ascending');
+        setGateways(gateways.reverse());
+    };
+
+    const displayHeaders = headers.map((item, key) => (
+        <Table.HeaderCell key={key}
+            sorted={column === item.name ? direction : null}
+            onClick={() => { if (item.sortable) { handleSort(item.name); } }}
+        >
+            {item.headerName ? intl.formatMessage(item.headerName) : ''}
+        </Table.HeaderCell>
+    ));
+
+    const tableCells = gateway => {
+        const tableRow = headers.map((header, key) => {
+            let content = gateway[header.name];
+
+            if (header.name === 'name') {
+                content = (
+                    <div className='gateway-name-container'>
+                        <img src={svgNetwork} />
+                        <Link to={vpnGatewayPath(gateway.id)}>{content}</Link>
+                    </div>
+                );
+            }
+
+            if (header.name === 'menu') {
+                content = <OptionsMenu type='gateways' instance={gateway} options={['edit']} />;
+            }
+            // else if (header.name === 'deleteButton') {
+            //     content = (<DeleteModal icon type='gateway' instance={vpnGateway} />);
+            // }
+
+            return (
+                <Table.Cell
+                    key={key}
+                    textAlign={header.name === 'menu' ? 'right' : 'left'}
+                >
+                    {content || longDash}
+                </Table.Cell>
+            );
+        });
+        return tableRow;
+    };
+
+    const searchTableData = searchTerm ?
+        searchMethod(
+            gateways,
+            searchTerm,
+            ['name', 'publicKey', 'hostname', 'natSubnet'], ['natSubnet']) : gateways;
+
+    const displayTableData = searchTableData
+        .slice(pageViseted, pageViseted + totalPaginationPages)
+        .map((item, key) => <Table.Row key={key}>{tableCells(item)}</Table.Row>);
+
+    return (
+        <>
+            <div style={{ color: '#969696', marginBottom: 16 }}>{intl.formatMessage(messages.vpnDescription, { tag: <br /> })}</div>
+
+            <div className='header'>
+                <Input
+                    className='small-input'
+                    icon='search'
+                    placeholder={intl.formatMessage(messages.search)}
+                    onChange={(event) => setSearchTerm(event.target.value)}
+                    value={searchTerm}
+                />
+            </div>
+
+            <div style={{ height: 554 }}>
+                <Table className='vpn-list-table' selectable={false} padded sortable basic='very'>
+                    <Table.Header>
+                        <Table.Row>{displayHeaders}</Table.Row>
+                    </Table.Header>
+                    <Table.Body>
+                        {displayTableData}
+                    </Table.Body>
+                </Table>
+
+                {searchTerm && searchTableData.length === 0 &&
+                    <div className='empty-table'>{intl.formatMessage(messages.noSearchResults)}</div>
+                }
+            </div>
+
+            <CustomPagination
+                data={searchTableData}
+                totalPaginationPages={totalPaginationPages}
+                activePageNumber={activePageNumber}
+                setActivePageNumber={setActivePageNumber}
+                searchTerm={searchTerm}
+            />
+        </>
+    );
+};
+
+VpnList.propTypes = {
+    intl: PropTypes.any,
+    items: PropTypes.array
+};
+
+export default injectIntl(VpnList);

@@ -1,0 +1,145 @@
+/* eslint-disable */
+import React, { useEffect, useState } from 'react';
+import { PropTypes } from 'prop-types';
+import { injectIntl } from 'react-intl';
+import ButtonBack from '../general/buttonBack';
+import { vpnGatewaysPath } from '../constants/routes';
+import { useParams, withRouter } from 'react-router-dom';
+import { fetchVpnClientConnections, fetchVpnGateway, fetchVpnPeerGateways, fetchVpnNatMapping } from '../AppActions';
+import { useDispatch, useSelector } from 'react-redux';
+import { dataStatusCheck, formatVpnGatewaysData } from './tools';
+import { Header, Menu } from 'semantic-ui-react';
+import messages from '../Messages';
+import './vpnDetails.scss';
+import svgNetwork from '../static/svgNetwork.svg';
+import VpnDetailsTable from './vpnDetailsTable';
+import { capitalizeFirstLetter, longDash } from './tools';
+import VpnModal from './vpnModal';
+
+const VpnDetails = ({ intl, history }) => {
+    const { id } = useParams();
+    const dispatch = useDispatch();
+    const gateway = useSelector(state => formatVpnGatewaysData(state.VpnStore.gateway));
+    const gatewayFetchStatus = useSelector(state => state.VpnStore.gatewayFetchStatus);
+    const user = useSelector(state => state.host.user);
+    const gatewayPublicHostname = gateway.hostname;
+    const tabs = ['clientConnections', 'peerGateways', 'natMapping'];
+    const [activeTab, setActiveTab] = useState(tabs[0]);
+    const [tableData, setTableData] = useState({
+        reduxStateName: 'vpnClientConnections',
+        fetchStatus: 'vpnCLientConnectionsFetchStatus'
+    });
+
+    window.goToRootRoute = () => history.push('/vpn');
+
+    useEffect(() => {
+        user.location && dispatch(fetchVpnGateway(id));
+    }, [dispatch, id, user]);
+
+    useEffect(() => {
+        switch (activeTab) {
+            case 'clientConnections':
+                dispatch(fetchVpnClientConnections(id));
+                setTableData({ ...tableData, reduxStateName: 'vpnClientConnections', fetchStatus: 'vpnClientConnectionsFetchStatus' });
+                return;
+            case 'peerGateways':
+                dispatch(fetchVpnPeerGateways(id));
+                setTableData({ ...tableData, reduxStateName: 'vpnPeerGateways', fetchStatus: 'vpnPeerGatewaysFetchStatus' });
+                return;
+            case 'natMapping':
+                dispatch(fetchVpnNatMapping(id));
+                setTableData({ ...tableData, reduxStateName: 'vpnNatMapping', fetchStatus: 'vpnNatMappingFetchSatus' });
+                return;
+        }
+
+    }, [dispatch, activeTab, id, user, user.location, user.role, user.account]);
+
+    const menuItems = [
+        {
+            name: 'clientConnections',
+            menuItem: intl.formatMessage(messages.clientConnections),
+            headers: ['name', 'subnet', 'endpoint', ''],
+            formFields: ['name', 'ip', 'port', 'mtu'],
+            addContentMessage: messages.addClientConnection
+        },
+        {
+            name: 'peerGateways',
+            menuItem: intl.formatMessage(messages.peerGateways),
+            headers: ['name', 'ip', 'peerEndpoint', 'publicKey', 'routeSubnets', ''],
+            formFields: ['name', 'ip', 'peerEndpoint', 'publicKey', 'routeSubnets'],
+            addContentMessage: messages.addPeerGateway
+        },
+        {
+            name: 'natMapping',
+            menuItem: intl.formatMessage(messages.natMapping),
+            headers: ['hostname', 'vpnIp', 'localIp', ''],
+            formFields: ['hostname', 'vpnIp', 'localIp'],
+            addContentMessage: messages.addNatMapping
+        }
+    ];
+
+    return (
+        <>
+            <ButtonBack path={vpnGatewaysPath()} />
+
+            {dataStatusCheck(gatewayFetchStatus, <>
+                <div className='gateway-title'>
+                    <img src={svgNetwork} />
+                    <Header as='h3' className='title' color='blue'>{capitalizeFirstLetter(gateway.name || '')}</Header>
+                </div>
+                <Header as='h4' style={{ marginTop: 16 }}>{intl.formatMessage(messages.vpnDetails)}</Header>
+                <div className='vpn-details-container'>
+                    <div className='vpn-details'>
+                        <div>{intl.formatMessage(messages.cloudGatewayInstance)}</div>
+                        <div>{intl.formatMessage(messages.publicKey)}</div>
+                        <div>{intl.formatMessage(messages.publicHostnameVpn)}</div>
+                        <div>{intl.formatMessage(messages.internalAddress)}</div>
+                        <div>{intl.formatMessage(messages.natSubnet)}</div>
+                    </div>
+                    <div className='vpn-details'>
+                        <div>{gateway.cloudGatewayInstance || longDash}</div>
+                        <div>{gateway.publicKey || longDash}</div>
+                        <div>{gateway.hostname || longDash}</div>
+                        <div>{gateway.internalAddress || longDash}</div>
+                        <div>{gateway.natSubnet || longDash}</div>
+                    </div>
+                </div>
+
+                <div className='menu-container'>
+                    <Menu pointing secondary color='blue' className='submenu' compact>
+                        {menuItems.map((item, key) =>
+                            <Menu.Item
+                                key={key}
+                                name={item.menuItem}
+                                active={activeTab === item.name}
+                                onClick={() => setActiveTab(item.name)}
+                            />
+                        )}
+                    </Menu>
+                    {menuItems.map((item, key) => (
+                        activeTab === item.name &&
+                        <VpnModal
+                            key={key}
+                            formFields={item.formFields}
+                            addContentMessage={item.addContentMessage}
+                            managementName={activeTab}
+                        />
+                    ))}
+                </div>
+                <VpnDetailsTable
+                    tableName={activeTab}
+                    headers={menuItems.filter(item => item.name === activeTab)[0].headers}
+                    reduxStateName={tableData.reduxStateName || []}
+                    reduxFetchStatus={tableData.fetchStatus}
+                    gatewayPublicHostname={gatewayPublicHostname}
+                />
+            </>)}
+        </>
+    );
+};
+
+VpnDetails.propTypes = {
+    intl: PropTypes.any
+};
+
+export default withRouter(injectIntl(VpnDetails));

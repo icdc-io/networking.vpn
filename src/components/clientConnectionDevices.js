@@ -1,0 +1,211 @@
+import React, { useEffect, useState } from 'react';
+import { injectIntl } from 'react-intl';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams, withRouter } from 'react-router-dom';
+import { PropTypes } from 'prop-types';
+import { Header, Loader, Popup, Table } from 'semantic-ui-react';
+import {
+    fetchVpnClientConnection,
+    fetchVpnClientConnectionDevices,
+    fetchVpnGateway,
+    updateVpnClientConnectionDeviceAndFetch
+} from '../AppActions';
+import { vpnGatewayPath } from '../constants/routes';
+import ButtonBack from '../general/buttonBack';
+import messages from '../Messages';
+import './clientConnectionDevices.scss';
+import { dataStatusCheck, formatClientConnectionData, formatDevicesData, formatVpnGatewaysData } from './tools';
+import { capitalizeFirstLetter, longDash, truncate } from './tools';
+import StatusLabel from './statusLabel';
+import DeviceStatistics from './deviceStatistics';
+import CustomPagination from '../general/customPagination';
+import OptionsMenu from '../general/optionsMenu';
+import VpnModal from './vpnModal';
+// import { devices } from '../../vpnMockData';
+import VpnCopyButton from './vpnCopyButton';
+
+const ClientConnectionDevices = ({ intl, history }) => {
+    const { connectionId } = useParams();
+    const dispatch = useDispatch();
+    const user = useSelector(state => state.host.user);
+    const [activePageNumber, setActivePageNumber] = useState(1);
+    const totalPaginationPages = 10;
+    const pageViseted = totalPaginationPages * (activePageNumber - 1);
+    const vpnClientConnectionDevicesData = useSelector(state => formatDevicesData(state.VpnStore.vpnClientConnectionDevices));
+    const vpnClientConnectionData = useSelector(state => formatClientConnectionData(state.VpnStore.vpnClientConnection));
+    const vpnGatewayData = useSelector(state => formatVpnGatewaysData(state.VpnStore.gateway));
+    const devicesFetchStatus = useSelector(state => state.VpnStore.vpnClientConnectionDevicesFetchStatus);
+    const clientConnectionFetchStatus = useSelector(state => state.VpnStore.vpnClientConnectionFetchStatus);
+    // const gatewayFetchStatus = useSelector(state => state.VpnStore.gatewayFetchStatus);
+    const headers = ['name', 'ip', 'publicKey', 'status', 'sent', 'received', 'lastConnection', ''];
+
+    window.goToRootRoute = () => history.push('/vpn');
+
+    // const vpnClientConnectionDevicesData = formatDevicesData(devices); //Uncomment to test pagintaion
+
+    useEffect(() => {
+        if (user.location && connectionId) {
+            dispatch(fetchVpnClientConnection(connectionId));
+            dispatch(fetchVpnClientConnectionDevices(connectionId));
+        }
+    }, [dispatch, user, connectionId]);
+
+    useEffect(() => {
+        vpnClientConnectionData.gatewayId && dispatch(fetchVpnGateway(vpnClientConnectionData.gatewayId));
+    }, [dispatch, user, vpnClientConnectionData.gatewayId]);
+
+    const formatDate = item => {
+        if (item) {
+            const options = {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: 'true'
+            };
+
+            return (new Date(item).toLocaleString('en-GB', options));
+        }
+
+        return;
+    };
+
+    const displayHeaders = headers.map((header, key) => (
+        <Table.HeaderCell key={key} style={header === 'status' ? { paddingLeft: 40 } : {}}>
+            {header !== '' ? intl.formatMessage(messages[header]) : ''}
+        </Table.HeaderCell>
+    ));
+
+    const enableOrDisableDevice = data => {
+        dispatch(updateVpnClientConnectionDeviceAndFetch(data.id, data.connectionId, {
+            name: data.name,
+            ip: data.ip,
+            // eslint-disable-next-line camelcase
+            public_key: data.publicKey,
+            keepalived: data.keepAlive,
+            enabled: !data.status,
+            subnets: data.routeSubnets,
+            owner: data.owner
+        }));
+    };
+
+    const returnPopupContent = {
+        publicKey: (content) => ({
+            cellContent: truncate(content, 12),
+            popupContent: (
+                <div className='flex'>
+                    <div>{content}</div>
+                    <VpnCopyButton copiedContent={content} />
+                </div>
+            )
+        })
+    };
+
+    const addPopup = (content, header) => {
+        const { cellContent, popupContent } = returnPopupContent[header](content);
+
+        return (
+            <div className='flex'>
+                {cellContent || content}
+                &ensp;
+                {cellContent && (
+                    <Popup
+                        on='click'
+                        pinned
+                        trigger={<div className='popup-dots'>...</div>}
+                        inverted
+                        className='vpn'
+                    >
+                        {popupContent}
+                    </Popup>
+                )}
+            </div>
+        );
+    };
+
+    const tableCells = data => headers.map((header, key) => {
+        let content = data[header] || longDash;
+
+        if (header === 'publicKey') {
+            content = data[header] ? addPopup(content, header) : longDash;
+        } else if (header === 'status') {
+            content = (<StatusLabel active={data[header]} />);
+        } else if (header === 'sent' || header === 'received') {
+            content = (<DeviceStatistics statisticsData={data.statistics} field={header} />);
+        } else if (header === 'lastConnection') {
+            content = formatDate(data.statistics.lastConnection) || longDash;
+        } else if (header === '') {
+            content = window.insights.getRole() === 'admin' ? <OptionsMenu
+                type='vpnDevices'
+                instance={data}
+                options={['enable', 'edit', 'delete']}
+                onClickAction={() => enableOrDisableDevice(data)}
+            /> : '';
+        }
+
+        return (
+            <Table.Cell key={key} textAlign={header === '' ? 'right' : 'left'}>
+                {content}
+            </Table.Cell>
+        );
+    });
+
+    const displayTableData = vpnClientConnectionDevicesData
+        .slice(pageViseted, pageViseted + totalPaginationPages)
+        .map((item, key) => <Table.Row key={key}>{tableCells(item)}</Table.Row>);
+
+    return (
+        <>
+            <ButtonBack path={vpnGatewayPath(vpnClientConnectionData.gatewayId)} />
+
+            {dataStatusCheck(clientConnectionFetchStatus, <>
+                <Header as='h3' className='title' color='blue'>{capitalizeFirstLetter(vpnClientConnectionData.name || longDash)}</Header>
+                <Header as='h4' style={{ marginTop: 16 }}>{intl.formatMessage(messages.clientConnectionDetails)}</Header>
+                <div className='details-container'>
+                    <div className='details'>
+                        <div>{intl.formatMessage(messages.subnet)}</div>
+                        <div>{intl.formatMessage(messages.endpoint)}</div>
+                    </div>
+                    <div className='details'>
+                        <div>{vpnClientConnectionData.subnet || longDash}</div>
+                        <div>{`${vpnGatewayData.hostname}:${vpnClientConnectionData.port}` || longDash}</div>
+                    </div>
+                </div>
+                <div className='customized-hr'></div>
+
+                <div className='table-title-container'>
+                    <Header as='h4' style={{ marginTop: 16 }}>{intl.formatMessage(messages.devices)}</Header>
+                    <VpnModal
+                        formFields={['name', 'ip', 'publicKey', 'routeSubnets', 'keepAlive']}
+                        addContentMessage={messages.addDevice}
+                        managementName='vpnDevices'
+                    />
+                </div>
+
+                <Table className='devices-table' basic='very' padded>
+                    <Table.Header>
+                        <Table.Row>{displayHeaders}</Table.Row>
+                    </Table.Header>
+                    {devicesFetchStatus === 'fulfilled' && <Table.Body>
+                        {displayTableData}
+                    </Table.Body>}
+                </Table>
+                {devicesFetchStatus === 'pending' && <Loader active inline='centered' />}
+
+                <CustomPagination
+                    data={vpnClientConnectionDevicesData}
+                    totalPaginationPages={10}
+                    setActivePageNumber={setActivePageNumber}
+                    activePageNumber={activePageNumber}
+                />
+            </>)}
+        </>
+    );
+};
+
+ClientConnectionDevices.propTypes = {
+    intl: PropTypes.any
+};
+
+export default withRouter(injectIntl(ClientConnectionDevices));
