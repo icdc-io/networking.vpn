@@ -65,8 +65,8 @@ export const infoNotification = (msg) =>
         };
 };
 
-const fetchData = async (url, headers, id) => {
-    const response = await API.get(base(url, id), expandHeaders(headers));
+const fetchData = async (url, headers) => {
+    const response = await API.get(base(url), expandHeaders(headers));
     return response.data;
 };
 
@@ -75,19 +75,19 @@ const createData = async (url, headers, payload) => {
     return response.data;
 };
 
-const updateData = async (url, headers, payload, id) => {
-    const response = await API.put(base(url, id), payload, expandHeaders(headers));
+const updateData = async (url, headers, payload) => {
+    const response = await API.put(base(url), payload, expandHeaders(headers));
     return response.data;
 };
 
-const deleteData = async (url, headers, id) => {
-    const response = await API.delete(base(url, id), expandHeaders(headers));
+const deleteData = async (url, headers) => {
+    const response = await API.delete(base(url), expandHeaders(headers));
     return response;
 };
 
 export const fetchVpnGateways = () => ({
     type: ActionTypes.VPN_GATEWAYS_FETCH,
-    payload: fetchData(ActionTypes.VPN_GATEWAYS_URL, {}, {}).then(response => response)
+    payload: fetchData(ActionTypes.VPN_GATEWAYS_URL, {}).then(response => response)
 });
 
 // ------------- THIS IS PAUSED IN DEVELOPEMENT DO NOT DELETE -------------
@@ -147,12 +147,12 @@ export const editVpnGatewayAndFetch = (gatewayId, payload) => {
 
 export const fetchVpnClientConnections = gatewayId => ({
     type: ActionTypes.VPN_CLIENT_CONNECTIONS_FETCH,
-    payload: fetchData(ActionTypes.vpnGatewayUrl(gatewayId, 'connections'), {}, {}).then(response => response)
+    payload: fetchData(ActionTypes.vpnGatewayUrl(gatewayId, 'connections'), {}).then(response => response)
 });
 
 export const fetchVpnClientConnection = clientConnectionId => ({
     type: ActionTypes.VPN_CLIENT_CONNECTION_FETCH,
-    payload: fetchData(ActionTypes.vpnClientConnectionsUrl(clientConnectionId), {}, {}).then(response => response)
+    payload: fetchData(ActionTypes.vpnClientConnectionsUrl(clientConnectionId), {}).then(response => response)
 });
 
 const createVpnClientConnection = (gatewayId, payload) => ({
@@ -205,7 +205,7 @@ export const deleteVpnClientConnectionAndFetch = (clientConnectionId, gatewayId)
 
 export const fetchVpnClientConnectionDevices = clientConnectionId => ({
     type: ActionTypes.VPN_CLIENT_CONNECTION_DEVICES_FETCH,
-    payload: fetchData(ActionTypes.vpnClientConnectionsUrl(clientConnectionId, 'devices'), {}, {}).then(response => response)
+    payload: fetchData(ActionTypes.vpnClientConnectionsUrl(clientConnectionId, 'devices'), {}).then(response => response)
 });
 
 const createVpnClientConnectionDevice = (clientConnectionId, payload) => ({
@@ -258,7 +258,7 @@ export const deleteVpnClientConnectionDeviceAndFetch = (deviceId, clientConnecti
 
 export const fetchVpnPeerGateways = gatewayId => ({
     type: ActionTypes.VPN_PEER_GATEWAYS_FETCH,
-    payload: fetchData(ActionTypes.vpnGatewayUrl(gatewayId, 'remote_gateways'), {}, {}).then(response => response)
+    payload: fetchData(ActionTypes.vpnGatewayUrl(gatewayId, 'remote_gateways'), {}).then(response => response)
 });
 
 const createVpnPeerGateway = (gatewayId, payload) => ({
@@ -311,7 +311,7 @@ export const deleteVpnPeerGatewayAndFetch = (peerGatewayId, gatewayId) => {
 
 export const fetchVpnNatMapping = gatewayId => ({
     type: ActionTypes.VPN_NAT_MAPPING_FETCH,
-    payload: fetchData(ActionTypes.vpnGatewayUrl(gatewayId, 'nat_maps '), {}, {}).then(response => response)
+    payload: fetchData(ActionTypes.vpnGatewayUrl(gatewayId, 'nat_maps '), {}).then(response => response)
 });
 
 const createVpnNatMapping = (gatewayId, payload) => ({

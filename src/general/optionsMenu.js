@@ -2,21 +2,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Dropdown } from 'semantic-ui-react';
-import { injectIntl } from 'react-intl';
 import DeleteModal from './deleteModal';
-import messages from '../Messages';
 import VpnModal from '../components/vpnModal';
 
-const OptionsMenu = ({ type, instance, options, intl, onClickAction }) => {
+const OptionsMenu = ({ t, type, instance, options, onClickAction }) => {
     const actions = {
         vpnClientConnections: {
             edit: (clientConnection, key) =>
                 <VpnModal
+                    t={t}
                     edit
                     key={key}
                     data={clientConnection}
                     formFields={['name', 'ip', 'port', 'mtu']}
-                    editContentMessage={messages.editClientConnection}
+                    editContentMessage={'editClientConnection'}
                     managementName='clientConnections'
                 />,
             delete: (clientConnection, key) => <DeleteModal key={key} type={type} instance={clientConnection} />
@@ -24,11 +23,12 @@ const OptionsMenu = ({ type, instance, options, intl, onClickAction }) => {
         vpnPeerGateways: {
             edit: (peerGateway, key) =>
                 <VpnModal
+                    t={t}
                     edit
                     key={key}
                     data={peerGateway}
                     formFields={['name', 'ip', 'peerEndpoint', 'publicKey', 'routeSubnets']}
-                    editContentMessage={messages.editPeerGateway}
+                    editContentMessage={'editPeerGateway'}
                     managementName='peerGateways'
                 />,
             delete: (peerGateway, key) => <DeleteModal key={key} type={type} instance={peerGateway} />
@@ -36,38 +36,41 @@ const OptionsMenu = ({ type, instance, options, intl, onClickAction }) => {
         vpnNatMapping: {
             edit: (natResource, key) =>
                 <VpnModal
+                    t={t}
                     edit
                     key={key}
                     data={natResource}
                     formFields={['hostname', 'vpnIp', 'localIp']}
-                    editContentMessage={messages.editNatMapping}
+                    editContentMessage={'editNatMapping'}
                     managementName='natMapping'
                 />,
-            delete: (natResource, key) => <DeleteModal key={key} type={type} instance={natResource} />
+            delete: (natResource, key) => <DeleteModal t={t} key={key} type={type} instance={natResource} />
         },
         gateways: {
             edit: (vpn, key) => <VpnModal
+                t={t}
                 key={key}
                 edit
                 data={vpn}
                 formFields={['name', 'natSubnet']}
-                editContentMessage={messages.editGateway}
+                editContentMessage={'editGateway'}
                 managementName='gateway'
             />
         },
         vpnDevices: {
             edit: (device, key) =>
                 <VpnModal
+                    t={t}
                     edit
                     key={key}
                     data={device}
                     formFields={['name', 'ip', 'publicKey', 'routeSubnets']}
-                    editContentMessage={messages.editDevice}
+                    editContentMessage={'editDevice'}
                     managementName='vpnDevices'
                 />,
-            delete: (device, key) => <DeleteModal key={key} type={type} instance={device} />,
+            delete: (device, key) => <DeleteModal t={t} key={key} type={type} instance={device} />,
             enable: (key) =>
-                <Dropdown.Item key={key} text={intl.formatMessage(instance.status ? messages.disable : messages.enable)} onClick={onClickAction} />
+                <Dropdown.Item key={key} text={t(instance.status ? 'disable' : 'enable')} onClick={onClickAction} />
         }
     };
 
@@ -81,11 +84,11 @@ const OptionsMenu = ({ type, instance, options, intl, onClickAction }) => {
 };
 
 OptionsMenu.propTypes = {
-    intl: PropTypes.any,
+    t: PropTypes.func,
     instance: PropTypes.object,
     type: PropTypes.string,
     options: PropTypes.array,
     onClickAction: PropTypes.func
 };
 
-export default injectIntl(OptionsMenu);
+export default OptionsMenu;

@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
-import { injectIntl } from 'react-intl';
 import { Loader, Table, Popup } from 'semantic-ui-react';
-import messages from '../Messages';
 import { Link } from 'react-router-dom';
 import { vpnClientConnectionDevicesPath } from '../constants/routes';
 import './vpnDetailsTable.scss';
@@ -13,7 +11,7 @@ import { useSelector } from 'react-redux';
 import { formatTableData, truncate } from './tools';
 import VpnCopyButton from './vpnCopyButton';
 
-const VpnDetailsTable = ({ intl, tableName, headers, reduxStateName, reduxFetchStatus, gatewayPublicHostname }) => {
+const VpnDetailsTable = ({ t, tableName, headers, reduxStateName, reduxFetchStatus, gatewayPublicHostname }) => {
     const [activePageNumber, setActivePageNumber] = useState(1);
     const totalPaginationPages = 10;
     const pageViseted = totalPaginationPages * (activePageNumber - 1);
@@ -27,7 +25,7 @@ const VpnDetailsTable = ({ intl, tableName, headers, reduxStateName, reduxFetchS
 
     const displayHeaders = headers.map((header, key) => (
         <Table.HeaderCell key={key}>
-            {header !== '' ? intl.formatMessage(messages[header]) : ''}
+            {header !== '' ? t([header]) : ''}
         </Table.HeaderCell>
     ));
 
@@ -137,7 +135,7 @@ const VpnDetailsTable = ({ intl, tableName, headers, reduxStateName, reduxFetchS
                 </Table>
                 {fetchStatus === 'pending' && <Loader active inline='centered' />}
                 {formattedTableContent.length === 0 && fetchStatus === 'fulfilled' &&
-                    <div className='empty-table'>{intl.formatMessage(messages.emptyListMessage, determineServiceForEmptyState[tableName])}</div>}
+                    <div className='empty-table'>{t('emptyListMessage', determineServiceForEmptyState[tableName])}</div>}
             </div>
 
             <CustomPagination
@@ -151,7 +149,7 @@ const VpnDetailsTable = ({ intl, tableName, headers, reduxStateName, reduxFetchS
 };
 
 VpnDetailsTable.propTypes = {
-    intl: PropTypes.any,
+    t: PropTypes.func,
     tableName: PropTypes.string,
     headers: PropTypes.array,
     reduxStateName: PropTypes.string,
@@ -159,4 +157,4 @@ VpnDetailsTable.propTypes = {
     gatewayPublicHostname: PropTypes.string
 };
 
-export default injectIntl(VpnDetailsTable);
+export default VpnDetailsTable;

@@ -1,7 +1,7 @@
 import { Loader } from 'semantic-ui-react';
 import React from 'react';
-import NoContent from '../general/noContent';
-import messages from '../Messages';
+
+const NoContent = React.lazy(() => import('container/NoContent'));
 
 /**
  * Formats the gateways data so that it doesn't contain "_"
@@ -124,7 +124,7 @@ export const dataStatusCheck = (fetchStatus, content) => {
         case 'pending':
             return <Loader active inline='centered' />;
         case 'rejected':
-            return <NoContent icon='desktop' textMessage={messages.wrong} />;
+            return <NoContent icon='desktop' textMessage={'wrong'} />;
         case 'fulfilled':
             return content;
     }

@@ -2,8 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Input, Table } from 'semantic-ui-react';
-import { injectIntl } from 'react-intl';
-import messages from '../Messages';
 import _ from 'lodash';
 import './vpnList.scss';
 // import DeleteModal from '../../GeneralComponents/deleteModal';
@@ -16,7 +14,7 @@ import { vpnGatewayPath } from '../constants/routes';
 import { formatVpnGatewaysData } from './tools';
 import OptionsMenu from '../general/optionsMenu';
 
-const VpnList = ({ intl, items: gatewaysData }) => {
+const VpnList = ({ t, items: gatewaysData }) => {
     const [direction, setDirection] = useState('ascending');
     const [column, setColumn] = useState(null);
     const [gateways, setGateways] = useState([]);
@@ -30,10 +28,10 @@ const VpnList = ({ intl, items: gatewaysData }) => {
     }, [gatewaysData]);
 
     const headers = [
-        { name: 'name', headerName: (messages.name), sortable: true },
-        { name: 'publicKey', headerName: (messages.publicKey), sortable: false },
-        { name: 'hostname', headerName: (messages.publicHostnameVpn), sortable: false },
-        { name: 'natSubnet', headerName: (messages.natSubnet), sortable: false },
+        { name: 'name', headerName: 'name', sortable: true },
+        { name: 'publicKey', headerName: 'publicKey', sortable: false },
+        { name: 'hostname', headerName: 'publicHostnameVpn', sortable: false },
+        { name: 'natSubnet', headerName: 'natSubnet', sortable: false },
         { name: 'menu', headerName: '', sortable: false }
     ];
 
@@ -54,7 +52,7 @@ const VpnList = ({ intl, items: gatewaysData }) => {
             sorted={column === item.name ? direction : null}
             onClick={() => { if (item.sortable) { handleSort(item.name); } }}
         >
-            {item.headerName ? intl.formatMessage(item.headerName) : ''}
+            {item.headerName ? t(item.headerName) : ''}
         </Table.HeaderCell>
     ));
 
@@ -72,7 +70,7 @@ const VpnList = ({ intl, items: gatewaysData }) => {
             }
 
             if (header.name === 'menu') {
-                content = <OptionsMenu type='gateways' instance={gateway} options={['edit']} />;
+                content = <OptionsMenu t={t} type='gateways' instance={gateway} options={['edit']} />;
             }
             // else if (header.name === 'deleteButton') {
             //     content = (<DeleteModal icon type='gateway' instance={vpnGateway} />);
@@ -102,13 +100,13 @@ const VpnList = ({ intl, items: gatewaysData }) => {
 
     return (
         <>
-            <div style={{ color: '#969696', marginBottom: 16 }}>{intl.formatMessage(messages.vpnDescription, { tag: <br /> })}</div>
+            <div style={{ color: '#969696', marginBottom: 16 }}>{t('vpnDescription', { tag: <br /> })}</div>
 
             <div className='header'>
                 <Input
                     className='small-input'
                     icon='search'
-                    placeholder={intl.formatMessage(messages.search)}
+                    placeholder={t('search')}
                     onChange={(event) => setSearchTerm(event.target.value)}
                     value={searchTerm}
                 />
@@ -125,7 +123,7 @@ const VpnList = ({ intl, items: gatewaysData }) => {
                 </Table>
 
                 {searchTerm && searchTableData.length === 0 &&
-                    <div className='empty-table'>{intl.formatMessage(messages.noSearchResults)}</div>
+                    <div className='empty-table'>{t('noSearchResults')}</div>
                 }
             </div>
 
@@ -141,8 +139,8 @@ const VpnList = ({ intl, items: gatewaysData }) => {
 };
 
 VpnList.propTypes = {
-    intl: PropTypes.any,
+    t: PropTypes.func,
     items: PropTypes.array
 };
 
-export default injectIntl(VpnList);
+export default VpnList;

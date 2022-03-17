@@ -1,9 +1,7 @@
 /* eslint camelcase: 0 */
 import React, { useState } from 'react';
-import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { Button, Dropdown, Modal } from 'semantic-ui-react';
-import messages from '../Messages';
 import VpnForm from './vpnForm';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -20,7 +18,7 @@ import {
     editVpnGatewayAndFetch
 } from '../AppActions';
 
-const VpnModal = ({ intl, edit, data: values, formFields, addContentMessage, editContentMessage, managementName }) => {
+const VpnModal = ({ t, edit, data: values, formFields, addContentMessage, editContentMessage, managementName }) => {
     const { id, connectionId } = useParams();
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
@@ -93,16 +91,16 @@ const VpnModal = ({ intl, edit, data: values, formFields, addContentMessage, edi
             messageText = 'creatingNatMapping';
         }
 
-        !edit && infoNotification(intl.formatMessage(messages[messageText]));
+        !edit && infoNotification(t([messageText]));
         dispatch(prepPayloadForSubmitingAndSubmitFunction(id, values));
         handleClose();
     };
 
     const button = edit ?
-        <Dropdown.Item text={intl.formatMessage(messages.edit)} onClick={() => setOpen(true)} /> :
+        <Dropdown.Item text={t('edit')} onClick={() => setOpen(true)} /> :
         <Button
             color='blue' onClick={() => setOpen(true)}>
-            {intl.formatMessage(addContentMessage)}
+            {t(addContentMessage)}
         </Button>;
 
     return (
@@ -114,7 +112,7 @@ const VpnModal = ({ intl, edit, data: values, formFields, addContentMessage, edi
                 onClose={handleClose}
                 closeIcon
             >
-                <Modal.Header content={intl.formatMessage(editContentMessage || addContentMessage)} />
+                <Modal.Header content={t(editContentMessage || addContentMessage)} />
                 <Modal.Content>
                     <VpnForm
                         handleClose={handleClose}
@@ -131,7 +129,7 @@ const VpnModal = ({ intl, edit, data: values, formFields, addContentMessage, edi
 };
 
 VpnModal.propTypes = {
-    intl: PropTypes.any,
+    t: PropTypes.func,
     edit: PropTypes.bool,
     data: PropTypes.any,
     formFields: PropTypes.array,
@@ -140,4 +138,4 @@ VpnModal.propTypes = {
     managementName: PropTypes.any
 };
 
-export default injectIntl(VpnModal);
+export default VpnModal;

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { injectIntl } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, withRouter } from 'react-router-dom';
 import { PropTypes } from 'prop-types';
@@ -12,7 +11,6 @@ import {
 } from '../AppActions';
 import { vpnGatewayPath } from '../constants/routes';
 import ButtonBack from '../general/buttonBack';
-import messages from '../Messages';
 import './clientConnectionDevices.scss';
 import { dataStatusCheck, formatClientConnectionData, formatDevicesData, formatVpnGatewaysData } from './tools';
 import { capitalizeFirstLetter, longDash, truncate } from './tools';
@@ -21,10 +19,9 @@ import DeviceStatistics from './deviceStatistics';
 import CustomPagination from '../general/customPagination';
 import OptionsMenu from '../general/optionsMenu';
 import VpnModal from './vpnModal';
-// import { devices } from '../../vpnMockData';
 import VpnCopyButton from './vpnCopyButton';
 
-const ClientConnectionDevices = ({ intl, history }) => {
+const ClientConnectionDevices = ({ t, history }) => {
     const { connectionId } = useParams();
     const dispatch = useDispatch();
     const user = useSelector(state => state.host.user);
@@ -73,7 +70,7 @@ const ClientConnectionDevices = ({ intl, history }) => {
 
     const displayHeaders = headers.map((header, key) => (
         <Table.HeaderCell key={key} style={header === 'status' ? { paddingLeft: 40 } : {}}>
-            {header !== '' ? intl.formatMessage(messages[header]) : ''}
+            {header !== '' ? t([header]) : ''}
         </Table.HeaderCell>
     ));
 
@@ -130,13 +127,14 @@ const ClientConnectionDevices = ({ intl, history }) => {
         if (header === 'publicKey') {
             content = data[header] ? addPopup(content, header) : longDash;
         } else if (header === 'status') {
-            content = (<StatusLabel active={data[header]} />);
+            content = (<StatusLabel t={t} active={data[header]} />);
         } else if (header === 'sent' || header === 'received') {
             content = (<DeviceStatistics statisticsData={data.statistics} field={header} />);
         } else if (header === 'lastConnection') {
             content = formatDate(data.statistics.lastConnection) || longDash;
         } else if (header === '') {
             content = window.insights.getRole() === 'admin' ? <OptionsMenu
+                t={t}
                 type='vpnDevices'
                 instance={data}
                 options={['enable', 'edit', 'delete']}
@@ -157,15 +155,15 @@ const ClientConnectionDevices = ({ intl, history }) => {
 
     return (
         <>
-            <ButtonBack path={vpnGatewayPath(vpnClientConnectionData.gatewayId)} />
+            <ButtonBack back={t('back')} path={vpnGatewayPath(vpnClientConnectionData.gatewayId)} />
 
             {dataStatusCheck(clientConnectionFetchStatus, <>
                 <Header as='h3' className='title' color='blue'>{capitalizeFirstLetter(vpnClientConnectionData.name || longDash)}</Header>
-                <Header as='h4' style={{ marginTop: 16 }}>{intl.formatMessage(messages.clientConnectionDetails)}</Header>
+                <Header as='h4' style={{ marginTop: 16 }}>{t('clientConnectionDetails')}</Header>
                 <div className='details-container'>
                     <div className='details'>
-                        <div>{intl.formatMessage(messages.subnet)}</div>
-                        <div>{intl.formatMessage(messages.endpoint)}</div>
+                        <div>{t('subnet')}</div>
+                        <div>{t('endpoint')}</div>
                     </div>
                     <div className='details'>
                         <div>{vpnClientConnectionData.subnet || longDash}</div>
@@ -175,10 +173,11 @@ const ClientConnectionDevices = ({ intl, history }) => {
                 <div className='customized-hr'></div>
 
                 <div className='table-title-container'>
-                    <Header as='h4' style={{ marginTop: 16 }}>{intl.formatMessage(messages.devices)}</Header>
+                    <Header as='h4' style={{ marginTop: 16 }}>{t('devices')}</Header>
                     <VpnModal
+                        t={t}
                         formFields={['name', 'ip', 'publicKey', 'routeSubnets', 'keepAlive']}
-                        addContentMessage={messages.addDevice}
+                        addContentMessage={'addDevice'}
                         managementName='vpnDevices'
                     />
                 </div>
@@ -208,4 +207,4 @@ ClientConnectionDevices.propTypes = {
     intl: PropTypes.any
 };
 
-export default withRouter(injectIntl(ClientConnectionDevices));
+export default withRouter(ClientConnectionDevices);

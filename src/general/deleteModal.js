@@ -1,8 +1,6 @@
 import React, { useState, useCallback } from 'react';
-import { injectIntl } from 'react-intl';
 import { Modal, Button, Header, Dropdown, Icon } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import messages from '../Messages';
 import {
     // deleteVpnGatewayAndFetch,
     deleteVpnClientConnectionAndFetch,
@@ -14,7 +12,7 @@ import { useDispatch } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 // import { vpnGatewaysPath } from '../Constants/routes';
 
-const DeleteModal = ({ type, instance, intl, icon, button, history }) => {
+const DeleteModal = ({ type, instance, t, icon, button, history }) => {
     const [isVisible, setIsVisible] = useState(false);
     const dispatch = useDispatch();
 
@@ -33,9 +31,9 @@ const DeleteModal = ({ type, instance, intl, icon, button, history }) => {
         //     )
         // },
         vpnClientConnections: {
-            item: messages.delete,
-            header: messages.deleteClientConnection,
-            content: [messages.deleteClientConnectionWarningMessage],
+            item: 'delete',
+            header: 'deleteClientConnection',
+            content: ['deleteClientConnectionWarningMessage'],
             textOptions: { name: instance.name },
             deleteAction: useCallback(
                 () => {
@@ -45,9 +43,9 @@ const DeleteModal = ({ type, instance, intl, icon, button, history }) => {
             )
         },
         vpnPeerGateways: {
-            item: messages.delete,
-            header: messages.deletePeerGateway,
-            content: [messages.deletePeerGatewayWarningMessage],
+            item: 'delete',
+            header: 'deletePeerGateway',
+            content: ['deletePeerGatewayWarningMessage'],
             textOptions: { name: instance.name },
             deleteAction: useCallback(
                 () => {
@@ -57,9 +55,9 @@ const DeleteModal = ({ type, instance, intl, icon, button, history }) => {
             )
         },
         vpnNatMapping: {
-            item: messages.delete,
-            header: messages.deleteNatMapping,
-            content: [messages.deleteNatMappingWarningMessage],
+            item: 'delete',
+            header: 'deleteNatMapping',
+            content: ['deleteNatMappingWarningMessage'],
             textOptions: { name: instance.name },
             deleteAction: useCallback(
                 () => {
@@ -69,9 +67,9 @@ const DeleteModal = ({ type, instance, intl, icon, button, history }) => {
             )
         },
         vpnDevices: {
-            item: messages.delete,
-            header: messages.deleteDevice,
-            content: [messages.deleteDeviceWarningMessage],
+            item: 'delete',
+            header: 'deleteDevice',
+            content: ['deleteDeviceWarningMessage'],
             textOptions: { name: instance.name },
             deleteAction: useCallback(
                 () => {
@@ -96,9 +94,9 @@ const DeleteModal = ({ type, instance, intl, icon, button, history }) => {
     };
 
     const modalText = (modalContent, textOptions) => modalContent.map((text, index) =>
-        <Modal.Description as='p' content={intl.formatMessage(text, textOptions)} key={index} />);
+        <Modal.Description as='p' content={t(text, textOptions)} key={index} />);
 
-    const modalTextWithName = (modalContent) => <Modal.Description as='p' content={intl.formatMessage(modalContent[0], modalContent[1])} />;
+    const modalTextWithName = (modalContent) => <Modal.Description as='p' content={t(modalContent[0], modalContent[1])} />;
 
     const hasAssignedVms = type === 'networks' && instance.assignedVms && instance.assignedVms.length > 0;
 
@@ -106,29 +104,29 @@ const DeleteModal = ({ type, instance, intl, icon, button, history }) => {
         <Button
             onClick={showModal}
             basic size='tiny' color='red'
-            content={intl.formatMessage(types[type].item)}
+            content={t(types[type].item)}
             className='delete'
             disabled={hasAssignedVms}
         /> :
         icon ?
             <Icon name="trash alternate outline" onClick={showModal} />
             :
-            <Dropdown.Item onClick={showModal} className='delete'>{intl.formatMessage(types[type].item)}</Dropdown.Item>;
+            <Dropdown.Item onClick={showModal} className='delete'>{t(types[type].item)}</Dropdown.Item>;
 
     return (
         window.insights.getRole() === 'admin' && <>
             {buttonModal}
             <Modal open={isVisible} size='mini' onClick={closeModal} closeIcon>
-                <Header as='h3' content={intl.formatMessage(types[type].header)} />
+                <Header as='h3' content={t(types[type].header)} />
                 <Modal.Content content={modalText(types[type].content, types[type].textOptions || {})} />
                 {types[type].contentNamed && <Modal.Content content={modalTextWithName(types[type].contentNamed)} />}
                 <Modal.Actions align='center'>
-                    <Button onClick={closeModal} content={intl.formatMessage(messages.cancel)} />
+                    <Button onClick={closeModal} content={t('cancel')} />
                     <Button
                         color='red'
                         type='submit'
                         onClick={onConfirm}
-                        content={intl.formatMessage(type === 'networks' ? messages.delete : messages.confirm)}
+                        content={t(type === 'networks' ? 'delete' : 'confirm')}
                     />
                 </Modal.Actions>
             </Modal>
@@ -139,10 +137,10 @@ const DeleteModal = ({ type, instance, intl, icon, button, history }) => {
 DeleteModal.propTypes = {
     type: PropTypes.string,
     instance: PropTypes.object,
-    intl: PropTypes.any,
+    t: PropTypes.func,
     button: PropTypes.bool,
     icon: PropTypes.bool,
     history: PropTypes.object
 };
 
-export default injectIntl(withRouter(DeleteModal));
+export default withRouter(DeleteModal);

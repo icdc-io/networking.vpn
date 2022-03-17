@@ -2,13 +2,12 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { fetchVpnGateways } from '../AppActions';
-import ContentPage from '../general/contentPage';
-import messages from '../Messages';
 // import { gateways } from '../../vpnMockData';
 import VpnList from './vpnList';
 // import VpnModal from './vpnModal';
+const ContentPage = React.lazy(() => import('container/ContentPage'));
 
-const Vpn = ({ history }) => {
+const Vpn = ({ t, history }) => {
     const dispatch = useDispatch();
     const user = useSelector(state => state.host.user);
     const gatewaysData = useSelector(state => state.VpnStore.gateways);
@@ -17,17 +16,18 @@ const Vpn = ({ history }) => {
     window.goToRootRoute = () => history.push('/vpn');
 
     useEffect(() => {
-        Object.keys(user).length !== 0 && dispatch(fetchVpnGateways());
-    }, [dispatch, user.role, user.location, user.account, user]);
+        user.location && dispatch(fetchVpnGateways());
+    }, [dispatch, user]);
 
     return (
         <ContentPage
-            status={gatewaysFetchStatus}
+            t={t}
+            statuses={[gatewaysFetchStatus]}
             pageData={gatewaysData}
-            title={messages.vpnGateways}
+            title={'vpnGateways'}
             componentDataList={VpnList}
             isTabbedView={false}
-            noContentMessage={messages.noVpnGateways}
+            noContentMessage={'noVpnGateways'}
             // componentModal={VpnModal}
         />
     );

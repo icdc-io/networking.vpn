@@ -1,10 +1,7 @@
 import React from 'react';
-import { injectIntl } from 'react-intl';
 import { Field, reduxForm } from 'redux-form';
 import { Button, Form, Modal } from 'semantic-ui-react';
-import GeneralInput from '../general/generalInput';
 import PropTypes from 'prop-types';
-import messages from '../Messages';
 import {
     hostname,
     ip,
@@ -22,8 +19,10 @@ import {
 } from '../utilities/Validations';
 import ChipInput from '../general/chipInput';
 
-const VpnForm = ({ intl, handleClose, handleSubmit, pristine, invalid, edit, fieldNames, managementName, initialValues }) => {
-    const buttonContent = edit ? intl.formatMessage(messages.save) : intl.formatMessage(messages.add);
+const GeneralInput = React.lazy(() => import('container/GeneralInput'));
+
+const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, fieldNames, managementName, initialValues }) => {
+    const buttonContent = edit ? t('save') : t('add');
 
     const validations = {
         clientConnections: {
@@ -64,7 +63,7 @@ const VpnForm = ({ intl, handleClose, handleSubmit, pristine, invalid, edit, fie
                 key={key}
                 name={item}
                 label={item === 'ip' && managementName !== 'vpnDevices' ?
-                    intl.formatMessage(messages.ipWithSubnetPrefix) : intl.formatMessage(messages[item])}
+                    t('ipWithSubnetPrefix') : t([item])}
                 component={item === 'routeSubnets' ? ChipInput : GeneralInput}
                 validate={[required, ...validations[managementName][item]]}
                 props={initialValues && edit && { initial: initialValues[item] }}
@@ -76,7 +75,7 @@ const VpnForm = ({ intl, handleClose, handleSubmit, pristine, invalid, edit, fie
         <Form>
             {displayFields}
             <Modal.Actions align='right' style={{ marginTop: 20 }}>
-                <Button onClick={handleClose} content={intl.formatMessage(messages.cancel)} />
+                <Button onClick={handleClose} content={t('cancel')} />
                 <Button
                     primary
                     type='submit'
@@ -90,7 +89,7 @@ const VpnForm = ({ intl, handleClose, handleSubmit, pristine, invalid, edit, fie
 };
 
 VpnForm.propTypes = {
-    intl: PropTypes.any,
+    t: PropTypes.func,
     handleClose: PropTypes.func,
     handleSubmit: PropTypes.func,
     invalid: PropTypes.any,
@@ -103,4 +102,4 @@ VpnForm.propTypes = {
 
 export default reduxForm({
     form: 'createVpn'
-})(injectIntl(VpnForm));
+})(VpnForm);

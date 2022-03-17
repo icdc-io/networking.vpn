@@ -364,10 +364,12 @@ module.exports = () => {
       new MiniCssExtractPlugin(),
       new ModuleFederationPlugin({
         name: 'vpn',
-        library: { type: 'var', name: 'vpn' },
         filename: 'remoteEntry.js',
         exposes: {
           './vpnMicrofrontend': './src/vpn.js',
+        },
+        remotes: {
+          container: (mode === 'development' ? 'mainComponent@http://localhost:8080/general.js' : 'mainComponent@http://localhost:8080/general.js')
         },
         shared: {
           react: {

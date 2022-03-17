@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Pagination } from 'semantic-ui-react';
-import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 
 const CustomPagination = ({ data, totalPaginationPages, activePageNumber, setActivePageNumber, searchTerm }) => {
@@ -52,4 +51,4 @@ CustomPagination.propTypes = {
     searchTerm: PropTypes.any
 };
 
-export default injectIntl(CustomPagination);
+export default CustomPagination;

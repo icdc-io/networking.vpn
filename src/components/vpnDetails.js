@@ -1,7 +1,6 @@
 /* eslint-disable */
 import React, { useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
-import { injectIntl } from 'react-intl';
 import ButtonBack from '../general/buttonBack';
 import { vpnGatewaysPath } from '../constants/routes';
 import { useParams, withRouter } from 'react-router-dom';
@@ -9,14 +8,13 @@ import { fetchVpnClientConnections, fetchVpnGateway, fetchVpnPeerGateways, fetch
 import { useDispatch, useSelector } from 'react-redux';
 import { dataStatusCheck, formatVpnGatewaysData } from './tools';
 import { Header, Menu } from 'semantic-ui-react';
-import messages from '../Messages';
 import './vpnDetails.scss';
 import svgNetwork from '../static/svgNetwork.svg';
 import VpnDetailsTable from './vpnDetailsTable';
 import { capitalizeFirstLetter, longDash } from './tools';
 import VpnModal from './vpnModal';
 
-const VpnDetails = ({ intl, history }) => {
+const VpnDetails = ({ t, history }) => {
     const { id } = useParams();
     const dispatch = useDispatch();
     const gateway = useSelector(state => formatVpnGatewaysData(state.VpnStore.gateway));
@@ -57,44 +55,44 @@ const VpnDetails = ({ intl, history }) => {
     const menuItems = [
         {
             name: 'clientConnections',
-            menuItem: intl.formatMessage(messages.clientConnections),
+            menuItem: t('clientConnections'),
             headers: ['name', 'subnet', 'endpoint', ''],
             formFields: ['name', 'ip', 'port', 'mtu'],
-            addContentMessage: messages.addClientConnection
+            addContentMessage: 'addClientConnection'
         },
         {
             name: 'peerGateways',
-            menuItem: intl.formatMessage(messages.peerGateways),
+            menuItem: t('peerGateways'),
             headers: ['name', 'ip', 'peerEndpoint', 'publicKey', 'routeSubnets', ''],
             formFields: ['name', 'ip', 'peerEndpoint', 'publicKey', 'routeSubnets'],
-            addContentMessage: messages.addPeerGateway
+            addContentMessage: 'addPeerGateway'
         },
         {
             name: 'natMapping',
-            menuItem: intl.formatMessage(messages.natMapping),
+            menuItem: t('natMapping'),
             headers: ['hostname', 'vpnIp', 'localIp', ''],
             formFields: ['hostname', 'vpnIp', 'localIp'],
-            addContentMessage: messages.addNatMapping
+            addContentMessage: 'addNatMapping'
         }
     ];
 
     return (
         <>
-            <ButtonBack path={vpnGatewaysPath()} />
+            <ButtonBack back={t('back')} path={vpnGatewaysPath()} />
 
             {dataStatusCheck(gatewayFetchStatus, <>
                 <div className='gateway-title'>
                     <img src={svgNetwork} />
                     <Header as='h3' className='title' color='blue'>{capitalizeFirstLetter(gateway.name || '')}</Header>
                 </div>
-                <Header as='h4' style={{ marginTop: 16 }}>{intl.formatMessage(messages.vpnDetails)}</Header>
+                <Header as='h4' style={{ marginTop: 16 }}>{t('vpnDetails')}</Header>
                 <div className='vpn-details-container'>
                     <div className='vpn-details'>
-                        <div>{intl.formatMessage(messages.cloudGatewayInstance)}</div>
-                        <div>{intl.formatMessage(messages.publicKey)}</div>
-                        <div>{intl.formatMessage(messages.publicHostnameVpn)}</div>
-                        <div>{intl.formatMessage(messages.internalAddress)}</div>
-                        <div>{intl.formatMessage(messages.natSubnet)}</div>
+                        <div>{t('cloudGatewayInstance')}</div>
+                        <div>{t('publicKey')}</div>
+                        <div>{t('publicHostnameVpn')}</div>
+                        <div>{t('internalAddress')}</div>
+                        <div>{t('natSubnet')}</div>
                     </div>
                     <div className='vpn-details'>
                         <div>{gateway.cloudGatewayInstance || longDash}</div>
@@ -119,6 +117,7 @@ const VpnDetails = ({ intl, history }) => {
                     {menuItems.map((item, key) => (
                         activeTab === item.name &&
                         <VpnModal
+                            t={t}
                             key={key}
                             formFields={item.formFields}
                             addContentMessage={item.addContentMessage}
@@ -127,6 +126,7 @@ const VpnDetails = ({ intl, history }) => {
                     ))}
                 </div>
                 <VpnDetailsTable
+                    t={t}
                     tableName={activeTab}
                     headers={menuItems.filter(item => item.name === activeTab)[0].headers}
                     reduxStateName={tableData.reduxStateName || []}
@@ -139,7 +139,7 @@ const VpnDetails = ({ intl, history }) => {
 };
 
 VpnDetails.propTypes = {
-    intl: PropTypes.any
+    t: PropTypes.func
 };
 
-export default withRouter(injectIntl(VpnDetails));
+export default withRouter(VpnDetails);

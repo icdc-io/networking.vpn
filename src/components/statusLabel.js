@@ -1,19 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl } from 'react-intl';
-import messages from '../Messages';
 
-const StatusLabel = ({ intl, active }) => {
+const StatusLabel = ({ t, active }) => {
     return (
         <div className={active ? 'status-label green-text' : 'status-label gray-text'}>
-            {active ? intl.formatMessage(messages.enabled) : intl.formatMessage(messages.disabled)}
+            {active ? t('enabled') : t('disabled')}
         </div>
     );
 };
 
 StatusLabel.propTypes = {
-    intl: PropTypes.any,
+    t: PropTypes.func,
     active: PropTypes.bool
 };
 
-export default injectIntl(StatusLabel);
+export default StatusLabel;

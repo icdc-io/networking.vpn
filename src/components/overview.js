@@ -8,15 +8,15 @@ const Vpn = React.lazy(() => import('./vpn'));
 const VpnDetails = React.lazy(() => import('./vpnDetails'));
 const ClientConnectionDevices = React.lazy(() => import('./clientConnectionDevices'));
 
-const VpnOverview = () => {
+const VpnOverview = ({ t }) => {
     return (
         <Segment
             style={{ minHeight: 792 }}
         >
             <Switch>
-                <Route exact path={vpnGatewaysPath()} component={Vpn} />
-                <Route exact path={vpnGatewayPath()} component={VpnDetails} />
-                <Route exact path={vpnClientConnectionDevicesPath()} component={ClientConnectionDevices} />
+                <Route exact path={vpnGatewaysPath()} render={() => <Vpn t={t} />} />
+                <Route exact path={vpnGatewayPath()} render={() => <VpnDetails t={t} />} />
+                <Route exact path={vpnClientConnectionDevicesPath()} render={() => <ClientConnectionDevices t={t} />} />
                 <Redirect to={`/vpn/gateways`} />
             </Switch>
         </Segment>
