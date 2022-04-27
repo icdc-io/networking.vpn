@@ -1,43 +1,43 @@
-// .ui.table.details-table {
-//     margin-top: 15px;
+.ui.table.details-table {
+    margin-top: 15px;
 
-//     tbody {
-//         tr:hover {
-//             background: none !important;
-//         }
-//     }
+    tbody {
+        tr:hover {
+            background: none !important;
+        }
+    }
 
-//     thead > tr > th:first-child,
-//     tbody > tr > td:first-child {
-//         padding-left: 16px !important;
-//     }
+    thead > tr > th:first-child,
+    tbody > tr > td:first-child {
+        padding-left: 16px !important;
+    }
 
-//     tbody > tr > td:last-child {
-//         padding-right: 16px !important;
-//     }
+    tbody > tr > td:last-child {
+        padding-right: 16px !important;
+    }
 
-//     .flex {
-//         align-items: center;
-//     }
-// }
+    .flex {
+        align-items: center;
+    }
+}
 
-// .ui.inverted.popup.vpn {
-//     left: -12px !important;
-//     max-width: 300px;
+.ui.inverted.popup.vpn {
+    left: -12px !important;
+    max-width: 300px;
 
-//     .flex {
-//         overflow-wrap: break-word;
-//         word-break: break-all;
-//         align-items: end;
+    .flex {
+        overflow-wrap: break-word;
+        word-break: break-all;
+        align-items: end;
 
-//         div {
-//             margin-right: 10px;
-//         }
-//     }
+        div {
+            margin-right: 10px;
+        }
+    }
 
-//     .ui.button.copy-popup-button {
-//         background: transparent;
-//         padding: 0px;
-//         margin: 0 0 5px auto;
-//     }    
-// }
+    .ui.button.copy-popup-button {
+        background: transparent;
+        padding: 0px;
+        margin: 0 0 5px auto;
+    }    
+}

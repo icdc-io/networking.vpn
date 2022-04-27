@@ -18,7 +18,7 @@ const OptionsMenu = ({ t, type, instance, options, onClickAction }) => {
                     editContentMessage={'editClientConnection'}
                     managementName='clientConnections'
                 />,
-            delete: (clientConnection, key) => <DeleteModal key={key} type={type} instance={clientConnection} />
+            delete: (clientConnection, key) => <DeleteModal t={t} key={key} type={type} instance={clientConnection} />
         },
         vpnPeerGateways: {
             edit: (peerGateway, key) =>
@@ -31,7 +31,7 @@ const OptionsMenu = ({ t, type, instance, options, onClickAction }) => {
                     editContentMessage={'editPeerGateway'}
                     managementName='peerGateways'
                 />,
-            delete: (peerGateway, key) => <DeleteModal key={key} type={type} instance={peerGateway} />
+            delete: (peerGateway, key) => <DeleteModal t={t} key={key} type={type} instance={peerGateway} />
         },
         vpnNatMapping: {
             edit: (natResource, key) =>

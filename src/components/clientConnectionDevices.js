@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, withRouter } from 'react-router-dom';
 import { PropTypes } from 'prop-types';
@@ -24,7 +24,7 @@ import VpnCopyButton from './vpnCopyButton';
 const ClientConnectionDevices = ({ t, history }) => {
     const { connectionId } = useParams();
     const dispatch = useDispatch();
-    const user = useSelector(state => state.host.user);
+    const { account = '', location = '', role = '' } = useSelector(state => state.host.user);
     const [activePageNumber, setActivePageNumber] = useState(1);
     const totalPaginationPages = 10;
     const pageViseted = totalPaginationPages * (activePageNumber - 1);
@@ -36,20 +36,56 @@ const ClientConnectionDevices = ({ t, history }) => {
     // const gatewayFetchStatus = useSelector(state => state.VpnStore.gatewayFetchStatus);
     const headers = ['name', 'ip', 'publicKey', 'status', 'sent', 'received', 'lastConnection', ''];
 
+    const ws = useRef(null);
+
     window.goToRootRoute = () => history.push('/vpn');
+
+    useEffect(() => {
+        if (account) {
+            ws.current = new WebSocket('ws://10.254.20.22:3000/ws?dev_id[]=1&dev_id[]=2', ['actioncable-v1-json', window.insights.getToken(), account]);
+            ws.current.onopen = () => {
+                console.log('open')
+                const subscribe_msg = {
+                    command: 'subscribe',
+                    identifier: JSON.stringify({channel: 'DeviceStatisticChannel'})
+                };
+                ws.current.send(JSON.stringify(subscribe_msg));
+                console.log("Соединение открыто");
+            }
+            ws.current.onclose = () => console.log("Соединение закрыто");
+            gettingData();
+        }
+    }, [account]);
+
+    useEffect(() => {
+        return () => ws.current.close();
+    }, []);
+
+    const gettingData = useCallback(() => {
+        if (!ws.current) return;
+
+        ws.current.onmessage = e => {
+            const message = JSON.parse(e.data);
+            if (message.type === "ping") {
+                return;
+            }
+            console.log("FROM RAILS: ", message);
+            console.log(message);
+        };
+    }, []);
 
     // const vpnClientConnectionDevicesData = formatDevicesData(devices); //Uncomment to test pagintaion
 
     useEffect(() => {
-        if (user.location && connectionId) {
+        if (location && connectionId) {
             dispatch(fetchVpnClientConnection(connectionId));
             dispatch(fetchVpnClientConnectionDevices(connectionId));
         }
-    }, [dispatch, user, connectionId]);
+    }, [dispatch, account, location, role, connectionId]);
 
     useEffect(() => {
         vpnClientConnectionData.gatewayId && dispatch(fetchVpnGateway(vpnClientConnectionData.gatewayId));
-    }, [dispatch, user, vpnClientConnectionData.gatewayId]);
+    }, [dispatch, account, location, role, vpnClientConnectionData.gatewayId]);
 
     const formatDate = item => {
         if (item) {

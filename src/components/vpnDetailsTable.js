@@ -102,7 +102,7 @@ const VpnDetailsTable = ({ t, tableName, headers, reduxStateName, reduxFetchStat
             }
 
             content = window.insights.getRole() === 'admin' ?
-                <OptionsMenu type={type} instance={data} options={['edit', 'delete']} /> : '';
+                <OptionsMenu t={t} type={type} instance={data} options={['edit', 'delete']} /> : '';
         }
 
         return (
