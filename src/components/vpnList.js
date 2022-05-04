@@ -13,6 +13,7 @@ import svgNetwork from '../static/svgNetwork.svg';
 import { vpnGatewayPath } from '../constants/routes';
 import { formatVpnGatewaysData } from './tools';
 import OptionsMenu from '../general/optionsMenu';
+import DangerousHTML from 'react-dangerous-html';
 
 const VpnList = ({ t, items: gatewaysData }) => {
     const [direction, setDirection] = useState('ascending');
@@ -100,7 +101,7 @@ const VpnList = ({ t, items: gatewaysData }) => {
 
     return (
         <>
-            <div style={{ color: '#969696', marginBottom: 16 }}>{t('vpnDescription', { tag: <br /> })}</div>
+            <div style={{ color: '#969696', marginBottom: 16 }}>{<DangerousHTML html={t('vpnDescription', { tag: '<br />' })} />}</div>
 
             <div className='header'>
                 <Input
