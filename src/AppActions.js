@@ -2,13 +2,13 @@ import * as ActionTypes from './AppConstants';
 import API from './utilities/Api';
 import cogoToast from 'cogo-toast';
 
-const waitingForBaseUrl = () => {
-    const { locations } = window.insights.getUserInfo().external;
+const waitingForBaseUrl = async() => {
+    const data = await window.insights.getUserInfo();
     const location = window.insights.getLocation();
-    return locations[location];
+    return data.external.locations[location];
 };
 
-const base = (url) => waitingForBaseUrl() + `/api/wireguard/v1` + url;
+const base = async(url) => await waitingForBaseUrl() + `/api/wireguard/v1` + url;
 
 const notificationOptions = { position: 'top-right', hideAfter: 7 };
 
@@ -66,22 +66,22 @@ export const infoNotification = (msg) =>
 };
 
 const fetchData = async (url, headers) => {
-    const response = await API.get(base(url), expandHeaders(headers));
+    const response = await API.get(await base(url), expandHeaders(headers));
     return response.data;
 };
 
 const createData = async (url, headers, payload) => {
-    const response = await API.post(base(url), expandHeaders(headers), payload);
+    const response = await API.post(await base(url), expandHeaders(headers), payload);
     return response.data;
 };
 
 const updateData = async (url, headers, payload) => {
-    const response = await API.put(base(url), payload, expandHeaders(headers));
+    const response = await API.put(await base(url), payload, expandHeaders(headers));
     return response.data;
 };
 
 const deleteData = async (url, headers) => {
-    const response = await API.delete(base(url), expandHeaders(headers));
+    const response = await API.delete(await base(url), expandHeaders(headers));
     return response;
 };
 
