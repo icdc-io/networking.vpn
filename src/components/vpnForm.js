@@ -21,8 +21,8 @@ import ChipInput from '../general/chipInput';
 
 const GeneralInput = React.lazy(() => import('container/GeneralInput'));
 
-const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, fieldNames, managementName, initialValues }) => {
-    const buttonContent = edit ? t('save') : t('add');
+const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil, privateKey, fieldNames, managementName, initialValues }) => {
+    const buttonContent = edit ? t('save') : privateKey ? t('proceed') : t('add');
 
     const validations = {
         clientConnections: {
@@ -44,7 +44,7 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, fieldN
             localIp: [ip]
         },
         gateway: {
-            name: [name, maxLength30],
+            name: pencil ? [] : [name, maxLength30],
             natSubnet: [ipWithSubnetPrefix]
         },
         vpnDevices: {
@@ -53,6 +53,9 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, fieldN
             publicKey: [publicKey],
             routeSubnets: [],
             keepAlive: [number]
+        },
+        privateKey: {
+            privateKey: [publicKey]
         }
     };
 
@@ -73,9 +76,14 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, fieldN
 
     return (
         <Form>
+            {(pencil || privateKey) &&             <>
+                <label htmlFor="">{t('name')}</label>
+                <p>{initialValues['name']}</p>
+            </>}
             {displayFields}
+            {privateKey && <div className='privateKeyInfo'>{t('privateKeyInfo')}</div>}
             <Modal.Actions align='right' style={{ marginTop: 20 }}>
-                <Button onClick={handleClose} content={t('cancel')} />
+               {!privateKey &&  <Button onClick={handleClose} content={t('cancel')} />}
                 <Button
                     primary
                     type='submit'

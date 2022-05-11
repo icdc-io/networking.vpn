@@ -1,7 +1,7 @@
 /* eslint camelcase: 0 */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Dropdown, Modal } from 'semantic-ui-react';
+import { Button, Dropdown, Icon, Modal } from 'semantic-ui-react';
 import VpnForm from './vpnForm';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -18,7 +18,7 @@ import {
     editVpnGatewayAndFetch
 } from '../AppActions';
 
-const VpnModal = ({ t, edit, data: values, formFields, addContentMessage, editContentMessage, managementName }) => {
+const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addContentMessage, editContentMessage, managementName }) => {
     const { id, connectionId } = useParams();
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
@@ -75,6 +75,12 @@ const VpnModal = ({ t, edit, data: values, formFields, addContentMessage, editCo
                 }
                 return edit ? updateVpnClientConnectionDeviceAndFetch(formValues.id, connectionId, payload) :
                     createVpnClientConnectionDeviceAndFetch(connectionId, payload)
+            case 'privateKey':
+                payload = {
+                    privateKey: formValues.privateKey,
+                }
+                return edit ? updateVpnClientConnectionDeviceAndFetch(formValues.id, connectionId, payload) :
+                    createVpnClientConnectionDeviceAndFetch(connectionId, payload)
         }
         /* eslint-enable */
     };
@@ -96,10 +102,12 @@ const VpnModal = ({ t, edit, data: values, formFields, addContentMessage, editCo
         handleClose();
     };
 
-    const button = edit ?
-        <Dropdown.Item text={t('edit')} onClick={() => setOpen(true)} /> :
-        <Button
-            color='blue' onClick={() => setOpen(true)}>
+    const button = (edit && !pencil) ?
+        <Dropdown.Item text={t('edit')} onClick={() => setOpen(true)} /> 
+        : (pencil && edit) 
+        ? <Icon name="pencil alternate" className='pencil' onClick={() => setOpen(true)} /> 
+        : privateKey ?  <Dropdown.Item text={t('configs')} onClick={() => setOpen(true)} />  : <Button
+            color='blue' size='small' onClick={() => setOpen(true)}>
             {t(addContentMessage)}
         </Button>;
 
@@ -113,13 +121,16 @@ const VpnModal = ({ t, edit, data: values, formFields, addContentMessage, editCo
                 closeIcon
             >
                 <Modal.Header content={t(editContentMessage || addContentMessage)} />
-                <Modal.Content>
+                <Modal.Content style={{paddingTop: '0'}}>
                     <VpnForm
+                        t={t}
                         handleClose={handleClose}
                         onSubmit={onSubmit}
-                        initialValues={edit && values}
+                        initialValues={(edit || privateKey) && values}
                         fieldNames={formFields}
                         edit={edit}
+                        pencil={pencil}
+                        privateKey={privateKey}
                         managementName={managementName}
                     />
                 </Modal.Content>

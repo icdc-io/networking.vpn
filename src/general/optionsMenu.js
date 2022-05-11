@@ -70,7 +70,17 @@ const OptionsMenu = ({ t, type, instance, options, onClickAction }) => {
                 />,
             delete: (device, key) => <DeleteModal t={t} key={key} type={type} instance={device} />,
             enable: (key) =>
-                <Dropdown.Item key={key} text={t(instance.status ? 'disable' : 'enable')} onClick={onClickAction} />
+                <Dropdown.Item key={key} text={t(instance.status ? 'disable' : 'enable')} onClick={onClickAction} />,
+            configs: (device, key) =>
+            <VpnModal
+            t={t}
+            privateKey
+            key={key}
+            data={device}
+            formFields={['privateKey']}
+            editContentMessage={'enterPrivatekey'}
+            managementName='privateKey'
+        />,
         }
     };
 

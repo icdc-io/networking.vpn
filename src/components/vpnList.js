@@ -9,11 +9,13 @@ import { Link } from 'react-router-dom';
 import { longDash } from './tools';
 import searchMethod from '../utilities/searchFunction';
 import CustomPagination from '../general/customPagination';
-import svgNetwork from '../static/svgNetwork.svg';
+import svgVpn from '../static/svgVpn.svg';
 import { vpnGatewayPath } from '../constants/routes';
 import { formatVpnGatewaysData } from './tools';
 import OptionsMenu from '../general/optionsMenu';
 import DangerousHTML from 'react-dangerous-html';
+import { useSelector } from 'react-redux';
+import VpnModal from './vpnModal';
 
 const VpnList = ({ t, items: gatewaysData }) => {
     const [direction, setDirection] = useState('ascending');
@@ -23,6 +25,8 @@ const VpnList = ({ t, items: gatewaysData }) => {
     const [activePageNumber, setActivePageNumber] = useState(1);
     const totalPaginationPages = 8;
     const pageViseted = totalPaginationPages * (activePageNumber - 1);
+    const ApiButton = React.lazy(() => import('container/ApiButton'));
+    const user = useSelector(state => state.host.user);
 
     useEffect(() => {
         setGateways(formatVpnGatewaysData(gatewaysData));
@@ -64,15 +68,28 @@ const VpnList = ({ t, items: gatewaysData }) => {
             if (header.name === 'name') {
                 content = (
                     <div className='gateway-name-container'>
-                        <img src={svgNetwork} />
+                        <img src={svgVpn} />
                         <Link to={vpnGatewayPath(gateway.id)}>{content}</Link>
                     </div>
                 );
             }
+            if (header.name === 'natSubnet') {
+                content = <>{content} <VpnModal 
+                button 
+                t={t}
+                pencil
+                edit
+                data={gateway}
+                formFields={['natSubnet']}
+                editContentMessage={'editNatSubnet'}
+                managementName='gateway'/></>;
+            }
+
 
             if (header.name === 'menu') {
                 content = <OptionsMenu t={t} type='gateways' instance={gateway} options={['edit']} />;
             }
+            
             // else if (header.name === 'deleteButton') {
             //     content = (<DeleteModal icon type='gateway' instance={vpnGateway} />);
             // }
@@ -111,6 +128,9 @@ const VpnList = ({ t, items: gatewaysData }) => {
                     onChange={(event) => setSearchTerm(event.target.value)}
                     value={searchTerm}
                 />
+                 <ApiButton element='routes'                //! need fix it
+                        item={{ destination: '10.112.0.1/24', nexthop: '0.0.0.0' }}
+                        user={user} />
             </div>
 
             <div style={{ height: 554 }}>

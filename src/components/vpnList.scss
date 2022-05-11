@@ -22,6 +22,9 @@
             // Target all th exept the first one
             cursor: default;
         }
+        tr th {
+            border-left: none;
+        }
     }
 
     tbody > tr:hover {

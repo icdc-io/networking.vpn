@@ -173,7 +173,7 @@ const ClientConnectionDevices = ({ t, history }) => {
                 t={t}
                 type='vpnDevices'
                 instance={data}
-                options={['enable', 'edit', 'delete']}
+                options={['configs', 'enable', 'edit', 'delete' ]}
                 onClickAction={() => enableOrDisableDevice(data)}
             /> : '';
         }
