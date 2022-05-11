@@ -67,7 +67,7 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
                 name={item}
                 label={item === 'ip' && managementName !== 'vpnDevices' ?
                     t('ipWithSubnetPrefix') : t([item])}
-                component={item === 'routeSubnets' ? ChipInput : GeneralInput}
+                component={item === (edit && 'routeSubnets') ? ChipInput : GeneralInput}
                 validate={[required, ...validations[managementName][item]]}
                 props={initialValues && edit && { initial: initialValues[item] }}
             />
@@ -88,7 +88,7 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
                     primary
                     type='submit'
                     content={buttonContent}
-                    disabled={pristine || invalid}
+                    // disabled={pristine || invalid}
                     onClick={handleSubmit}
                 />
             </Modal.Actions>

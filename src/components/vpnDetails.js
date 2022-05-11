@@ -87,8 +87,7 @@ const VpnDetails = ({ t, history }) => {
                     <img src={svgVpn} />
                     <Header as='h3' className='title' color='blue'>{capitalizeFirstLetter(gateway.name || '')}</Header>
                 </div>
-                <ApiButton element='routes'                //! need fix it
-                            user={user} />
+                <ApiButton element='vpnGateway' user={user} />
             </div>
                 <Header as='h4' style={{ marginTop: 16 }}>{t('vpnDetails')}</Header>
                 <div className='vpn-details-container'>
@@ -128,6 +127,10 @@ const VpnDetails = ({ t, history }) => {
                             />
                         )}
                     </Menu>
+                    <span></span>
+                </div>
+                <div className='sub-menu-container'>
+                <ApiButton element={activeTab === 'clientConnections' ? 'vpnConnection' : activeTab === 'peerGateways' ? 'vpnRemoteGateways' : 'vpnNatMapping'} gatewayId={id} user={user} />
                     {menuItems.map((item, key) => (
                         activeTab === item.name &&
                         <VpnModal

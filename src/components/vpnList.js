@@ -128,9 +128,7 @@ const VpnList = ({ t, items: gatewaysData }) => {
                     onChange={(event) => setSearchTerm(event.target.value)}
                     value={searchTerm}
                 />
-                 <ApiButton element='routes'                //! need fix it
-                        item={{ destination: '10.112.0.1/24', nexthop: '0.0.0.0' }}
-                        user={user} />
+                 <ApiButton element='vpnGateway' user={user} />
             </div>
 
             <div style={{ height: 554 }}>
