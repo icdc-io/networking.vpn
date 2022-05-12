@@ -20,7 +20,8 @@ const validateTranslations = {
         ipOrHostname: 'Please enter a valid IP address or hostname',
         mtu: 'Must be a number within the range of 1-9000',
         peerEndpoint: 'Must be in the formats hostname:port, ipv4:port or ipv6:port',
-        publicKey: 'Must be a valid public key'
+        publicKey: 'Must be a valid public key',
+        publicKey: 'Must be a valid private key'
     },
     ru: {
         required: 'Обязательно для заполнения',
@@ -37,7 +38,8 @@ const validateTranslations = {
         ipOrHostname: 'Введите действительный IP-адреc или hostname',
         mtu: 'Должно быть число в пределах 1-9000',
         peerEndpoint: 'Должен быть в формате hostname:port, ipv4:port, ipv6:port',
-        publicKey: 'Пожалуйста, введите действительный публичный ключ'
+        publicKey: 'Пожалуйста, введите действительный публичный ключ',
+        pprivateKey: 'Пожалуйста, введите действительный приватный ключ'
     }
 };
 
@@ -249,10 +251,15 @@ export const peerEndpoint = value => {
 };
 
 export const publicKey = value => {
-    const validatePublicKey = value.match(/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/) ? true : false;
+    const validatePublicKey = value?.match(/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/) ? true : false;
 
     return validatePublicKey ? undefined : validateTranslations[getLang()].publicKey;
 };
 
+export const isPrivateKey = value => {
+    const validatePublicKey = value?.match(/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/) ? true : false;
+
+    return validatePublicKey ? undefined : validateTranslations[getLang()].privateKey;
+};
 // eslint-disable-next-line max-len
 //MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCqGKukO1De7zhZj6+H0qtjTkVxwTCpvKe4eCZ0FPqri0cb2JZfXJ/DgYSF6vUpwmJG8wVQZKjeGcjDOL5UlsuusFncCzWBQ7RKNUSesmQRMSGkVb1/3j+skZ6UtW+5u09lHNsj6tQ51s1SPrCBkedbNf0Tp0GbMJDyR4e9T04ZZwIDAQAB

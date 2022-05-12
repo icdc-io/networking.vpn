@@ -53,6 +53,8 @@ const VpnDetails = ({ t, history }) => {
 
     }, [dispatch, activeTab, id, user, user.location, user.role, user.account]);
 
+
+
     const menuItems = [
         {
             name: 'clientConnections',
@@ -115,7 +117,6 @@ const VpnDetails = ({ t, history }) => {
                         </div>
                     </div>
                 </div>
-
                 <div className='menu-container'>
                     <Menu pointing secondary color='blue' className='submenu' compact>
                         {menuItems.map((item, key) =>

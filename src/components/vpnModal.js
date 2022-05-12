@@ -1,5 +1,5 @@
 /* eslint camelcase: 0 */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Dropdown, Icon, Modal } from 'semantic-ui-react';
 import VpnForm from './vpnForm';
@@ -15,7 +15,8 @@ import {
     updateVpnClientConnectionDeviceAndFetch,
     updateVpnNatMappingAndFetch,
     updateVpnPeerGatewayAndFetch,
-    editVpnGatewayAndFetch
+    editVpnGatewayAndFetch,
+    createQRcodeAndFetch
 } from '../AppActions';
 
 const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addContentMessage, editContentMessage, managementName }) => {
@@ -23,7 +24,13 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
     const handleClose = () => setOpen(false);
-    const user = useSelector(state => state.host.user);
+    const userEmail = JSON.parse(localStorage.getItem('user')).email;
+    const [openConfigs, setOpenConfigs] = useState(false);
+    const urlQRstatus = useSelector(state => state.VpnStore.vpnClientConnectionDevicesQRcodeStatus);
+
+    useEffect(() => {
+        (urlQRstatus == 'fulfilled' && openConfigs) && setOpen(true)
+    }, [openConfigs, urlQRstatus]);
 
     const prepPayloadForSubmitingAndSubmitFunction = (id, formValues) => {
         let payload = {};
@@ -70,10 +77,8 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
                     public_key: formValues.publicKey,
                     keepalived: formValues.keepalived || 0,
                     enabled: true,
-                    // subnets: formValues.routeSubnets,
-                    // owner: 'pnkazlou@ibagroup.eu'
-                    subnets: formValues.routeSubnets.join(','),
-                    owner: user.email
+                    subnets: formValues.routeSubnets,
+                    owner: userEmail
                 }
                 return edit ? updateVpnClientConnectionDeviceAndFetch(formValues.id, connectionId, payload) :
                     createVpnClientConnectionDeviceAndFetch(connectionId, payload)
@@ -81,8 +86,7 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
                 payload = {
                     privateKey: formValues.privateKey,
                 }
-                return edit ? updateVpnClientConnectionDeviceAndFetch(formValues.id, connectionId, payload) :
-                    createVpnClientConnectionDeviceAndFetch(connectionId, payload)
+                return createQRcodeAndFetch(id, payload);
         }
         /* eslint-enable */
     };
@@ -95,12 +99,14 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
             messageText = 'creatingPeerGateway';
         } else if (managementName === 'vpnDevices') {
             messageText = 'creatingDevice';
+        } else  if (managementName === 'privateKey') {
+            messageText = 'creatingQRcode';
         } else {
             messageText = 'creatingNatMapping';
         }
-
+        messageText == 'creatingQRcode' && setOpenConfigs(true)
         !edit && infoNotification(t([messageText]));
-        dispatch(prepPayloadForSubmitingAndSubmitFunction(id, values));
+        dispatch(prepPayloadForSubmitingAndSubmitFunction(messageText === 'creatingQRcode' ? values.id : id, values));
         handleClose();
     };
 
@@ -124,6 +130,15 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
             >
                 <Modal.Header content={t(editContentMessage || addContentMessage)} />
                 <Modal.Content style={{paddingTop: '0'}}>
+                    {openConfigs ? <VpnForm
+                        t={t}
+                        handleClose={handleClose}
+                        onSubmit={onSubmit}
+                        initialValues={(edit || privateKey) && values}
+                        fieldNames={formFields}
+                        configs
+                        managementName={managementName}
+                    /> : 
                     <VpnForm
                         t={t}
                         handleClose={handleClose}
@@ -134,7 +149,7 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
                         pencil={pencil}
                         privateKey={privateKey}
                         managementName={managementName}
-                    />
+                    />}
                 </Modal.Content>
             </Modal>
         </>

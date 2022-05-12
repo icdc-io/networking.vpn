@@ -8,7 +8,7 @@ const waitingForBaseUrl = async() => {
     return data.external.locations[location];
 };
 
-const base = async(url) => await waitingForBaseUrl() + `/api/wireguard/v1` + url;
+export const base = async(url) => await waitingForBaseUrl() + `/api/wireguard/v1` + url;
 
 const notificationOptions = { position: 'top-right', hideAfter: 7 };
 
@@ -52,7 +52,7 @@ const successNotification = (msg) =>
 export const infoNotification = (msg) =>
     cogoToast.info(msg, notificationOptions);
 
-    const expandHeaders = (headers) => {
+    export const expandHeaders = (headers) => {
         const account = window.insights.getAccount();
         const role = window.insights.getRole();
     
@@ -221,6 +221,27 @@ export const createVpnClientConnectionDeviceAndFetch = (clientConnectionId, payl
             dispatch(fetchVpnClientConnectionDevices(clientConnectionId));
             successNotification('');
         }, error => errorNotification(error));
+    };
+};
+
+const fetchQR = async (url, headers, payload) => {
+    let currentUrl = await base(url) ;
+       return  await fetch(currentUrl, {
+            method: 'POST',
+            headers: expandHeaders(headers),
+            body: payload
+          }).then(response => response.blob().then(data => URL.createObjectURL(data)))
+}
+
+const createQRcode = (deviceId, payload) => ({
+    type: ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_QR_CODE_URL,
+    payload: fetchQR(ActionTypes.vpnClientConnectionDevicesUrl(deviceId), { }, payload)
+})
+
+export const createQRcodeAndFetch = (deviceId, payload) => {
+    return (dispatch) => {
+        const response = dispatch(createQRcode(deviceId, payload));
+        response.then(() => successNotification(''), error => errorNotification(error))
     };
 };
 

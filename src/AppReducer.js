@@ -14,10 +14,12 @@ const initialState = Immutable({
     vpnClientConnectionFetchStatus: '',
     vpnClientConnectionDevices: [],
     vpnClientConnectionDevicesFetchStatus: '',
+    vpnClientConnectionDevicesQRcode: [],
+    vpnClientConnectionDevicesQRcodeStatus: '',
     vpnPeerGateways: [],
     vpnPeerGatewaysFetchStatus: '',
     vpnNatMapping: [],
-    vpnNatMappingFetchSatus: ''
+    vpnNatMappingFetchSatus: '',
 });
 
 export const VpnStore = (state = initialState, action) => {
@@ -131,6 +133,16 @@ export const VpnStore = (state = initialState, action) => {
         return Immutable.merge(state, {
             // vpnClientConnectionDevices: [action.payload, ...state.vpnClientConnectionDevices],
             vpnClientConnectionDevicesFetchStatus: 'fulfilled'
+        });
+        
+    case `${ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_QR_CODE_URL}_PENDING`:
+        return state.set('vpnClientConnectionDevicesQRcodeStatus', 'pending');
+    case `${ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_QR_CODE_URL}_REJECTED`:
+        return state.set('vpnClientConnectionDevicesQRcodeStatus', 'rejected');
+    case `${ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_QR_CODE_URL}_FULFILLED`:
+        return Immutable.merge(state, {
+            vpnClientConnectionDevicesQRcode: action.payload,
+            vpnClientConnectionDevicesQRcodeStatus: 'fulfilled'
         });
 
     case `${ActionTypes.VPN_PEER_GATEWAYS_FETCH}_PENDING`:

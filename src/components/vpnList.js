@@ -73,17 +73,17 @@ const VpnList = ({ t, items: gatewaysData }) => {
                     </div>
                 );
             }
-            if (header.name === 'natSubnet') {
-                content = <>{content} <VpnModal 
-                button 
-                t={t}
-                pencil
-                edit
-                data={gateway}
-                formFields={['natSubnet']}
-                editContentMessage={'editNatSubnet'}
-                managementName='gateway'/></>;
-            }
+            // if (header.name === 'natSubnet') {
+            //     content = <>{content} <VpnModal 
+            //     button 
+            //     t={t}
+            //     pencil
+            //     edit
+            //     data={gateway}
+            //     formFields={['natSubnet']}
+            //     editContentMessage={'editNatSubnet'}
+            //     managementName='gateway'/></>;
+            // }
 
 
             if (header.name === 'menu') {

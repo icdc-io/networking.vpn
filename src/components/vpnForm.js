@@ -1,6 +1,6 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
-import { Button, Form, Modal } from 'semantic-ui-react';
+import { Accordion, Button, Form, Modal } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import {
     hostname,
@@ -15,13 +15,18 @@ import {
     peerEndpoint,
     port,
     publicKey,
+    isPrivateKey,
     required
 } from '../utilities/Validations';
 import ChipInput from '../general/chipInput';
+import { useSelector } from 'react-redux';
 
 const GeneralInput = React.lazy(() => import('container/GeneralInput'));
 
-const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil, privateKey, fieldNames, managementName, initialValues }) => {
+const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil, privateKey, configs, fieldNames, managementName, initialValues }) => {
+
+    const urlQR = useSelector(state => state.VpnStore.vpnClientConnectionDevicesQRcode);
+
     const buttonContent = edit ? t('save') : privateKey ? t('proceed') : t('add');
 
     const validations = {
@@ -48,14 +53,14 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
             natSubnet: [ipWithSubnetPrefix]
         },
         vpnDevices: {
-            name: [name],
-            ip: [ip],
-            publicKey: [publicKey],
+            name: [name, required],
+            ip: [ip, required],
+            publicKey: [publicKey, required],
             routeSubnets: [],
-            keepAlive: [number]
+            keepAlive: [number, required]
         },
         privateKey: {
-            privateKey: [publicKey]
+            privateKey: [isPrivateKey]
         }
     };
 
@@ -68,27 +73,34 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
                 label={item === 'ip' && managementName !== 'vpnDevices' ?
                     t('ipWithSubnetPrefix') : t([item])}
                 component={item === (edit && 'routeSubnets') ? ChipInput : GeneralInput}
-                validate={[required, ...validations[managementName][item]]}
+                validate={validations[managementName][item]}
                 props={initialValues && edit && { initial: initialValues[item] }}
             />
         );
     });
-
+    const panels = [
+        { key: 'panel-2a', title: 'Level 2A', content: 'Level 2A Contents' },
+        { key: 'panel-2b', title: 'Level 2B', content: 'Level 2B Contents' },
+      ]
     return (
         <Form>
-            {(pencil || privateKey) &&             <>
+            {(pencil || privateKey || configs) &&             <>
                 <label htmlFor="">{t('name')}</label>
                 <p>{initialValues['name']}</p>
             </>}
-            {displayFields}
+            {!configs && displayFields}
             {privateKey && <div className='privateKeyInfo'>{t('privateKeyInfo')}</div>}
+            {configs && <>
+                <label htmlFor="">{t('files')}</label>
+                <Accordion defaultActiveIndex={0} panels={panels} styled />
+            </>}
             <Modal.Actions align='right' style={{ marginTop: 20 }}>
                {!privateKey &&  <Button onClick={handleClose} content={t('cancel')} />}
                 <Button
                     primary
                     type='submit'
                     content={buttonContent}
-                    // disabled={pristine || invalid}
+                    disabled={pristine || invalid}
                     onClick={handleSubmit}
                 />
             </Modal.Actions>

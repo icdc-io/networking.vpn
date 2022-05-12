@@ -190,7 +190,7 @@ const ClientConnectionDevices = ({ t, history }) => {
     const displayTableData = vpnClientConnectionDevicesData
         .slice(pageViseted, pageViseted + totalPaginationPages)
         .map((item, key) => <Table.Row key={key}>{tableCells(item)}</Table.Row>);
-
+        const urlQR = useSelector(state => state.VpnStore.vpnClientConnectionDevicesQRcode);
     return (
         <>
             <ButtonBack back={t('back')} path={vpnGatewayPath(vpnClientConnectionData.gatewayId)} />
@@ -209,7 +209,7 @@ const ClientConnectionDevices = ({ t, history }) => {
                     </div>
                 </div>
                 <div className='customized-hr'></div>
-
+                <img src={urlQR} alt="img" />
                 <div className='table-title-container'>
                     <Header as='h4' style={{ marginTop: 16 }}>{t('devices')}</Header>
                     <div className='table-title-container-controls'>
