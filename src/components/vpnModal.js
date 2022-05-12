@@ -70,6 +70,8 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
                     public_key: formValues.publicKey,
                     keepalived: formValues.keepalived || 0,
                     enabled: true,
+                    // subnets: formValues.routeSubnets,
+                    // owner: 'pnkazlou@ibagroup.eu'
                     subnets: formValues.routeSubnets.join(','),
                     owner: user.email
                 }
