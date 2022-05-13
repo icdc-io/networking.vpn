@@ -128,7 +128,7 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
                 onClose={handleClose}
                 closeIcon
             >
-                <Modal.Header content={t(editContentMessage || addContentMessage)} />
+                <Modal.Header content={openConfigs ? t('configs') : t(editContentMessage || addContentMessage)} />
                 <Modal.Content style={{paddingTop: '0'}}>
                     {openConfigs ? <VpnForm
                         t={t}
