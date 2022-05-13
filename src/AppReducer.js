@@ -19,7 +19,7 @@ const initialState = Immutable({
     vpnPeerGateways: [],
     vpnPeerGatewaysFetchStatus: '',
     vpnNatMapping: [],
-    vpnNatMappingFetchSatus: '',
+    vpnNatMappingFetchSatus: ''
 });
 
 export const VpnStore = (state = initialState, action) => {

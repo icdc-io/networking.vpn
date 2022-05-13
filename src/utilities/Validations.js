@@ -79,7 +79,7 @@ export const maxLength250 = maxLength(250);
 export const maxLength256 = maxLength(256);
 
 export const name = value => (
-    value && !value.match(/^[a-zA-Z0-9_.-]*$/) ?
+    value && !value.match(/^[a-zA-Z0-9_.-\s]*$/) ?
         validateTranslations[getLang()].name :
         undefined
 );

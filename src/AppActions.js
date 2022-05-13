@@ -8,7 +8,7 @@ const waitingForBaseUrl = async() => {
     return data.external.locations[location];
 };
 
-export const base = async(url) => await waitingForBaseUrl() + `/api/wireguard/v1` + url;
+const base = async(url) => await waitingForBaseUrl() + `/api/wireguard/v1` + url;
 
 const notificationOptions = { position: 'top-right', hideAfter: 7 };
 
@@ -52,7 +52,7 @@ const successNotification = (msg) =>
 export const infoNotification = (msg) =>
     cogoToast.info(msg, notificationOptions);
 
-    export const expandHeaders = (headers) => {
+    const expandHeaders = (headers) => {
         const account = window.insights.getAccount();
         const role = window.insights.getRole();
     

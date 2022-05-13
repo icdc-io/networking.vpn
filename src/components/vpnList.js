@@ -89,7 +89,6 @@ const VpnList = ({ t, items: gatewaysData }) => {
             if (header.name === 'menu') {
                 content = <OptionsMenu t={t} type='gateways' instance={gateway} options={['edit']} />;
             }
-            
             // else if (header.name === 'deleteButton') {
             //     content = (<DeleteModal icon type='gateway' instance={vpnGateway} />);
             // }

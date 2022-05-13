@@ -77,7 +77,7 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
                     public_key: formValues.publicKey,
                     keepalived: formValues.keepalived || 0,
                     enabled: true,
-                    subnets: formValues.routeSubnets,
+                    subnets: formValues.routeSubnets.join(','),
                     owner: userEmail
                 }
                 return edit ? updateVpnClientConnectionDeviceAndFetch(formValues.id, connectionId, payload) :

@@ -51,7 +51,7 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
             localIp: [ip]
         },
         gateway: {
-            name: pencil ? [] : [name, maxLength30],
+            name: [name, maxLength30],
             natSubnet: [ipWithSubnetPrefix]
         },
         vpnDevices: {
@@ -74,7 +74,7 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
                 name={item}
                 label={item === 'ip' && managementName !== 'vpnDevices' ?
                     t('ipWithSubnetPrefix') : t([item])}
-                component={item === (edit && 'routeSubnets') ? ChipInput : GeneralInput}
+                component={item === 'routeSubnets' ? ChipInput : GeneralInput}
                 validate={validations[managementName][item]}
                 props={initialValues && edit && { initial: initialValues[item] }}
             />
