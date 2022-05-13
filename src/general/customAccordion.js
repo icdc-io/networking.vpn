@@ -9,11 +9,11 @@ const description = 'Pellentesque in ipsum id orci porta dapibus. Sed porttitor 
 
     return (
         <div className="accordion" >
-            <section style={open ? { borderRadius: '5px 5px 0px 0px', borderColor: '#2185D0' } : {}} className='title' onClick={() => handleClick(index)} >
+            <section style={open ? { borderRadius: '5px 5px 0px 0px', borderColor: '#2185D0' } : {}} className='title-config' onClick={() => handleClick(index)} >
                 <span>{title}</span>
                 <span>{open ? t('hide') : t('show')}</span>
             </section>
-            {open && <section className='description'>
+            {open && <section className='description-config'>
                 {qr 
                 ? <img src={urlQR} alt="img" /> 
                 : <div>

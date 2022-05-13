@@ -8,7 +8,7 @@
     font-size: 14px;
     line-height: 16px;
 }
-.title {
+.title-config {
     display: flex;
     justify-content: space-between;
     height: 40px;
@@ -26,8 +26,8 @@
         cursor: pointer;
     }
 }
-.description {
-    border: 1px solid #2185D0;
+.description-config {
+    border: 1px solid #2185d0;
     border-top: none;
     border-radius: 0px 0px 5px 5px;
     display: flex;
@@ -36,6 +36,6 @@
     padding: 10px;
 
     li {
-margin: 10px 0;
+        margin: 10px 0;
     }
 }
