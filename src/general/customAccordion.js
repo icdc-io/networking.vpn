@@ -3,7 +3,7 @@ import { Button, Icon } from "semantic-ui-react";
 
 import './customAccordion.scss';
 
-export const CustomAccordion = ({t, title, qr, urlQR, index, open, handleClick}) => {
+export const CustomAccordion = ({t, title, urlQR, index, open, handleClick}) => {
 
 const description = 'Pellentesque in ipsum id orci porta dapibus. Sed porttitor lectus nibh. Nulla porttitor accumsan tincidunt. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a.'
 
@@ -14,7 +14,7 @@ const description = 'Pellentesque in ipsum id orci porta dapibus. Sed porttitor 
                 <span>{open ? t('hide') : t('show')}</span>
             </section>
             {open && <section className='description-config'>
-                {qr 
+                {urlQR 
                 ? <img src={urlQR} alt="img" /> 
                 : <div>
                     <label>{t('instruction')}</label>

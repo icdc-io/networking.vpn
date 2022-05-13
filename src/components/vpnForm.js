@@ -83,9 +83,9 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
 
 
     const deviceConfigsData = [
-        {title: 'QR code for mobile devices', urlQR: urlQR, qr: true},
-        {title: 'Windows\MAC config', qr: false},
-        {title: 'Linux Network Manager connection', qr: false},
+        {title: 'QR code for mobile devices', urlQR: urlQR},
+        {title: 'Windows\MAC config'},
+        {title: 'Linux Network Manager connection'},
 
     ];
     const deviceConfigs = deviceConfigsData.map((el, index) => 
@@ -95,8 +95,7 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
             t={t} 
             title={el.title} 
             urlQR={el.urlQR} 
-            qr={el.qr} 
-            open={selectedConfig == index ? true : false} 
+            open={selectedConfig == index} 
             handleClick={setSelectedConfig}
         />);
 
