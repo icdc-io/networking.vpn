@@ -23,7 +23,7 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
     const { id, connectionId } = useParams();
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
-    const handleClose = () => setOpen(false);
+    const handleClose = () => {setOpen(false); openConfigs && setOpenConfigs(false)};
     const userEmail = JSON.parse(localStorage.getItem('user')).email;
     const [openConfigs, setOpenConfigs] = useState(false);
     const urlQRstatus = useSelector(state => state.VpnStore.vpnClientConnectionDevicesQRcodeStatus);
