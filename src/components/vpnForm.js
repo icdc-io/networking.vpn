@@ -1,6 +1,6 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
-import { Accordion, Button, Form, Modal } from 'semantic-ui-react';
+import { Button, Form, Modal } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import {
     hostname,
@@ -19,6 +19,7 @@ import {
     required
 } from '../utilities/Validations';
 import ChipInput from '../general/chipInput';
+import { CustomAccordion } from '../general/customAccordion';
 import { useSelector } from 'react-redux';
 
 const GeneralInput = React.lazy(() => import('container/GeneralInput'));
@@ -33,7 +34,7 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
         clientConnections: {
             name: [name, maxLength30],
             ip: [ipWithSubnetPrefix],
-            port: [port, maxLength4],
+            port: [port],
             mtu: [mtu, maxLength4]
         },
         peerGateways: {
@@ -90,9 +91,10 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
             </>}
             {!configs && displayFields}
             {privateKey && <div className='privateKeyInfo'>{t('privateKeyInfo')}</div>}
-            {configs && <>
+            {configs && //! вынести отдельно
+              <>
                 <label htmlFor="">{t('files')}</label>
-                <Accordion defaultActiveIndex={0} panels={panels} styled />
+                <CustomAccordion t={t} title='QR' description='blablabla' urlQR={urlQR} qr/>
             </>}
             <Modal.Actions align='right' style={{ marginTop: 20 }}>
                {!privateKey &&  <Button onClick={handleClose} content={t('cancel')} />}
