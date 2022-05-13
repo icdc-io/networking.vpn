@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { Button, Form, Modal } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
@@ -27,6 +27,7 @@ const GeneralInput = React.lazy(() => import('container/GeneralInput'));
 const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil, privateKey, configs, fieldNames, managementName, initialValues }) => {
 
     const urlQR = useSelector(state => state.VpnStore.vpnClientConnectionDevicesQRcode);
+    const [selectedConfig, setSelectedConfig] = useState(0);
 
     const buttonContent = edit ? t('save') : privateKey ? t('proceed') : t('add');
 
@@ -79,32 +80,47 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
             />
         );
     });
-    const panels = [
-        { key: 'panel-2a', title: 'Level 2A', content: 'Level 2A Contents' },
-        { key: 'panel-2b', title: 'Level 2B', content: 'Level 2B Contents' },
-      ]
+
+
+    const deviceConfigsData = [
+        {title: 'QR code for mobile devices', urlQR: urlQR, qr: true},
+        {title: 'Windows\MAC config', qr: false},
+        {title: 'Linux Network Manager connection', qr: false},
+
+    ];
+    const deviceConfigs = deviceConfigsData.map((el, index) => 
+        <CustomAccordion 
+            key={index} 
+            index={index} 
+            t={t} 
+            title={el.title} 
+            urlQR={el.urlQR} 
+            qr={el.qr} 
+            open={selectedConfig == index ? true : false} 
+            handleClick={setSelectedConfig}
+        />);
+
     return (
         <Form>
-            {(pencil || privateKey || configs) &&             <>
+            {(pencil || privateKey || configs) && <>
                 <label htmlFor="">{t('name')}</label>
                 <p>{initialValues['name']}</p>
             </>}
             {!configs && displayFields}
             {privateKey && <div className='privateKeyInfo'>{t('privateKeyInfo')}</div>}
-            {configs && //! вынести отдельно
-              <>
+            {configs && <>
                 <label htmlFor="">{t('files')}</label>
-                <CustomAccordion t={t} title='QR' description='blablabla' urlQR={urlQR} qr/>
+                {deviceConfigs}
             </>}
             <Modal.Actions align='right' style={{ marginTop: 20 }}>
-               {!privateKey &&  <Button onClick={handleClose} content={t('cancel')} />}
-                <Button
+                {!privateKey &&  <Button onClick={handleClose} content={t('cancel')} primary={configs}/>}
+                {!configs && <Button
                     primary
                     type='submit'
                     content={buttonContent}
                     disabled={pristine || invalid}
                     onClick={handleSubmit}
-                />
+                />}
             </Modal.Actions>
         </Form>
     );
