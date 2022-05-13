@@ -35,6 +35,8 @@ const ClientConnectionDevices = ({ t, history }) => {
     const clientConnectionFetchStatus = useSelector(state => state.VpnStore.vpnClientConnectionFetchStatus);
     // const gatewayFetchStatus = useSelector(state => state.VpnStore.gatewayFetchStatus);
     const headers = ['name', 'ip', 'publicKey', 'status', 'sent', 'received', 'lastConnection', ''];
+    const ApiButton = React.lazy(() => import('container/ApiButton'));
+    const user = useSelector(state => state.host.user);
 
     const ws = useRef(null);
 
@@ -173,7 +175,7 @@ const ClientConnectionDevices = ({ t, history }) => {
                 t={t}
                 type='vpnDevices'
                 instance={data}
-                options={['enable', 'edit', 'delete']}
+                options={['configs', 'enable', 'edit', 'delete' ]}
                 onClickAction={() => enableOrDisableDevice(data)}
             /> : '';
         }
@@ -188,7 +190,6 @@ const ClientConnectionDevices = ({ t, history }) => {
     const displayTableData = vpnClientConnectionDevicesData
         .slice(pageViseted, pageViseted + totalPaginationPages)
         .map((item, key) => <Table.Row key={key}>{tableCells(item)}</Table.Row>);
-
     return (
         <>
             <ButtonBack back={t('back')} path={vpnGatewayPath(vpnClientConnectionData.gatewayId)} />
@@ -207,15 +208,17 @@ const ClientConnectionDevices = ({ t, history }) => {
                     </div>
                 </div>
                 <div className='customized-hr'></div>
-
                 <div className='table-title-container'>
                     <Header as='h4' style={{ marginTop: 16 }}>{t('devices')}</Header>
+                    <div className='table-title-container-controls'>
+                    <ApiButton element='vpnDevices' connectionId={connectionId} user={user} />
                     <VpnModal
                         t={t}
                         formFields={['name', 'ip', 'publicKey', 'routeSubnets', 'keepAlive']}
                         addContentMessage={'addDevice'}
                         managementName='vpnDevices'
                     />
+                    </div>
                 </div>
 
                 <Table className='devices-table' basic='very' padded>

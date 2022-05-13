@@ -7,9 +7,9 @@ import { useParams, withRouter } from 'react-router-dom';
 import { fetchVpnClientConnections, fetchVpnGateway, fetchVpnPeerGateways, fetchVpnNatMapping } from '../AppActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { dataStatusCheck, formatVpnGatewaysData } from './tools';
-import { Header, Menu } from 'semantic-ui-react';
+import { Header, Icon, Menu } from 'semantic-ui-react';
 import './vpnDetails.scss';
-import svgNetwork from '../static/svgNetwork.svg';
+import svgVpn from '../static/svgVpn.svg';
 import VpnDetailsTable from './vpnDetailsTable';
 import { capitalizeFirstLetter, longDash } from './tools';
 import VpnModal from './vpnModal';
@@ -27,6 +27,7 @@ const VpnDetails = ({ t, history }) => {
         reduxStateName: 'vpnClientConnections',
         fetchStatus: 'vpnCLientConnectionsFetchStatus'
     });
+    const ApiButton = React.lazy(() => import('container/ApiButton'));
 
     window.goToRootRoute = () => history.push('/vpn');
 
@@ -51,6 +52,8 @@ const VpnDetails = ({ t, history }) => {
         }
 
     }, [dispatch, activeTab, id, user, user.location, user.role, user.account]);
+
+
 
     const menuItems = [
         {
@@ -81,10 +84,13 @@ const VpnDetails = ({ t, history }) => {
             <ButtonBack back={t('back')} path={vpnGatewaysPath()} />
 
             {dataStatusCheck(gatewayFetchStatus, <>
+            <div className='gateway-title-wrapper'>
                 <div className='gateway-title'>
-                    <img src={svgNetwork} />
+                    <img src={svgVpn} />
                     <Header as='h3' className='title' color='blue'>{capitalizeFirstLetter(gateway.name || '')}</Header>
                 </div>
+                <ApiButton element='vpnGateway' user={user} />
+            </div>
                 <Header as='h4' style={{ marginTop: 16 }}>{t('vpnDetails')}</Header>
                 <div className='vpn-details-container'>
                     <div className='vpn-details'>
@@ -99,10 +105,18 @@ const VpnDetails = ({ t, history }) => {
                         <div>{gateway.publicKey || longDash}</div>
                         <div>{gateway.hostname || longDash}</div>
                         <div>{gateway.internalAddress || longDash}</div>
-                        <div>{gateway.natSubnet || longDash}</div>
+                        <div>{gateway.natSubnet || longDash} <VpnModal 
+                            button 
+                            t={t}
+                            pencil
+                            edit
+                            data={gateway}
+                            formFields={['natSubnet']}
+                            editContentMessage={'editNatSubnet'}
+                            managementName='gateway'/>
+                        </div>
                     </div>
                 </div>
-
                 <div className='menu-container'>
                     <Menu pointing secondary color='blue' className='submenu' compact>
                         {menuItems.map((item, key) =>
@@ -114,6 +128,10 @@ const VpnDetails = ({ t, history }) => {
                             />
                         )}
                     </Menu>
+                    <span></span>
+                </div>
+                <div className='sub-menu-container'>
+                <ApiButton element={activeTab === 'clientConnections' ? 'vpnConnection' : activeTab === 'peerGateways' ? 'vpnRemoteGateways' : 'vpnNatMapping'} gatewayId={id} user={user} />
                     {menuItems.map((item, key) => (
                         activeTab === item.name &&
                         <VpnModal

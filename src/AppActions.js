@@ -224,6 +224,27 @@ export const createVpnClientConnectionDeviceAndFetch = (clientConnectionId, payl
     };
 };
 
+const fetchQR = async (url, headers, payload) => {
+    let currentUrl = await base(url) ;
+       return  await fetch(currentUrl, {
+            method: 'POST',
+            headers: expandHeaders(headers),
+            body: payload
+          }).then(response => response.blob().then(data => URL.createObjectURL(data)))
+}
+
+const createQRcode = (deviceId, payload) => ({
+    type: ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_QR_CODE_URL,
+    payload: fetchQR(ActionTypes.vpnClientConnectionDevicesUrl(deviceId), { }, payload)
+})
+
+export const createQRcodeAndFetch = (deviceId, payload) => {
+    return (dispatch) => {
+        const response = dispatch(createQRcode(deviceId, payload));
+        response.then(() => successNotification(''), error => errorNotification(error))
+    };
+};
+
 const updateVpnClientConnectionDevice = (deviceId, payload) => ({
     type: ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_UPDATE,
     payload: updateData(ActionTypes.vpnClientConnectionDevicesUrl(deviceId), {}, payload).then(response => response)

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { Button, Form, Modal } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
@@ -15,20 +15,27 @@ import {
     peerEndpoint,
     port,
     publicKey,
+    isPrivateKey,
     required
 } from '../utilities/Validations';
 import ChipInput from '../general/chipInput';
+import { CustomAccordion } from '../general/customAccordion';
+import { useSelector } from 'react-redux';
 
 const GeneralInput = React.lazy(() => import('container/GeneralInput'));
 
-const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, fieldNames, managementName, initialValues }) => {
-    const buttonContent = edit ? t('save') : t('add');
+const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil, privateKey, configs, fieldNames, managementName, initialValues }) => {
+
+    const urlQR = useSelector(state => state.VpnStore.vpnClientConnectionDevicesQRcode);
+    const [selectedConfig, setSelectedConfig] = useState(0);
+
+    const buttonContent = edit ? t('save') : privateKey ? t('proceed') : t('add');
 
     const validations = {
         clientConnections: {
             name: [name, maxLength30],
             ip: [ipWithSubnetPrefix],
-            port: [port, maxLength4],
+            port: [port],
             mtu: [mtu, maxLength4]
         },
         peerGateways: {
@@ -48,11 +55,14 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, fieldN
             natSubnet: [ipWithSubnetPrefix]
         },
         vpnDevices: {
-            name: [name],
-            ip: [ip],
-            publicKey: [publicKey],
+            name: [name, required],
+            ip: [ip, required],
+            publicKey: [publicKey, required],
             routeSubnets: [],
-            keepAlive: [number]
+            keepAlive: [number, required]
+        },
+        privateKey: {
+            privateKey: [isPrivateKey]
         }
     };
 
@@ -65,24 +75,51 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, fieldN
                 label={item === 'ip' && managementName !== 'vpnDevices' ?
                     t('ipWithSubnetPrefix') : t([item])}
                 component={item === 'routeSubnets' ? ChipInput : GeneralInput}
-                validate={[required, ...validations[managementName][item]]}
+                validate={validations[managementName][item]}
                 props={initialValues && edit && { initial: initialValues[item] }}
             />
         );
     });
 
+
+    const deviceConfigsData = [
+        {title: 'QR code for mobile devices', urlQR: urlQR},
+        {title: 'Windows\MAC config'},
+        {title: 'Linux Network Manager connection'},
+
+    ];
+    const deviceConfigs = deviceConfigsData.map((el, index) => 
+        <CustomAccordion 
+            key={index} 
+            index={index} 
+            t={t} 
+            title={el.title} 
+            urlQR={el.urlQR} 
+            open={selectedConfig == index} 
+            handleClick={setSelectedConfig}
+        />);
+
     return (
         <Form>
-            {displayFields}
+            {(pencil || privateKey || configs) && <>
+                <label htmlFor="">{t('name')}</label>
+                <p>{initialValues['name']}</p>
+            </>}
+            {!configs && displayFields}
+            {privateKey && <div className='privateKeyInfo'>{t('privateKeyInfo')}</div>}
+            {configs && <>
+                <label htmlFor="">{t('files')}</label>
+                {deviceConfigs}
+            </>}
             <Modal.Actions align='right' style={{ marginTop: 20 }}>
-                <Button onClick={handleClose} content={t('cancel')} />
-                <Button
+                {!privateKey &&  <Button onClick={handleClose} content={t('cancel')} primary={configs}/>}
+                {!configs && <Button
                     primary
                     type='submit'
                     content={buttonContent}
                     disabled={pristine || invalid}
                     onClick={handleSubmit}
-                />
+                />}
             </Modal.Actions>
         </Form>
     );
