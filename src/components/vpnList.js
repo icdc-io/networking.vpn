@@ -16,6 +16,7 @@ import OptionsMenu from '../general/optionsMenu';
 import DangerousHTML from 'react-dangerous-html';
 import { useSelector } from 'react-redux';
 import VpnModal from './vpnModal';
+const ApiButton = React.lazy(() => import('container/ApiButton'));
 
 const VpnList = ({ t, items: gatewaysData }) => {
     const [direction, setDirection] = useState('ascending');
@@ -25,8 +26,9 @@ const VpnList = ({ t, items: gatewaysData }) => {
     const [activePageNumber, setActivePageNumber] = useState(1);
     const totalPaginationPages = 8;
     const pageViseted = totalPaginationPages * (activePageNumber - 1);
-    const ApiButton = React.lazy(() => import('container/ApiButton'));
+
     const user = useSelector(state => state.host.user);
+    const baseUrls = useSelector(state => state.host.baseUrls);
 
     useEffect(() => {
         setGateways(formatVpnGatewaysData(gatewaysData));
@@ -127,7 +129,7 @@ const VpnList = ({ t, items: gatewaysData }) => {
                     onChange={(event) => setSearchTerm(event.target.value)}
                     value={searchTerm}
                 />
-                 <ApiButton element='vpnGateway' user={user} />
+                 <ApiButton element='vpnGateway' user={user} locationUrl={baseUrls[user.location]} />
             </div>
 
             <div style={{ height: 554 }}>
