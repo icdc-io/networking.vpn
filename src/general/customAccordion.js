@@ -1,11 +1,38 @@
-import React from "react";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { Button, Icon } from "semantic-ui-react";
+import { defaultConfiguration, getConfiguration } from "../utilities/getConfiguration";
 
 import './customAccordion.scss';
 
-export const CustomAccordion = ({t, title, urlQR, index, open, handleClick}) => {
+export const CustomAccordion = ({t, title, urlQR, deviceData, index, open, handleClick}) => {
+    const user = useSelector(state => state.host.user)
+    const vpnStore = useSelector(state => state.VpnStore);
+    const device = vpnStore.vpnClientConnectionDevices.find(e => e.id == deviceData.id)
+    const CodeSnippet = React.lazy(() => import('container/CodeSnippet'));
+console.log(CodeSnippet)
+    const initialConfigData = {
+        vpnConnectName: vpnStore.vpnClientConnection.name,
+        vpnConnectSubPrefix: vpnStore.vpnClientConnection.ip.slice(-2),
+        vpnConnectSubnet: vpnStore.gateway.nat_subnet,
+        vpnConnectPort: vpnStore.vpnClientConnection.port,
+        devicePrivateKey: deviceData.privateKey,
+        deviceIp: device.ip,
+        deviceKeepAlive: device.keepalived,
+        dns: 'TEST',
+        locationName: user.location,
+        locationPublicKey: vpnStore.gateway.public_key,
+        natMapSubnet: vpnStore.gateway.nat_subnet,
+        vpcAllSubnets: device.subnets,
+        account: user.account
+    };
 
-const description = 'Pellentesque in ipsum id orci porta dapibus. Sed porttitor lectus nibh. Nulla porttitor accumsan tincidunt. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a.'
+    const nameOfFile = `vpn-${vpnStore.vpnClientConnection.name}.conf`
+
+    const description = 'Pellentesque in ipsum id orci porta dapibus. Sed porttitor lectus nibh. Nulla porttitor accumsan tincidunt. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a.'
+    const value = getConfiguration(initialConfigData);
+    const file = new Blob([value], {type: 'text/plain'});
+    let link =  URL.createObjectURL(file);
 
     return (
         <div className="accordion" >
@@ -20,11 +47,10 @@ const description = 'Pellentesque in ipsum id orci porta dapibus. Sed porttitor 
                     <label>{t('instruction')}</label>
                     <ol>
                         <li> {description}</li>
-                        <li> {description}</li>
-                        <li> {description}</li>
+<CodeSnippet />
                     </ol>
                     <Button icon labelPosition='right'>
-                        {t('download')}
+                    <a href={link} download={nameOfFile}>{t('download')}</a>
                         <Icon name='download' />
                     </Button>
                     </div>}

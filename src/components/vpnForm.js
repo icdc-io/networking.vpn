@@ -16,7 +16,8 @@ import {
     port,
     publicKey,
     isPrivateKey,
-    required
+    required,
+    nameWithSpace
 } from '../utilities/Validations';
 import ChipInput from '../general/chipInput';
 import { CustomAccordion } from '../general/customAccordion';
@@ -24,7 +25,7 @@ import { useSelector } from 'react-redux';
 
 const GeneralInput = React.lazy(() => import('container/GeneralInput'));
 
-const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil, privateKey, configs, fieldNames, managementName, initialValues }) => {
+const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil, privateKey, configs, deviceData, fieldNames, managementName, initialValues }) => {
 
     const urlQR = useSelector(state => state.VpnStore.vpnClientConnectionDevicesQRcode);
     const [selectedConfig, setSelectedConfig] = useState(0);
@@ -55,7 +56,7 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
             natSubnet: [ipWithSubnetPrefix]
         },
         vpnDevices: {
-            name: [name, required],
+            name: [nameWithSpace, required],
             ip: [ip, required],
             publicKey: [publicKey, required],
             routeSubnets: [],
@@ -95,6 +96,7 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
             t={t} 
             title={el.title} 
             urlQR={el.urlQR} 
+            deviceData={deviceData}
             open={selectedConfig == index} 
             handleClick={setSelectedConfig}
         />);
