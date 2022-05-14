@@ -1,6 +1,6 @@
 .accordion {
     width: 100%;
-    margin: 6px 0;
+    margin: 10px 0;
 }
 .accordion section {
     width: 100%;
@@ -18,7 +18,7 @@
 
     span {
         height: 100%;
-        padding: 10px;
+        padding: 10px 15px;
         display: flex;
         align-items: center;
     }
@@ -33,9 +33,19 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 10px;
+    padding: 15px;
 
     li {
         margin: 10px 0;
+    }
+}
+
+pre {
+    // font-size: 10px;
+    border: solid 1px #c8cfee;
+    border-radius: 4px;
+
+    code {
+        // font-size: 10px;
     }
 }

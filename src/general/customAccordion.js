@@ -1,16 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { base16AteliersulphurpoolLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import './customAccordion.scss';
 import { Button, Icon } from "semantic-ui-react";
 import { defaultConfiguration, getConfiguration } from "../utilities/getConfiguration";
-
-import './customAccordion.scss';
 
 export const CustomAccordion = ({t, title, urlQR, deviceData, index, open, handleClick}) => {
     const user = useSelector(state => state.host.user)
     const vpnStore = useSelector(state => state.VpnStore);
     const device = vpnStore.vpnClientConnectionDevices.find(e => e.id == deviceData.id)
-    const CodeSnippet = React.lazy(() => import('container/CodeSnippet'));
-console.log(CodeSnippet)
+
     const initialConfigData = {
         vpnConnectName: vpnStore.vpnClientConnection.name,
         vpnConnectSubPrefix: vpnStore.vpnClientConnection.ip.slice(-2),
@@ -42,18 +42,26 @@ console.log(CodeSnippet)
             </section>
             {open && <section className='description-config'>
                 {urlQR 
-                ? <img src={urlQR} alt="img" /> 
-                : <div>
-                    <label>{t('instruction')}</label>
-                    <ol>
-                        <li> {description}</li>
-<CodeSnippet />
-                    </ol>
-                    <Button icon labelPosition='right'>
-                    <a href={link} download={nameOfFile}>{t('download')}</a>
-                        <Icon name='download' />
-                    </Button>
-                    </div>}
+                    ? <img src={urlQR} alt="img" /> 
+                    : <div>
+                        <label>{t('instruction')}</label>
+                        <ol>
+                            <li> {description}</li>
+                        </ol>
+                        <SyntaxHighlighter  
+                            language='bash'  
+                            style={base16AteliersulphurpoolLight} 
+                            customStyle={{margin: '15px 0'}} 
+                            codeTagProps={{style: {fontSize: '10px'}}}
+                        >
+                            {defaultConfiguration}
+                        </SyntaxHighlighter>
+                        <Button icon labelPosition='right'>
+                            <a href={link} download={nameOfFile} onClick={() => console.log('click')}>  {t('download')}</a>
+                            <Icon name='download' />
+                        </Button>
+                    </div>
+                }
             </section>}
         </div>
     );

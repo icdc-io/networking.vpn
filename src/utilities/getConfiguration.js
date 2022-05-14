@@ -2,7 +2,7 @@ export const defaultConfiguration = `# File: vpn-\${VPN_CONN.NAME}.conf
 [Interface]
 PrivateKey = \${DEVICE.PRIVATE_KEY}
 Address = \${DEVICE.IP}/$\{VPN_CONN.SUBNET_PREFIX}
-# DNS = \${LOCATION.PUBLIC_DNS}
+DNS = \${LOCATION.PUBLIC_DNS}
 [Peer]
 PublicKey = \${LOCATION.PUBLIC_KEY}
 # PresharedKey = {Pre-shared-key-here} # do not render for now
