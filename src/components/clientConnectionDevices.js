@@ -20,6 +20,7 @@ import CustomPagination from '../general/customPagination';
 import OptionsMenu from '../general/optionsMenu';
 import VpnModal from './vpnModal';
 import VpnCopyButton from './vpnCopyButton';
+const ApiButton = React.lazy(() => import('container/ApiButton'));
 
 const ClientConnectionDevices = ({ t, history }) => {
     const { connectionId } = useParams();
@@ -35,8 +36,9 @@ const ClientConnectionDevices = ({ t, history }) => {
     const clientConnectionFetchStatus = useSelector(state => state.VpnStore.vpnClientConnectionFetchStatus);
     // const gatewayFetchStatus = useSelector(state => state.VpnStore.gatewayFetchStatus);
     const headers = ['name', 'ip', 'publicKey', 'status', 'sent', 'received', 'lastConnection', ''];
-    const ApiButton = React.lazy(() => import('container/ApiButton'));
+
     const user = useSelector(state => state.host.user);
+    const baseUrls = useSelector(state => state.host.baseUrls);
 
     const ws = useRef(null);
 
@@ -211,7 +213,7 @@ const ClientConnectionDevices = ({ t, history }) => {
                 <div className='table-title-container'>
                     <Header as='h4' style={{ marginTop: 16 }}>{t('devices')}</Header>
                     <div className='table-title-container-controls'>
-                    <ApiButton element='vpnDevices' connectionId={connectionId} user={user} />
+                    <ApiButton element='vpnDevices' connectionId={connectionId} user={user} locationUrl={baseUrls[user.location]} />
                     <VpnModal
                         t={t}
                         formFields={['name', 'ip', 'publicKey', 'routeSubnets', 'keepAlive']}
