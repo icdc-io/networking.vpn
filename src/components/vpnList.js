@@ -15,7 +15,6 @@ import { formatVpnGatewaysData } from './tools';
 import OptionsMenu from '../general/optionsMenu';
 import DangerousHTML from 'react-dangerous-html';
 import { useSelector } from 'react-redux';
-import VpnModal from './vpnModal';
 const ApiButton = React.lazy(() => import('container/ApiButton'));
 
 const VpnList = ({ t, items: gatewaysData }) => {
