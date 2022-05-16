@@ -1,15 +1,15 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { base16AteliersulphurpoolLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import './customAccordion.scss';
 import { Button, Icon } from "semantic-ui-react";
-import { defaultConfiguration, getConfiguration } from "../utilities/getConfiguration";
+import { getConfiguration } from "../utilities/getConfiguration";
 
 export const CustomAccordion = ({t, title, urlQR, deviceData, index, open, handleClick}) => {
-    const user = useSelector(state => state.host.user)
+    const user = useSelector(state => state.host.user);
     const vpnStore = useSelector(state => state.VpnStore);
-    const device = vpnStore.vpnClientConnectionDevices.find(e => e.id == deviceData.id)
+    const device = vpnStore.vpnClientConnectionDevices.find(e => e.id == deviceData.id);
+
+    const CodeSnippet = React.lazy(() => import('container/CodeSnippet'));
 
     const initialConfigData = {
         vpnConnectName: vpnStore.vpnClientConnection.name,
@@ -19,7 +19,7 @@ export const CustomAccordion = ({t, title, urlQR, deviceData, index, open, handl
         devicePrivateKey: deviceData.privateKey,
         deviceIp: device.ip,
         deviceKeepAlive: device.keepalived,
-        dns: 'TEST',
+        //dns: 'TEST',
         locationName: user.location,
         locationPublicKey: vpnStore.gateway.public_key,
         natMapSubnet: vpnStore.gateway.nat_subnet,
@@ -33,6 +33,14 @@ export const CustomAccordion = ({t, title, urlQR, deviceData, index, open, handl
     const value = getConfiguration(initialConfigData);
     const file = new Blob([value], {type: 'text/plain'});
     let link =  URL.createObjectURL(file);
+
+    const copy = value => {
+        const singleLineValue = value.replaceAll('\n', '');
+        navigator.clipboard.writeText(singleLineValue)
+            .catch(err => {
+                console.log('Something went wrong', err); // eslint-disable-line no-console
+            });
+    };
 
     return (
         <div className="accordion" >
@@ -48,15 +56,12 @@ export const CustomAccordion = ({t, title, urlQR, deviceData, index, open, handl
                         <ol>
                             <li> {description}</li>
                         </ol>
-                        <SyntaxHighlighter  
-                            language='bash'  
-                            style={base16AteliersulphurpoolLight} 
-                            customStyle={{margin: '15px 0'}} 
-                            codeTagProps={{style: {fontSize: '10px'}}}
-                        >
-                            {defaultConfiguration}
-                        </SyntaxHighlighter>
-                        <Button icon labelPosition='right'>
+                        <div className="api-dialog-snippet-wrapper">
+                        <CodeSnippet title={t('configFile')}
+                    content={value}
+                    copyFuncion={copy}
+                     /></div>
+                        <Button icon labelPosition='right' style={{marginTop: '15px'}}>
                             <a href={link} download={nameOfFile} onClick={() => console.log('click')}>  {t('download')}</a>
                             <Icon name='download' />
                         </Button>

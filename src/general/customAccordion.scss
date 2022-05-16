@@ -40,12 +40,29 @@
     }
 }
 
-pre {
-    // font-size: 10px;
+.api-dialog-snippet-wrapper {
     border: solid 1px #c8cfee;
     border-radius: 4px;
-
-    code {
-        // font-size: 10px;
+    margin-top: 10px;
+    background: #F5F7FF;
+  
+    .code-snippet-wrapper .language-bash {
+      word-break: break-all !important;
     }
-}
+    // .code-snippet-wrapper pre code {
+    //     font-size: 10px;
+    // }
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #c8cfee;
+      padding: 7px;
+  
+      button {
+        background: none;
+        border: none;
+        color: rgba(0, 0, 0, 0.6);
+      }
+    }
+  }
