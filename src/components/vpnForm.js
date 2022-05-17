@@ -25,7 +25,7 @@ import { useSelector } from 'react-redux';
 
 const GeneralInput = React.lazy(() => import('container/GeneralInput'));
 
-const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil, privateKey, configs, deviceData, fieldNames, managementName, initialValues }) => {
+const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil, privateKey, configs, fieldNames, managementName, initialValues }) => {
 
     const urlQR = useSelector(state => state.VpnStore.vpnClientConnectionDevicesQRcode);
     const [selectedConfig, setSelectedConfig] = useState(0);
@@ -96,7 +96,6 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
             t={t} 
             title={el.title} 
             urlQR={el.urlQR} 
-            deviceData={deviceData}
             open={selectedConfig == index} 
             handleClick={setSelectedConfig}
         />);

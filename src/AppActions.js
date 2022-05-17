@@ -235,13 +235,20 @@ const fetchQR = async (url, headers, payload) => {
 
 const createQRcode = (deviceId, payload) => ({
     type: ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_QR_CODE_URL,
-    payload: fetchQR(ActionTypes.vpnClientConnectionDevicesUrl(deviceId), { }, payload)
+    payload: fetchQR(ActionTypes.vpnClientConnectionDevicesUrl(deviceId, 'qr'), { }, payload)
 })
+
+const createConfiguration = (deviceId, payload) => ({
+    type: ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_CONFIGURATION,
+    payload: createData(ActionTypes.vpnClientConnectionDevicesUrl(deviceId, 'config'), { }, payload)
+})
+
 
 export const createQRcodeAndFetch = (deviceId, payload) => {
     return (dispatch) => {
-        const response = dispatch(createQRcode(deviceId, payload));
-        response.then(() => successNotification(''), error => errorNotification(error))
+        const responseQR = dispatch(createQRcode(deviceId, payload));
+        const responseConfig = dispatch(createConfiguration(deviceId, payload));
+        Promise.all([responseQR, responseConfig]).then(() => successNotification(''), error => errorNotification(error))
     };
 };
 

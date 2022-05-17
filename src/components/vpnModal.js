@@ -26,7 +26,6 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
     const handleClose = () => {setOpen(false); openConfigs && setOpenConfigs(false)};
     const userEmail = JSON.parse(localStorage.getItem('user')).email;
     const [openConfigs, setOpenConfigs] = useState(false);
-    const [deviceData, setDeviceData] = useState({id: '', privateKey: ''});
     const urlQRstatus = useSelector(state => state.VpnStore.vpnClientConnectionDevicesQRcodeStatus);
 
     useEffect(() => {
@@ -108,7 +107,6 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
         messageText == 'creatingQRcode' && setOpenConfigs(true)
         !edit && infoNotification(t([messageText]));
         dispatch(prepPayloadForSubmitingAndSubmitFunction(messageText === 'creatingQRcode' ? values.id : id, values));
-        setDeviceData({id: values.id, privateKey: values.privateKey})
         handleClose();
     };
 
@@ -139,7 +137,6 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
                         initialValues={(edit || privateKey) && values}
                         fieldNames={formFields}
                         configs
-                        deviceData={deviceData}
                         managementName={managementName}
                     /> : 
                     <VpnForm

@@ -133,7 +133,11 @@ const VpnDetails = ({ t, history }) => {
                     <span></span>
                 </div>
                 <div className='sub-menu-container'>
-                <ApiButton element={activeTab === 'clientConnections' ? 'vpnConnection' : activeTab === 'peerGateways' ? 'vpnRemoteGateways' : 'vpnNatMapping'} gatewayId={id} user={user} locationUrl={baseUrls[user.location]}/>
+                <ApiButton 
+                    element={activeTab === 'clientConnections' ? 'vpnConnection' : activeTab === 'peerGateways' ? 'vpnRemoteGateways' : 'vpnNatMapping'} 
+                    gatewayId={id} 
+                    user={user} 
+                    locationUrl={baseUrls[user.location]} />
                     {menuItems.map((item, key) => (
                         activeTab === item.name &&
                         <VpnModal

@@ -4,30 +4,30 @@ import './customAccordion.scss';
 import { Button, Icon } from "semantic-ui-react";
 import { getConfiguration } from "../utilities/getConfiguration";
 
-export const CustomAccordion = ({t, title, urlQR, deviceData, index, open, handleClick}) => {
-    const user = useSelector(state => state.host.user);
-    const vpnStore = useSelector(state => state.VpnStore);
-    const device = vpnStore.vpnClientConnectionDevices.find(e => e.id == deviceData.id);
+export const CustomAccordion = ({t, title, urlQR, index, open, handleClick}) => {
+    // const user = useSelector(state => state.host.user);
+    const connectionName = useSelector(state => state.VpnStore.vpnClientConnection.name);
+    // const device = vpnStore.vpnClientConnectionDevices.find(e => e.id == deviceData.id);
 
     const CodeSnippet = React.lazy(() => import('container/CodeSnippet'));
 
     const initialConfigData = {
-        vpnConnectName: vpnStore.vpnClientConnection.name,
-        vpnConnectSubPrefix: vpnStore.vpnClientConnection.ip.slice(-2),
-        vpnConnectSubnet: vpnStore.gateway.nat_subnet,
-        vpnConnectPort: vpnStore.vpnClientConnection.port,
-        devicePrivateKey: deviceData.privateKey,
-        deviceIp: device.ip,
-        deviceKeepAlive: device.keepalived,
+        vpnConnectName: 'vpnStore.vpnClientConnection.name',
+        vpnConnectSubPrefix: 'vpnStore.vpnClientConnection.ip.slice(-2)',
+        vpnConnectSubnet: 'vpnStore.gateway.nat_subnet',
+        vpnConnectPort: 'vpnStore.vpnClientConnection.port',
+        devicePrivateKey: 'deviceData.privateKey',
+        deviceIp: 'device.ip',
+        deviceKeepAlive: 'device.keepalived',
         //dns: 'TEST',
-        locationName: user.location,
-        locationPublicKey: vpnStore.gateway.public_key,
-        natMapSubnet: vpnStore.gateway.nat_subnet,
-        vpcAllSubnets: device.subnets,
-        account: user.account
+        locationName: 'user.location',
+        locationPublicKey: 'vpnStore.gateway.public_key',
+        natMapSubnet: 'vpnStore.gateway.nat_subnet',
+        vpcAllSubnets: 'device.subnets',
+        account: 'user.account'
     };
 
-    const nameOfFile = `vpn-${vpnStore.vpnClientConnection.name}.conf`
+    // const nameOfFile = `vpn-${connectionName}.conf`
 
     const description = 'Pellentesque in ipsum id orci porta dapibus. Sed porttitor lectus nibh. Nulla porttitor accumsan tincidunt. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a.'
     const value = getConfiguration(initialConfigData);
@@ -62,7 +62,7 @@ export const CustomAccordion = ({t, title, urlQR, deviceData, index, open, handl
                     copyFuncion={copy}
                      /></div>
                         <Button icon labelPosition='right' style={{marginTop: '15px'}}>
-                            <a href={link} download={nameOfFile} onClick={() => console.log('click')}>  {t('download')}</a>
+                            <a href={link} download={`vpn-${connectionName}.conf`} onClick={() => console.log('click')}>  {t('download')}</a>
                             <Icon name='download' />
                         </Button>
                     </div>
