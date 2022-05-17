@@ -27,9 +27,10 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
     const userEmail = JSON.parse(localStorage.getItem('user')).email;
     const [openConfigs, setOpenConfigs] = useState(false);
     const urlQRstatus = useSelector(state => state.VpnStore.vpnClientConnectionDevicesQRcodeStatus);
+    const configStatus = useSelector(state => state.VpnStore.vpnClientConnectionDevicesConfigStatus);
 
     useEffect(() => {
-        (urlQRstatus == 'fulfilled' && openConfigs) && setOpen(true)
+        (urlQRstatus == 'fulfilled' && configStatus == 'fulfilled' && openConfigs) && setOpen(true)
     }, [openConfigs, urlQRstatus]);
 
     const prepPayloadForSubmitingAndSubmitFunction = (id, formValues) => {
@@ -84,7 +85,7 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
                     createVpnClientConnectionDeviceAndFetch(connectionId, payload)
             case 'privateKey':
                 payload = {
-                    privateKey: formValues.privateKey,
+                    private_key: formValues.privateKey,
                 }
                 return createQRcodeAndFetch(id, payload);
         }

@@ -245,6 +245,7 @@ const createConfiguration = (deviceId, payload) => ({
 
 
 export const createQRcodeAndFetch = (deviceId, payload) => {
+    console.log(payload)
     return (dispatch) => {
         const responseQR = dispatch(createQRcode(deviceId, payload));
         const responseConfig = dispatch(createConfiguration(deviceId, payload));

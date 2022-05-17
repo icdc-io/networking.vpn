@@ -28,6 +28,7 @@ const GeneralInput = React.lazy(() => import('container/GeneralInput'));
 const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil, privateKey, configs, fieldNames, managementName, initialValues }) => {
 
     const urlQR = useSelector(state => state.VpnStore.vpnClientConnectionDevicesQRcode);
+    const configuration = useSelector(state => state.VpnStore.vpnClientConnectionDevicesConfig);
     const [selectedConfig, setSelectedConfig] = useState(0);
 
     const buttonContent = edit ? t('save') : privateKey ? t('proceed') : t('add');
@@ -84,9 +85,9 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
 
 
     const deviceConfigsData = [
-        {title: 'QR code for mobile devices', urlQR: urlQR},
-        {title: 'Windows\MAC config'},
-        {title: 'Linux Network Manager connection'},
+        {title: 'qrCodeTitle', descriptions: [ {text: 'descriptionQrFirst'}, {text: 'descriptionQrSecond'}, {text: 'descriptionQrThird'}], urlQR: urlQR},
+        {title: 'windowsTitle', descriptions: [ {text: 'descriptionLinuxConfigFirst'}, {text: 'descriptionWinConfigSecond'}, {text: 'descriptionWinConfigThird'}], config: configuration},
+        {title: 'linuxTitle', descriptions: [ {text: 'descriptionLinuxConfigFirst'}, {text: 'descriptionLinuxConfigSecond'}, {text: 'descriptionLinuxConfigThird'}], config: configuration},
 
     ];
     const deviceConfigs = deviceConfigsData.map((el, index) => 
@@ -94,8 +95,7 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
             key={index} 
             index={index} 
             t={t} 
-            title={el.title} 
-            urlQR={el.urlQR} 
+            configData={el}
             open={selectedConfig == index} 
             handleClick={setSelectedConfig}
         />);

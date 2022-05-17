@@ -2,36 +2,15 @@ import React from "react";
 import { useSelector } from "react-redux";
 import './customAccordion.scss';
 import { Button, Icon } from "semantic-ui-react";
-import { getConfiguration } from "../utilities/getConfiguration";
+import DangerousHTML from 'react-dangerous-html';
+import { Link } from "react-router-dom";
 
-export const CustomAccordion = ({t, title, urlQR, index, open, handleClick}) => {
-    // const user = useSelector(state => state.host.user);
+export const CustomAccordion = ({t, configData, index, open, handleClick}) => {
     const connectionName = useSelector(state => state.VpnStore.vpnClientConnection.name);
-    // const device = vpnStore.vpnClientConnectionDevices.find(e => e.id == deviceData.id);
 
     const CodeSnippet = React.lazy(() => import('container/CodeSnippet'));
 
-    const initialConfigData = {
-        vpnConnectName: 'vpnStore.vpnClientConnection.name',
-        vpnConnectSubPrefix: 'vpnStore.vpnClientConnection.ip.slice(-2)',
-        vpnConnectSubnet: 'vpnStore.gateway.nat_subnet',
-        vpnConnectPort: 'vpnStore.vpnClientConnection.port',
-        devicePrivateKey: 'deviceData.privateKey',
-        deviceIp: 'device.ip',
-        deviceKeepAlive: 'device.keepalived',
-        //dns: 'TEST',
-        locationName: 'user.location',
-        locationPublicKey: 'vpnStore.gateway.public_key',
-        natMapSubnet: 'vpnStore.gateway.nat_subnet',
-        vpcAllSubnets: 'device.subnets',
-        account: 'user.account'
-    };
-
-    // const nameOfFile = `vpn-${connectionName}.conf`
-
-    const description = 'Pellentesque in ipsum id orci porta dapibus. Sed porttitor lectus nibh. Nulla porttitor accumsan tincidunt. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a.'
-    const value = getConfiguration(initialConfigData);
-    const file = new Blob([value], {type: 'text/plain'});
+    const file = new Blob([configData.config], {type: 'text/plain'});
     let link =  URL.createObjectURL(file);
 
     const copy = value => {
@@ -45,26 +24,39 @@ export const CustomAccordion = ({t, title, urlQR, index, open, handleClick}) => 
     return (
         <div className="accordion" >
             <section style={open ? { borderRadius: '5px 5px 0px 0px', borderColor: '#2185D0' } : {}} className='title-config' onClick={() => handleClick(index)} >
-                <span>{title}</span>
+                <span>{t(configData.title)}</span>
                 <span>{open ? t('hide') : t('show')}</span>
             </section>
             {open && <section className='description-config'>
-                {urlQR 
-                    ? <img src={urlQR} alt="img" /> 
-                    : <div>
-                        <label>{t('instruction')}</label>
+                <label>{t('instruction')}</label>
+                {configData.title === 'qrCodeTitle' 
+                    ? <div className="qr-wrapper">
                         <ol>
-                            <li> {description}</li>
+                            {configData.descriptions.map((el, i) => i === 0 ? <li key={i}>{<DangerousHTML html={t(el.text)} />}</li> : <li key={i}>{t(el.text)}</li>)}
                         </ol>
-                        <div className="api-dialog-snippet-wrapper">
-                        <CodeSnippet title={t('configFile')}
-                    content={value}
-                    copyFuncion={copy}
-                     /></div>
-                        <Button icon labelPosition='right' style={{marginTop: '15px'}}>
-                            <a href={link} download={`vpn-${connectionName}.conf`} onClick={() => console.log('click')}>  {t('download')}</a>
-                            <Icon name='download' />
-                        </Button>
+                        <img src={configData.urlQR} alt="img" /> </div>
+                    : <div>
+                        <ol>
+                            <li>{<DangerousHTML html={t(configData.descriptions[0].text, {name: connectionName})} />}
+                            <div className="api-dialog-snippet-wrapper">
+                            <CodeSnippet title={t('configFile')}
+                                content={configData.config}
+                                copyFuncion={copy}/>
+                        </div>
+                            </li>
+                            <li>{t(configData.descriptions[1].text)}</li>
+                            {configData.title === 'linuxTitle' && <div className="command"><code>{`sudo nmcli conn import type wireguard file vpn-${connectionName}.conf`}</code></div>}
+                            <li>{t(configData.descriptions[2].text)}</li>
+                            {configData.title === 'linuxTitle' && <div className="command"><code>{`nmcli conn show vpn-${connectionName}.conf`}</code></div>}
+                        </ol>
+                        <div style={{position: 'relative'}}>
+                            <div style={{width: '144px'}}><a href={link} download={`vpn-${connectionName}.conf`} className='downloadLink'><div className="linkDiv"></div></a></div>
+                            <Button icon labelPosition='right' style={{marginTop: '15px'}}>
+                                {t('download')}
+                                <Icon name='download' />
+                            </Button>
+                        </div>
+                        
                     </div>
                 }
             </section>}
