@@ -229,7 +229,7 @@ const fetchQR = async (url, headers, payload) => {
        return  await fetch(currentUrl, {
             method: 'POST',
             headers: expandHeaders(headers),
-            body: payload
+            body: JSON.stringify(payload)
           }).then(response => response.blob().then(data => URL.createObjectURL(data)))
 }
 
