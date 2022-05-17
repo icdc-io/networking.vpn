@@ -113,7 +113,7 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
                 {deviceConfigs}
             </>}
             <Modal.Actions align='right' style={{ marginTop: 20 }}>
-                {!privateKey &&  <Button onClick={handleClose} content={t('cancel')} primary={configs}/>}
+                {!privateKey &&  <Button onClick={handleClose} content={configs ? t('close') : t('cancel')} primary={configs}/>}
                 {!configs && <Button
                     primary
                     type='submit'

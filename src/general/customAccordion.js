@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import './customAccordion.scss';
 import { Button, Icon } from "semantic-ui-react";
 import DangerousHTML from 'react-dangerous-html';
-import { Link } from "react-router-dom";
 
 export const CustomAccordion = ({t, configData, index, open, handleClick}) => {
     const connectionName = useSelector(state => state.VpnStore.vpnClientConnection.name);

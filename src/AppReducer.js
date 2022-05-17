@@ -153,7 +153,7 @@ export const VpnStore = (state = initialState, action) => {
         return state.set('vpnClientConnectionDevicesConfigStatus', 'rejected');
     case `${ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_CONFIGURATION}_FULFILLED`:
         return Immutable.merge(state, {
-            vpnClientConnectionDevicesConfig: action.payload,
+            vpnClientConnectionDevicesConfig: action.payload.trim(),
             vpnClientConnectionDevicesConfigStatus: 'fulfilled'
         });
 
