@@ -27,9 +27,18 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
     const userEmail = JSON.parse(localStorage.getItem('user')).email;
     const [openConfigs, setOpenConfigs] = useState(false);
     const urlQRstatus = useSelector(state => state.VpnStore.vpnClientConnectionDevicesQRcodeStatus);
+    const configStatus = useSelector(state => state.VpnStore.vpnClientConnectionDevicesConfigStatus);
+
+    const managementMessages = {
+        clientConnections: 'creatingClientConnection',
+        peerGateways: 'creatingPeerGateway',
+        vpnDevices: 'creatingDevice',
+        privateKey: 'creatingConfig',
+        natMapping: 'creatingNatMapping'
+    };
 
     useEffect(() => {
-        (urlQRstatus == 'fulfilled' && openConfigs) && setOpen(true)
+        (urlQRstatus == 'fulfilled' && configStatus == 'fulfilled' && openConfigs) && setOpen(true)
     }, [openConfigs, urlQRstatus]);
 
     const prepPayloadForSubmitingAndSubmitFunction = (id, formValues) => {
@@ -84,7 +93,7 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
                     createVpnClientConnectionDeviceAndFetch(connectionId, payload)
             case 'privateKey':
                 payload = {
-                    privateKey: formValues.privateKey,
+                    private_key: formValues.privateKey,
                 }
                 return createQRcodeAndFetch(id, payload);
         }
@@ -92,21 +101,10 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
     };
 
     const onSubmit = values => {
-        let messageText = '';
-        if (managementName === 'clientConnections') {
-            messageText = 'creatingClientConnection';
-        } else if (managementName === 'peerGateways') {
-            messageText = 'creatingPeerGateway';
-        } else if (managementName === 'vpnDevices') {
-            messageText = 'creatingDevice';
-        } else  if (managementName === 'privateKey') {
-            messageText = 'creatingQRcode';
-        } else {
-            messageText = 'creatingNatMapping';
-        }
-        messageText == 'creatingQRcode' && setOpenConfigs(true)
+        let messageText = managementMessages[managementName];
+        messageText == 'creatingConfig' && setOpenConfigs(true)
         !edit && infoNotification(t([messageText]));
-        dispatch(prepPayloadForSubmitingAndSubmitFunction(messageText === 'creatingQRcode' ? values.id : id, values));
+        dispatch(prepPayloadForSubmitingAndSubmitFunction(messageText === 'creatingConfig' ? values.id : id, values));
         handleClose();
     };
 

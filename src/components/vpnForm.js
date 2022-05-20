@@ -16,7 +16,8 @@ import {
     port,
     publicKey,
     isPrivateKey,
-    required
+    required,
+    nameWithSpace
 } from '../utilities/Validations';
 import ChipInput from '../general/chipInput';
 import { CustomAccordion } from '../general/customAccordion';
@@ -27,6 +28,7 @@ const GeneralInput = React.lazy(() => import('container/GeneralInput'));
 const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil, privateKey, configs, fieldNames, managementName, initialValues }) => {
 
     const urlQR = useSelector(state => state.VpnStore.vpnClientConnectionDevicesQRcode);
+    const configuration = useSelector(state => state.VpnStore.vpnClientConnectionDevicesConfig);
     const [selectedConfig, setSelectedConfig] = useState(0);
 
     const buttonContent = edit ? t('save') : privateKey ? t('proceed') : t('add');
@@ -55,7 +57,7 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
             natSubnet: [ipWithSubnetPrefix]
         },
         vpnDevices: {
-            name: [name, required],
+            name: [nameWithSpace, required],
             ip: [ip, required],
             publicKey: [publicKey, required],
             routeSubnets: [],
@@ -83,9 +85,9 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
 
 
     const deviceConfigsData = [
-        {title: 'QR code for mobile devices', urlQR: urlQR},
-        {title: 'Windows\MAC config'},
-        {title: 'Linux Network Manager connection'},
+        {title: 'qrCodeTitle', descriptions: [ {text: 'descriptionQrFirst'}, {text: 'descriptionQrSecond'}, {text: 'descriptionQrThird'}], urlQR: urlQR},
+        {title: 'windowsTitle', descriptions: [ {text: 'descriptionWinConfigFirst'}, {text: 'descriptionWinConfigSecond'}, {text: 'descriptionWinConfigThird'}, {text: 'descriptionWinConfigFour'} ], config: configuration},
+        {title: 'linuxTitle', descriptions: [ {text: 'descriptionLinuxConfigFirst'}, {text: 'descriptionLinuxConfigSecond'}, {text: 'descriptionLinuxConfigThird'}], config: configuration},
 
     ];
     const deviceConfigs = deviceConfigsData.map((el, index) => 
@@ -93,8 +95,7 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
             key={index} 
             index={index} 
             t={t} 
-            title={el.title} 
-            urlQR={el.urlQR} 
+            configData={el}
             open={selectedConfig == index} 
             handleClick={setSelectedConfig}
         />);
@@ -112,7 +113,7 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
                 {deviceConfigs}
             </>}
             <Modal.Actions align='right' style={{ marginTop: 20 }}>
-                {!privateKey &&  <Button onClick={handleClose} content={t('cancel')} primary={configs}/>}
+                {!privateKey &&  <Button onClick={handleClose} content={configs ? t('close') : t('cancel')} primary={configs}/>}
                 {!configs && <Button
                     primary
                     type='submit'

@@ -13,6 +13,7 @@ import svgVpn from '../static/svgVpn.svg';
 import VpnDetailsTable from './vpnDetailsTable';
 import { capitalizeFirstLetter, longDash } from './tools';
 import VpnModal from './vpnModal';
+const ApiButton = React.lazy(() => import('container/ApiButton'));
 
 const VpnDetails = ({ t, history }) => {
     const { id } = useParams();
@@ -27,7 +28,7 @@ const VpnDetails = ({ t, history }) => {
         reduxStateName: 'vpnClientConnections',
         fetchStatus: 'vpnCLientConnectionsFetchStatus'
     });
-    const ApiButton = React.lazy(() => import('container/ApiButton'));
+    const baseUrls = useSelector(state => state.host.baseUrls);
 
     window.goToRootRoute = () => history.push('/vpn');
 
@@ -89,7 +90,7 @@ const VpnDetails = ({ t, history }) => {
                     <img src={svgVpn} />
                     <Header as='h3' className='title' color='blue'>{capitalizeFirstLetter(gateway.name || '')}</Header>
                 </div>
-                <ApiButton element='vpnGateway' user={user} />
+                <ApiButton element='vpnGateway' user={user} locationUrl={baseUrls[user.location]} />
             </div>
                 <Header as='h4' style={{ marginTop: 16 }}>{t('vpnDetails')}</Header>
                 <div className='vpn-details-container'>
@@ -131,7 +132,11 @@ const VpnDetails = ({ t, history }) => {
                     <span></span>
                 </div>
                 <div className='sub-menu-container'>
-                <ApiButton element={activeTab === 'clientConnections' ? 'vpnConnection' : activeTab === 'peerGateways' ? 'vpnRemoteGateways' : 'vpnNatMapping'} gatewayId={id} user={user} />
+                <ApiButton 
+                    element={activeTab === 'clientConnections' ? 'vpnConnection' : activeTab === 'peerGateways' ? 'vpnRemoteGateways' : 'vpnNatMapping'} 
+                    gatewayId={id} 
+                    user={user} 
+                    locationUrl={baseUrls[user.location]} />
                     {menuItems.map((item, key) => (
                         activeTab === item.name &&
                         <VpnModal

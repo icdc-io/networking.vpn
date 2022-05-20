@@ -1,6 +1,6 @@
 .accordion {
     width: 100%;
-    margin: 6px 0;
+    margin: 10px 0;
 }
 .accordion section {
     width: 100%;
@@ -18,9 +18,13 @@
 
     span {
         height: 100%;
-        padding: 10px;
+        padding: 10px 15px;
         display: flex;
         align-items: center;
+
+        div {
+            margin: 10px 0px;
+        }
     }
     &:hover {
         cursor: pointer;
@@ -31,11 +35,83 @@
     border-top: none;
     border-radius: 0px 0px 5px 5px;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: center;
-    padding: 10px;
+    padding: 15px;
 
-    li {
-        margin: 10px 0;
+    .qr-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        img {
+            width: 70%;
+        }
+
+        .inctruction-item {
+            margin: 5px 0px;
+        }
+    }
+
+    .os-wrapper {
+        .command {
+            background-color: #fafafa;
+            border: 1px solid #e2e2e2;
+            font-family: Consolas, Menlo, "Liberation Mono", Courier, monospace;
+            font-size: 12px;
+            width: max-content;
+            padding: 4px 6px;
+            border-radius: 5px;
+        }
+
+        .inctruction-item div {
+            margin: 10px 0px;
+        }
+    }
+    .inctruction-item {
+        align-self: flex-start;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 1.2rem;
+        margin: 10px 0px;
+    }
+    .link-div {
+        width: 144px;
+        height: 36px;
+        position: absolute;
+        z-index: 1;
+        top: 15px;
+    }
+}
+
+.api-dialog-snippet-wrapper {
+    border: solid 1px #c8cfee;
+    border-radius: 4px;
+    background: #f5f7ff;
+
+    pre {
+        margin: 0 !important;
+        border-radius: 5px;
+    }
+    .code-snippet-wrapper .language-bash {
+        word-break: break-all !important;
+    }
+    code span {
+        font-size: 10px;
+    }
+    .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #c8cfee;
+        padding: 7px;
+        padding-right: 0px;
+
+        button {
+            background: none;
+            border: none;
+            color: rgba(0, 0, 0, 0.6);
+        }
     }
 }

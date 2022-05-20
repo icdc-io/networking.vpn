@@ -1,33 +1,65 @@
 import React from "react";
-import { Button, Icon } from "semantic-ui-react";
-
+import { useSelector } from "react-redux";
 import './customAccordion.scss';
+import { Button, Icon } from "semantic-ui-react";
+import DangerousHTML from 'react-dangerous-html';
+const CodeSnippet = React.lazy(() => import('container/CodeSnippet'));
 
-export const CustomAccordion = ({t, title, urlQR, index, open, handleClick}) => {
+export const CustomAccordion = ({t, configData, index, open, handleClick}) => {
+    const connectionName = useSelector(state => state.VpnStore.vpnClientConnection.name);
 
-const description = 'Pellentesque in ipsum id orci porta dapibus. Sed porttitor lectus nibh. Nulla porttitor accumsan tincidunt. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a.'
+    const file = new Blob([configData.config], {type: 'text/plain'});
+    let link =  URL.createObjectURL(file);
+
+    const copy = value => {
+        const singleLineValue = value.replaceAll('\n', '');
+        navigator.clipboard.writeText(singleLineValue)
+            .catch(err => {
+                console.log('Something went wrong', err); // eslint-disable-line no-console
+            });
+    };
 
     return (
         <div className="accordion" >
-            <section style={open ? { borderRadius: '5px 5px 0px 0px', borderColor: '#2185D0' } : {}} className='title-config' onClick={() => handleClick(index)} >
-                <span>{title}</span>
+            <section style={open ? { borderRadius: '5px 5px 0px 0px', borderColor: '#2185D0' } : {}} className='title-config' onClick={() => {open ? handleClick('close') : handleClick(index)}} >
+                <span>{t(configData.title)}</span>
                 <span>{open ? t('hide') : t('show')}</span>
             </section>
             {open && <section className='description-config'>
-                {urlQR 
-                ? <img src={urlQR} alt="img" /> 
-                : <div>
-                    <label>{t('instruction')}</label>
-                    <ol>
-                        <li> {description}</li>
-                        <li> {description}</li>
-                        <li> {description}</li>
-                    </ol>
-                    <Button icon labelPosition='right'>
-                        {t('download')}
-                        <Icon name='download' />
-                    </Button>
-                    </div>}
+                <label>{t('instruction')}</label>
+                {configData.title === 'qrCodeTitle' 
+
+                    ? <div className="qr-wrapper">
+                            {configData.descriptions.map((el, i) => i === 0 
+                                ? <div className="inctruction-item" key={i}>{<DangerousHTML html={t(el.text)} />}</div> 
+                                : <div className="inctruction-item" key={i}>{t(el.text)}</div>)}
+                        <img src={configData.urlQR} alt="img" />
+                    </div>
+
+                    : <div className="os-wrapper">
+                        <div className="inctruction-item">{<DangerousHTML html={t(configData.descriptions[0].text, {name: connectionName})} />}</div>
+                        {configData.title === 'windowsTitle' && <span>{<DangerousHTML html={t(configData.descriptions[1].text, {name: connectionName})} />}</span>}
+                        <div className="api-dialog-snippet-wrapper">
+                            <CodeSnippet title={t('configFile')}
+                                content={configData.config}
+                                copyFuncion={copy}/>
+                        </div>
+                            {<div className="inctruction-item">{t(configData.descriptions[configData.title === 'windowsTitle'? 2 : 1].text)}</div>}
+                            {configData.title === 'linuxTitle' && <div className="command"><code>{`sudo nmcli conn import type wireguard file vpn-${connectionName}.conf`}</code></div>}
+                            <div className="inctruction-item">{t(configData.descriptions[configData.title === 'windowsTitle'? 3 : 2].text)}</div>
+                            {configData.title === 'linuxTitle' && <div className="command"><code>{`nmcli conn show vpn-${connectionName}.conf`}</code></div>}
+                        <div style={{position: 'relative'}}>
+                            <div style={{width: '144px'}}>
+                                <a href={link} download={`vpn-${connectionName}.conf`}><div className="link-div"></div></a>
+                            </div>
+                            <Button icon labelPosition='right' style={configData.title !== 'windowsTitle' ? {marginTop: '15px'} : {}}>
+                                {t('download')}
+                                <Icon name='download' />
+                            </Button>
+                        </div>
+                        
+                    </div>
+                }
             </section>}
         </div>
     );
