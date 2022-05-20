@@ -101,13 +101,13 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
         } else if (managementName === 'vpnDevices') {
             messageText = 'creatingDevice';
         } else  if (managementName === 'privateKey') {
-            messageText = 'creatingQRcode';
+            messageText = 'creatingConfig';
         } else {
             messageText = 'creatingNatMapping';
         }
-        messageText == 'creatingQRcode' && setOpenConfigs(true)
+        messageText == 'creatingConfig' && setOpenConfigs(true)
         !edit && infoNotification(t([messageText]));
-        dispatch(prepPayloadForSubmitingAndSubmitFunction(messageText === 'creatingQRcode' ? values.id : id, values));
+        dispatch(prepPayloadForSubmitingAndSubmitFunction(messageText === 'creatingConfig' ? values.id : id, values));
         handleClose();
     };
 
