@@ -60,7 +60,8 @@
             font-family: Consolas, Menlo, "Liberation Mono", Courier, monospace;
             font-size: 12px;
             width: max-content;
-            padding: 2px;
+            padding: 4px 6px;
+            border-radius: 5px;
         }
 
         .inctruction-item div {
@@ -87,11 +88,11 @@
 .api-dialog-snippet-wrapper {
     border: solid 1px #c8cfee;
     border-radius: 4px;
-    // margin: 10px 0px;
     background: #f5f7ff;
 
     pre {
         margin: 0 !important;
+        border-radius: 5px;
     }
     .code-snippet-wrapper .language-bash {
         word-break: break-all !important;
@@ -105,6 +106,7 @@
         align-items: center;
         border-bottom: 1px solid #c8cfee;
         padding: 7px;
+        padding-right: 0px;
 
         button {
             background: none;

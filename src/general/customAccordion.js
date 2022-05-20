@@ -22,7 +22,7 @@ export const CustomAccordion = ({t, configData, index, open, handleClick}) => {
 
     return (
         <div className="accordion" >
-            <section style={open ? { borderRadius: '5px 5px 0px 0px', borderColor: '#2185D0' } : {}} className='title-config' onClick={() => handleClick(index)} >
+            <section style={open ? { borderRadius: '5px 5px 0px 0px', borderColor: '#2185D0' } : {}} className='title-config' onClick={() => {open ? handleClick('close') : handleClick(index)}} >
                 <span>{t(configData.title)}</span>
                 <span>{open ? t('hide') : t('show')}</span>
             </section>
@@ -53,7 +53,7 @@ export const CustomAccordion = ({t, configData, index, open, handleClick}) => {
                             <div style={{width: '144px'}}>
                                 <a href={link} download={`vpn-${connectionName}.conf`}><div className="link-div"></div></a>
                             </div>
-                            <Button icon labelPosition='right' style={{marginTop: '15px'}}>
+                            <Button icon labelPosition='right' style={configData.title !== 'windowsTitle' ? {marginTop: '15px'} : {}}>
                                 {t('download')}
                                 <Icon name='download' />
                             </Button>
