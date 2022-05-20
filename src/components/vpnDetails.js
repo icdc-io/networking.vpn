@@ -13,6 +13,7 @@ import svgVpn from '../static/svgVpn.svg';
 import VpnDetailsTable from './vpnDetailsTable';
 import { capitalizeFirstLetter, longDash } from './tools';
 import VpnModal from './vpnModal';
+const ApiButton = React.lazy(() => import('container/ApiButton'));
 
 const VpnDetails = ({ t, history }) => {
     const { id } = useParams();
@@ -28,8 +29,6 @@ const VpnDetails = ({ t, history }) => {
         fetchStatus: 'vpnCLientConnectionsFetchStatus'
     });
     const baseUrls = useSelector(state => state.host.baseUrls);
-
-    const ApiButton = React.lazy(() => import('container/ApiButton'));
 
     window.goToRootRoute = () => history.push('/vpn');
 
