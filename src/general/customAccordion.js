@@ -30,24 +30,21 @@ export const CustomAccordion = ({t, configData, index, open, handleClick}) => {
                 <label>{t('instruction')}</label>
                 {configData.title === 'qrCodeTitle' 
                     ? <div className="qr-wrapper">
-                        <ol>
-                            {configData.descriptions.map((el, i) => i === 0 ? <li key={i}>{<DangerousHTML html={t(el.text)} />}</li> : <li key={i}>{t(el.text)}</li>)}
-                        </ol>
+                            {configData.descriptions.map((el, i) => i === 0 ? <div className="inctruction-item" key={i}>{<DangerousHTML html={t(el.text)} />}</div> : <div className="inctruction-item" key={i}>{t(el.text)}</div>)}
                         <img src={configData.urlQR} alt="img" /> </div>
-                    : <div>
-                        <ol>
-                            <li>{<DangerousHTML html={t(configData.descriptions[0].text, {name: connectionName})} />}
-                            <div className="api-dialog-snippet-wrapper">
+                    : <div className="os-wrapper">
+                        <div className="inctruction-item">{<DangerousHTML html={t(configData.descriptions[0].text, {name: connectionName})} />}</div>
+                        {configData.title === 'windowsTitle' && <span>{<DangerousHTML html={t(configData.descriptions[1].text, {name: connectionName})} />}</span>}
+                        <div className="api-dialog-snippet-wrapper">
                             <CodeSnippet title={t('configFile')}
                                 content={configData.config}
                                 copyFuncion={copy}/>
                         </div>
-                            </li>
-                            <li>{t(configData.descriptions[1].text)}</li>
+                          
+                            {<div className="inctruction-item">{t(configData.descriptions[configData.title === 'windowsTitle'? 2 : 1].text)}</div>}
                             {configData.title === 'linuxTitle' && <div className="command"><code>{`sudo nmcli conn import type wireguard file vpn-${connectionName}.conf`}</code></div>}
-                            <li>{t(configData.descriptions[2].text)}</li>
+                            <div className="inctruction-item">{t(configData.descriptions[configData.title === 'windowsTitle'? 3 : 2].text)}</div>
                             {configData.title === 'linuxTitle' && <div className="command"><code>{`nmcli conn show vpn-${connectionName}.conf`}</code></div>}
-                        </ol>
                         <div style={{position: 'relative'}}>
                             <div style={{width: '144px'}}><a href={link} download={`vpn-${connectionName}.conf`} className='downloadLink'><div className="linkDiv"></div></a></div>
                             <Button icon labelPosition='right' style={{marginTop: '15px'}}>

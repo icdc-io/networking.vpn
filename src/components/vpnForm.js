@@ -86,7 +86,7 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
 
     const deviceConfigsData = [
         {title: 'qrCodeTitle', descriptions: [ {text: 'descriptionQrFirst'}, {text: 'descriptionQrSecond'}, {text: 'descriptionQrThird'}], urlQR: urlQR},
-        {title: 'windowsTitle', descriptions: [ {text: 'descriptionLinuxConfigFirst'}, {text: 'descriptionWinConfigSecond'}, {text: 'descriptionWinConfigThird'}], config: configuration},
+        {title: 'windowsTitle', descriptions: [ {text: 'descriptionWinConfigFirst'}, {text: 'descriptionWinConfigSecond'}, {text: 'descriptionWinConfigThird'}, {text: 'descriptionWinConfigFour'} ], config: configuration},
         {title: 'linuxTitle', descriptions: [ {text: 'descriptionLinuxConfigFirst'}, {text: 'descriptionLinuxConfigSecond'}, {text: 'descriptionLinuxConfigThird'}], config: configuration},
 
     ];

@@ -21,6 +21,10 @@
         padding: 10px 15px;
         display: flex;
         align-items: center;
+
+        div {
+            margin: 10px 0px;
+        }
     }
     &:hover {
         cursor: pointer;
@@ -35,27 +39,6 @@
     justify-content: center;
     padding: 15px;
 
-    ol {
-        padding-left: 15px;
-        margin: 0px;
-
-        .command {
-            background-color: #fafafa;
-            border: 1px solid #e2e2e2;
-            font-family: Consolas, Menlo, "Liberation Mono", Courier, monospace;
-            font-size: 12px;
-            width: max-content;
-        }
-    }
-
-    li {
-        margin: 10px 0;
-        font-style: normal;
-        font-weight: 400;
-        font-size: 14px;
-        line-height: 134.19%;
-    }
-
     .qr-wrapper {
         display: flex;
         flex-direction: column;
@@ -64,8 +47,34 @@
         img {
             width: 70%;
         }
+
+        .inctruction-item {
+            margin: 5px 0px;
+        }
     }
 
+    .os-wrapper {
+        .command {
+            background-color: #fafafa;
+            border: 1px solid #e2e2e2;
+            font-family: Consolas, Menlo, "Liberation Mono", Courier, monospace;
+            font-size: 12px;
+            width: max-content;
+            padding: 2px;
+        }
+
+        .inctruction-item div {
+            margin: 10px 0px;
+        }
+    }
+    .inctruction-item {
+        align-self: flex-start;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 1.2rem;
+        margin: 10px 0px;
+    }
     .linkDiv {
         width: 144px;
         height: 36px;
@@ -78,7 +87,7 @@
 .api-dialog-snippet-wrapper {
     border: solid 1px #c8cfee;
     border-radius: 4px;
-    margin-top: 10px;
+    // margin: 10px 0px;
     background: #f5f7ff;
 
     pre {
