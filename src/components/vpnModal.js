@@ -29,6 +29,14 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
     const urlQRstatus = useSelector(state => state.VpnStore.vpnClientConnectionDevicesQRcodeStatus);
     const configStatus = useSelector(state => state.VpnStore.vpnClientConnectionDevicesConfigStatus);
 
+    const managementMessages = {
+        clientConnections: 'creatingClientConnection',
+        peerGateways: 'creatingPeerGateway',
+        vpnDevices: 'creatingDevice',
+        privateKey: 'creatingConfig',
+        natMapping: 'creatingNatMapping'
+    };
+
     useEffect(() => {
         (urlQRstatus == 'fulfilled' && configStatus == 'fulfilled' && openConfigs) && setOpen(true)
     }, [openConfigs, urlQRstatus]);
@@ -93,18 +101,7 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
     };
 
     const onSubmit = values => {
-        let messageText = '';
-        if (managementName === 'clientConnections') {
-            messageText = 'creatingClientConnection';
-        } else if (managementName === 'peerGateways') {
-            messageText = 'creatingPeerGateway';
-        } else if (managementName === 'vpnDevices') {
-            messageText = 'creatingDevice';
-        } else  if (managementName === 'privateKey') {
-            messageText = 'creatingConfig';
-        } else {
-            messageText = 'creatingNatMapping';
-        }
+        let messageText = managementMessages[managementName];
         messageText == 'creatingConfig' && setOpenConfigs(true)
         !edit && infoNotification(t([messageText]));
         dispatch(prepPayloadForSubmitingAndSubmitFunction(messageText === 'creatingConfig' ? values.id : id, values));

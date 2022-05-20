@@ -4,10 +4,10 @@ import './customAccordion.scss';
 import { Button, Icon } from "semantic-ui-react";
 import DangerousHTML from 'react-dangerous-html';
 
+const CodeSnippet = React.lazy(() => import('container/CodeSnippet'));
+
 export const CustomAccordion = ({t, configData, index, open, handleClick}) => {
     const connectionName = useSelector(state => state.VpnStore.vpnClientConnection.name);
-
-    const CodeSnippet = React.lazy(() => import('container/CodeSnippet'));
 
     const file = new Blob([configData.config], {type: 'text/plain'});
     let link =  URL.createObjectURL(file);
