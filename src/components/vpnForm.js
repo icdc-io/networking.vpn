@@ -19,11 +19,11 @@ import {
     required,
     nameWithSpace,
 } from '../utilities/Validations';
-import ChipInput from '../general/chipInput';
 import { CustomAccordion } from '../general/customAccordion';
 import { useSelector } from 'react-redux';
 import './vpnDetails.scss'
 import CustomChipInput from '../general/customChipInput';
+import CustomDroopdown from '../general/customDropdown';
 
 const GeneralInput = React.lazy(() => import('container/GeneralInput'));
 
@@ -38,36 +38,36 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
 
     const placeholderMessages = {
         clientConnections: {
-            name: 'Enter a name',
-            ip: 'ex. 10.206.1.1/24',
-            port: 'ex. 2200',
-            mtu: 'ex. 1500'
+            name: 'enterName',
+            ip: 'enterIpWithPrefix',
+            port: 'enterPort',
+            mtu: 'enterMtu'
         },
         peerGateways: {
-            name: 'Enter a name',
-            peerEndpoint: 'Enter or choose. E.g. acc.vpn.loc.icdc.io:2200',
-            ip: 'e.g. 10.253.25.1/24',
-            publicKey: 'Enter a public key',
-            routeSubnets: 'Use space or comma to separate'
+            name: 'enterName',
+            peerEndpoint: 'enterPeerEndpoint',
+            ip: 'enterIpWithPrefix',
+            publicKey: 'enterPublicKey',
+            routeSubnets: 'enterRouteSubnets'
         },
         gateway: {
-            name: 'Enter a name',
-            natSubnet: 'Enter a NAT Subnet'
+            name: 'enterName',
+            natSubnet: 'enterNat'
         },
         vpnDevices: {
-            name: 'Enter a name',
-            ip: 'e.g. 10.253.25.1',
-            publicKey: 'Enter a public key',
-            routeSubnets: 'Use space or comma to separate',
-            keepAlive: 'Enter a number of seconds'
+            name: 'enterName',
+            ip: 'enterIp',
+            publicKey: 'enterPublicKey',
+            routeSubnets: 'enterRouteSubnets',
+            keepAlive: 'enterKeepAlive'
         },
         privateKey: {
-            privateKey: 'Enter a private key'
+            privateKey: 'enterPrivateKey'
         },
         natMapping: {
-            vpnIp: 'Enter a VPN IP',
-            localIp: 'Enter a local IP',
-            hostname: 'Enter a hostname'
+            vpnIp: 'enterVpnIp',
+            localIp: 'enterLocalIp',
+            hostname: 'enterHostname'
         }
     };
 
@@ -115,10 +115,10 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
                 label={item === 'ip' && managementName !== 'vpnDevices' ?
                     t('ipWithSubnetPrefix') : t([item])}
                 // component={item === 'routeSubnets' ? ChipInput : GeneralInput}
-                component={item === 'routeSubnets' ? CustomChipInput : GeneralInput}
+                component={item === 'routeSubnets' ? CustomChipInput : item === 'peerEndpoint' ? CustomDroopdown : GeneralInput}
                 validate={validations[managementName][item]}
                 props={initialValues && edit && { initial: initialValues[item] }}
-                placeholder={placeholderMessages[managementName][item]}
+                placeholder={t(placeholderMessages[managementName][item])}
             />{item == 'hostname' && <p>{`.${user.account}.vpn.${user.location}.icdc.io`}</p>}</div>
         );
     });
