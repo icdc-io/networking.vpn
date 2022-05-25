@@ -35,17 +35,16 @@ const CustomChipInput = ({
             setValue(e.currentTarget.value.trim().slice(0,-1));
         } else {
             setValue(e.currentTarget.value.trim());
-        }
-        
+        };
         if (value.length) {
             const newError = ipWithSubnetPrefix(e.currentTarget.value);
             setLocalError(newError);
-        }
+        };
         if((e.currentTarget.value[e.currentTarget.value.length - 1] == ',' || e.currentTarget.value[e.currentTarget.value.length - 1] == ';') && value.trim().length && !localError) {
             setCurrentValues((prev) => [...prev, value]);
             setValue("");
             setLocalError("")
-        }
+        };
     };
     const keyDown = (e) => {
         if (

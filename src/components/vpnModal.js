@@ -27,7 +27,6 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
     const handleClose = () => {setOpen(false); openConfigs && setOpenConfigs(false)};
     const userEmail = JSON.parse(localStorage.getItem('user')).email;
     const [openConfigs, setOpenConfigs] = useState(false);
-    // const natSubnet = useSelector(state => state.VpnStore.gateway.nat_subnet);
     const urlQRstatus = useSelector(state => state.VpnStore.vpnClientConnectionDevicesQRcodeStatus);
     const configStatus = useSelector(state => state.VpnStore.vpnClientConnectionDevicesConfigStatus);
 

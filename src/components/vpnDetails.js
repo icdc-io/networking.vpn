@@ -80,6 +80,7 @@ const VpnDetails = ({ t, history }) => {
         }
     ];
 
+
     return (
         <>
             <ButtonBack back={t('back')} path={vpnGatewaysPath()} />
