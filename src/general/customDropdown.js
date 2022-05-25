@@ -53,7 +53,7 @@ const CustomDroopdown = ({
 
     return (
         <Form.Field
-            error={(touched && error) || localError ? true : false}
+            error={(touched && error) || localError}
             style={{ marginTop: 20 }}
         >
             <label>{label}</label>

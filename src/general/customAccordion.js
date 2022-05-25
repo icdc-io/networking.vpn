@@ -7,6 +7,7 @@ const CodeSnippet = React.lazy(() => import('container/CodeSnippet'));
 
 export const CustomAccordion = ({t, configData, index, open, handleClick}) => {
     const connectionName = useSelector(state => state.VpnStore.vpnClientConnection.name);
+    const user = useSelector(state => state.host.user);
 
     const file = new Blob([configData.config], {type: 'text/plain'});
     let link =  URL.createObjectURL(file);
@@ -50,7 +51,7 @@ export const CustomAccordion = ({t, configData, index, open, handleClick}) => {
                             {configData.title === 'linuxTitle' && <div className="command"><code>{`nmcli conn show vpn-${connectionName}.conf`}</code></div>}
                         <div style={{position: 'relative'}}>
                             <div style={{width: '144px'}}>
-                                <a href={link} download={`vpn-${connectionName}.conf`}><div className="link-div"></div></a>
+                                <a href={link} download={`vpn-${connectionName}-${user.account}-${user.location}.conf`}><div className="link-div"></div></a>
                             </div>
                             <Button icon labelPosition='right' style={configData.title !== 'windowsTitle' ? {marginTop: '15px'} : {}}>
                                 {t('download')}

@@ -30,32 +30,34 @@ const CustomChipInput = ({
         });
     }, [currentValues]);
 
+
     const onChange = (e) => {
-        if(e.currentTarget.value[e.currentTarget.value.length - 1] == ',' || e.currentTarget.value[e.currentTarget.value.length - 1] == ';') {
-            setValue(e.currentTarget.value.trim().slice(0,-1));
+        const currentValue = e.currentTarget.value;
+        const isDivider = currentValue[currentValue.length - 1] == ',' || currentValue[currentValue.length - 1] == ';';
+
+        if(isDivider) {
+            setValue(currentValue.trim().slice(0,-1));
         } else {
-            setValue(e.currentTarget.value.trim());
+            setValue(currentValue.trim());
         };
         if (value.length) {
-            const newError = ipWithSubnetPrefix(e.currentTarget.value);
+            const newError = ipWithSubnetPrefix(currentValue);
             setLocalError(newError);
         };
-        if((e.currentTarget.value[e.currentTarget.value.length - 1] == ',' || e.currentTarget.value[e.currentTarget.value.length - 1] == ';') && value.trim().length && !localError) {
+        if(isDivider && value.trim().length && !localError) {
             setCurrentValues((prev) => [...prev, value]);
             setValue("");
             setLocalError("")
         };
     };
+
     const keyDown = (e) => {
-        if (
-            value.trim().length &&
-            !localError &&
-            (e.keyCode == 32 || e.keyCode == 13)
-        ) {
+        if (value.trim().length && !localError && (e.keyCode == 32 || e.keyCode == 13)) {
             setCurrentValues((prev) => [...prev, value]);
             setValue("");
         }
     };
+
     const onBlur = () => {
         if (value.trim().length && !localError) {
             setCurrentValues((prev) => [...prev, value]);
@@ -66,9 +68,11 @@ const CustomChipInput = ({
     const onDelete = (i) =>
         setCurrentValues(currentValues.filter((el, index) => index !== i));
 
+    const isError = (touched && error) || localError;
+    
     return (
         <Form.Field
-            error={(touched && error) || localError ? true : false}
+            error={isError}
             disabled={readOnly}
             style={{ marginTop: 20 }}
         >
@@ -95,7 +99,7 @@ const CustomChipInput = ({
                     className={currentValues.length == 0 ? "full-width" : ""}
                 />
             </div>
-            {((touched && error) || localError) && (
+            {isError && (
                 <div>
                     <Label pointing color="red" prompt>
                         {localError || error}

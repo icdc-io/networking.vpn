@@ -31,6 +31,7 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
 
     const urlQR = useSelector(state => state.VpnStore.vpnClientConnectionDevicesQRcode);
     const user = useSelector(state => state.host.user);
+    const configStatus = useSelector(state => state.VpnStore.vpnClientConnectionDevicesConfigStatus);
     const configuration = useSelector(state => state.VpnStore.vpnClientConnectionDevicesConfig);
     const [selectedConfig, setSelectedConfig] = useState(0);
 
@@ -147,7 +148,7 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
             </>}
             {!configs && displayFields}
             {privateKey && <div className='privateKeyInfo'>{t('privateKeyInfo')}</div>}
-            {configs && <>
+            {(configs && configStatus == 'fulfilled') && <>
                 <label htmlFor="">{t('files')}</label>
                 {deviceConfigs}
             </>}
