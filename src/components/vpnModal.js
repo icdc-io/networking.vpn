@@ -1,7 +1,7 @@
 /* eslint camelcase: 0 */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Dropdown, Icon, Modal } from 'semantic-ui-react';
+import { Button, Dropdown, Icon, Modal, Popup } from 'semantic-ui-react';
 import VpnForm from './vpnForm';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -18,14 +18,16 @@ import {
     editVpnGatewayAndFetch,
     createQRcodeAndFetch
 } from '../AppActions';
+import './vpnDetails.scss'
 
-const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addContentMessage, editContentMessage, managementName }) => {
+const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addContentMessage, editContentMessage, managementName, natSubnet }) => {
     const { id, connectionId } = useParams();
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
     const handleClose = () => {setOpen(false); openConfigs && setOpenConfigs(false)};
     const userEmail = JSON.parse(localStorage.getItem('user')).email;
     const [openConfigs, setOpenConfigs] = useState(false);
+    // const natSubnet = useSelector(state => state.VpnStore.gateway.nat_subnet);
     const urlQRstatus = useSelector(state => state.VpnStore.vpnClientConnectionDevicesQRcodeStatus);
     const configStatus = useSelector(state => state.VpnStore.vpnClientConnectionDevicesConfigStatus);
 
@@ -112,11 +114,20 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
         <Dropdown.Item text={t('edit')} onClick={() => setOpen(true)} /> 
         : (pencil && edit) 
         ? <Icon name="pencil alternate" className='pencil' onClick={() => setOpen(true)} /> 
-        : privateKey ?  <Dropdown.Item text={t('configs')} onClick={() => setOpen(true)} />  : <Button
-            color='blue' size='small' onClick={() => setOpen(true)}>
-            {t(addContentMessage)}
-        </Button>;
-
+        : privateKey ?  <Dropdown.Item text={t('configs')} onClick={() => setOpen(true)} />  
+        : (!natSubnet && managementName == 'natMapping') 
+        ? <Popup
+            on='hover'
+            pinned
+            trigger={<Button color='blue'  size='small' className='disabled-btn' >
+                    {t(addContentMessage)}<Icon name='question circle outline' size='large' className='info-icon'/>
+                </Button>}
+            inverted
+            className='vpn'
+            position='top right'
+        >{t('natPopup')}</Popup>
+        : <Button color='blue'  size='small'  onClick={() => setOpen(true)}> {t(addContentMessage)} </Button>;
+    
     return (
         window.insights.getRole() === 'admin' && <>
             {button}
