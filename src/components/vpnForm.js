@@ -17,21 +17,60 @@ import {
     publicKey,
     isPrivateKey,
     required,
-    nameWithSpace
+    nameWithSpace,
 } from '../utilities/Validations';
-import ChipInput from '../general/chipInput';
 import { CustomAccordion } from '../general/customAccordion';
 import { useSelector } from 'react-redux';
+import './vpnDetails.scss'
+import CustomChipInput from '../general/customChipInput';
+import CustomDroopdown from '../general/customDropdown';
 
 const GeneralInput = React.lazy(() => import('container/GeneralInput'));
 
 const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil, privateKey, configs, fieldNames, managementName, initialValues }) => {
 
     const urlQR = useSelector(state => state.VpnStore.vpnClientConnectionDevicesQRcode);
+    const user = useSelector(state => state.host.user);
+    const configStatus = useSelector(state => state.VpnStore.vpnClientConnectionDevicesConfigStatus);
     const configuration = useSelector(state => state.VpnStore.vpnClientConnectionDevicesConfig);
     const [selectedConfig, setSelectedConfig] = useState(0);
 
     const buttonContent = edit ? t('save') : privateKey ? t('proceed') : t('add');
+
+    const placeholderMessages = {
+        clientConnections: {
+            name: 'enterName',
+            ip: 'enterIpWithPrefix',
+            port: 'enterPort',
+            mtu: 'enterMtu'
+        },
+        peerGateways: {
+            name: 'enterName',
+            peerEndpoint: 'enterPeerEndpoint',
+            ip: 'enterIpWithPrefix',
+            publicKey: 'enterPublicKey',
+            routeSubnets: 'enterRouteSubnets'
+        },
+        gateway: {
+            name: 'enterName',
+            natSubnet: 'enterNat'
+        },
+        vpnDevices: {
+            name: 'enterName',
+            ip: 'enterIp',
+            publicKey: 'enterPublicKey',
+            routeSubnets: 'enterRouteSubnets',
+            keepAlive: 'enterKeepAlive'
+        },
+        privateKey: {
+            privateKey: 'enterPrivateKey'
+        },
+        natMapping: {
+            vpnIp: 'enterVpnIp',
+            localIp: 'enterLocalIp',
+            hostname: 'enterHostname'
+        }
+    };
 
     const validations = {
         clientConnections: {
@@ -43,7 +82,7 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
         peerGateways: {
             name: [name, maxLength30],
             ip: [ipWithSubnetPrefix],
-            peerEndpoint: [peerEndpoint],
+            peerEndpoint: [],
             publicKey: [publicKey],
             routeSubnets: []
         },
@@ -69,17 +108,18 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
     };
 
     const displayFields = fieldNames.map((item, key) => {
-        return (
+        return (<div className={item == 'hostname' ? 'hostname-field' : ''}>
             <Field
                 type={item === 'routeSubnets' && 'select-multiple'}
                 key={key}
                 name={item}
                 label={item === 'ip' && managementName !== 'vpnDevices' ?
                     t('ipWithSubnetPrefix') : t([item])}
-                component={item === 'routeSubnets' ? ChipInput : GeneralInput}
+                component={item === 'routeSubnets' ? CustomChipInput : item === 'peerEndpoint' ? CustomDroopdown : GeneralInput}
                 validate={validations[managementName][item]}
                 props={initialValues && edit && { initial: initialValues[item] }}
-            />
+                placeholder={t(placeholderMessages[managementName][item])}
+            />{item == 'hostname' && <p>{`.${user.account}.vpn.${user.location}.icdc.io`}</p>}</div>
         );
     });
 
@@ -108,7 +148,7 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
             </>}
             {!configs && displayFields}
             {privateKey && <div className='privateKeyInfo'>{t('privateKeyInfo')}</div>}
-            {configs && <>
+            {(configs && configStatus == 'fulfilled') && <>
                 <label htmlFor="">{t('files')}</label>
                 {deviceConfigs}
             </>}

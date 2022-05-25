@@ -75,10 +75,11 @@ const VpnDetails = ({ t, history }) => {
             name: 'natMapping',
             menuItem: t('natMapping'),
             headers: ['hostname', 'vpnIp', 'localIp', ''],
-            formFields: ['hostname', 'vpnIp', 'localIp'],
+            formFields: ['vpnIp', 'localIp', 'hostname'],
             addContentMessage: 'addNatMapping'
         }
     ];
+
 
     return (
         <>
@@ -145,6 +146,7 @@ const VpnDetails = ({ t, history }) => {
                             formFields={item.formFields}
                             addContentMessage={item.addContentMessage}
                             managementName={activeTab}
+                            natSubnet={gateway.natSubnet}
                         />
                     ))}
                 </div>
