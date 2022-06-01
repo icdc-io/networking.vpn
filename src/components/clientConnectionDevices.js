@@ -44,39 +44,39 @@ const ClientConnectionDevices = ({ t, history }) => {
 
     window.goToRootRoute = () => history.push('/vpn');
 
-    useEffect(() => {
-        if (account) {
-            ws.current = new WebSocket('ws://10.254.20.22:3000/ws?dev_id[]=1&dev_id[]=2', ['actioncable-v1-json', window.insights.getToken(), account]);
-            ws.current.onopen = () => {
-                console.log('open')
-                const subscribe_msg = {
-                    command: 'subscribe',
-                    identifier: JSON.stringify({channel: 'DeviceStatisticChannel'})
-                };
-                ws.current.send(JSON.stringify(subscribe_msg));
-                console.log("Соединение открыто");
-            }
-            ws.current.onclose = () => console.log("Соединение закрыто");
-            gettingData();
-        }
-    }, [account]);
+    // useEffect(() => {
+    //     if (account) {
+    //         ws.current = new WebSocket('ws://10.254.20.22:3000/ws?dev_id[]=1&dev_id[]=2', ['actioncable-v1-json', window.insights.getToken(), account]);
+    //         ws.current.onopen = () => {
+    //             console.log('open')
+    //             const subscribe_msg = {
+    //                 command: 'subscribe',
+    //                 identifier: JSON.stringify({channel: 'DeviceStatisticChannel'})
+    //             };
+    //             ws.current.send(JSON.stringify(subscribe_msg));
+    //             console.log("Соединение открыто");
+    //         }
+    //         ws.current.onclose = () => console.log("Соединение закрыто");
+    //         gettingData();
+    //     }
+    // }, [account]);
 
-    useEffect(() => {
-        return () => ws.current.close();
-    }, []);
+    // useEffect(() => {
+    //     return () => ws.current.close();
+    // }, []);
 
-    const gettingData = useCallback(() => {
-        if (!ws.current) return;
+    // const gettingData = useCallback(() => {
+    //     if (!ws.current) return;
 
-        ws.current.onmessage = e => {
-            const message = JSON.parse(e.data);
-            if (message.type === "ping") {
-                return;
-            }
-            console.log("FROM RAILS: ", message);
-            console.log(message);
-        };
-    }, []);
+    //     ws.current.onmessage = e => {
+    //         const message = JSON.parse(e.data);
+    //         if (message.type === "ping") {
+    //             return;
+    //         }
+    //         console.log("FROM RAILS: ", message);
+    //         console.log(message);
+    //     };
+    // }, []);
 
     // const vpnClientConnectionDevicesData = formatDevicesData(devices); //Uncomment to test pagintaion
 
