@@ -117,9 +117,9 @@ const VpnDetailsTable = ({ t, tableName, headers, reduxStateName, reduxFetchStat
         .map((item, key) => <Table.Row key={key}>{tableCells(item)}</Table.Row>);
 
     const determineServiceForEmptyState = {
-        clientConnections: { listName: 'Client connections' },
-        peerGateways: { listName: 'Peer Gateways' },
-        natMapping: { listName: 'NAT Mapping' }
+        clientConnections: { listName: t('emptyClientConnections') },
+        peerGateways: { listName: t('emptyPeerGateways') },
+        natMapping: { listName: t('emptyNatDevices') }
     };
 
     return (
