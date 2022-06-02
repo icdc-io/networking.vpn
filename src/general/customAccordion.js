@@ -38,8 +38,8 @@ export const CustomAccordion = ({t, configData, index, open, handleClick}) => {
                     </div>
 
                     : <div className="os-wrapper">
-                        <div className="inctruction-item">{<DangerousHTML html={t(configData.descriptions[0].text, {name: connectionName})} />}</div>
-                        {configData.title === 'windowsTitle' && <span>{<DangerousHTML html={t(configData.descriptions[1].text, {name: connectionName})} />}</span>}
+                        <div className="inctruction-item">{<DangerousHTML html={t(configData.descriptions[0].text, {name: connectionName, account: user.account, location: user.location})} />}</div>
+                        {configData.title === 'windowsTitle' && <span>{<DangerousHTML html={t(configData.descriptions[1].text, {name: connectionName, account: user.account, location: user.location})} />}</span>}
                         <div className="api-dialog-snippet-wrapper">
                             <CodeSnippet title={t('configFile')}
                                 content={configData.config}
