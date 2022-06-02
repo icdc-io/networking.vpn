@@ -46,9 +46,9 @@ export const CustomAccordion = ({t, configData, index, open, handleClick}) => {
                                 copyFuncion={copy}/>
                         </div>
                             {<div className="inctruction-item">{t(configData.descriptions[configData.title === 'windowsTitle'? 2 : 1].text)}</div>}
-                            {configData.title === 'linuxTitle' && <div className="command"><code>{`sudo nmcli conn import type wireguard file vpn-${connectionName}.conf`}</code></div>}
+                            {configData.title === 'linuxTitle' && <div className="command"><code>{`sudo nmcli conn import type wireguard file vpn-${connectionName}-${user.account}-${user.location}.conf`}</code></div>}
                             <div className="inctruction-item">{t(configData.descriptions[configData.title === 'windowsTitle'? 3 : 2].text)}</div>
-                            {configData.title === 'linuxTitle' && <div className="command"><code>{`nmcli conn show vpn-${connectionName}.conf`}</code></div>}
+                            {configData.title === 'linuxTitle' && <div className="command"><code>{`nmcli conn show vpn-${connectionName}-${user.account}-${user.location}.conf`}</code></div>}
                         <div style={{position: 'relative'}}>
                             <div style={{width: '144px'}}>
                                 <a href={link} download={`vpn-${connectionName}-${user.account}-${user.location}.conf`}><div className="link-div"></div></a>
