@@ -13,9 +13,10 @@ const CustomDroopdown = ({
 }) => {
     const dispatch = useDispatch();
     const user = useSelector((state) => state.host.user);
+    const availableLocations = useSelector(state => state.host.locationsAvailability);
 
     const generalInitial = initial ? initial : "";
-    const optionsData = user.availableLocations.map((el) => ({
+    const optionsData = availableLocations[user.account].locations.map((el) => ({
         text: `${user.account}.vpn.${el}.icdc.io:2200`,
         value: `${user.account}.vpn.${el}.icdc.io:2200`,
     }));
