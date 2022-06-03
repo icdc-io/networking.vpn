@@ -68,6 +68,8 @@ export const maxLength4 = maxLength(4);
 
 export const maxLength5 = maxLength(5);
 
+export const maxLength10 = maxLength(10);
+
 export const maxLength15 = maxLength(15);
 
 export const maxLength30 = maxLength(30);
