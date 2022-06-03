@@ -18,6 +18,7 @@ import {
     isPrivateKey,
     required,
     nameWithSpace,
+    maxLength10,
 } from '../utilities/Validations';
 import { CustomAccordion } from '../general/customAccordion';
 import { useSelector } from 'react-redux';
@@ -74,7 +75,7 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
 
     const validations = {
         clientConnections: {
-            name: [name, maxLength30],
+            name: [name, maxLength10],
             ip: [ipWithSubnetPrefix],
             port: [port],
             mtu: [mtu, maxLength4]
