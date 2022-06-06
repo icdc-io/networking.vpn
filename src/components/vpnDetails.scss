@@ -86,7 +86,7 @@ $base-blue-color: #2185d0;
         width: 300px;
     }
 }
-.ui.button > .info-icon {
+.ui.button > .question.circle.info-icon {
     margin: 0px 0px 2px 0px!important;
     position: relative;
   
@@ -95,7 +95,7 @@ $base-blue-color: #2185d0;
         bottom: -2px;
     }
   }
-  .disabled-btn {
+.button-vpn-wrapper .disabled-btn {
     cursor: default;
     opacity: .45!important;
     background-image: none!important;
