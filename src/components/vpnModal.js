@@ -118,9 +118,9 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
         ? <Popup
             on='hover'
             pinned
-            trigger={<div className='button-vpn-wrapper'><Button color='blue'  size='small' className='disabled-btn' >
+            trigger={<Button color='blue'  size='small' className='disabled-btn' >
                     {t(addContentMessage)}<Icon name='question circle outline' size='large' className='info-icon'/>
-                </Button></div>}
+                </Button>}
             inverted
             className='vpn'
             position='top right'

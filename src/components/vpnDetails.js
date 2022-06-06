@@ -82,7 +82,7 @@ const VpnDetails = ({ t, history }) => {
 
 
     return (
-        <>
+        <div className='vpn-details-wrapper'>
             <ButtonBack back={t('back')} path={vpnGatewaysPath()} />
 
             {dataStatusCheck(gatewayFetchStatus, <>
@@ -159,7 +159,7 @@ const VpnDetails = ({ t, history }) => {
                     gatewayPublicHostname={gatewayPublicHostname}
                 />
             </>)}
-        </>
+        </div>
     );
 };
 
