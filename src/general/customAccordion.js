@@ -35,7 +35,7 @@ export const CustomAccordion = ({t, configData, index, open, handleClick}) => {
                             {configData.descriptions.map((el, i) => i === 0 
                                 ? <div className="inctruction-item" key={i}>{<DangerousHTML html={t(el.text)} />}</div> 
                                 : <div className="inctruction-item" key={i}>{t(el.text)}</div>)}
-                        <img src={configData.urlQR} alt="img" />
+                        <img src={`data:image/png;base64, ${configData.urlQR}`} alt="img" />
                     </div>
 
                     : <div className="os-wrapper">
