@@ -1,5 +1,6 @@
 $base-blue-color: #2185d0;
 
+.vpn-details-wrapper {
 .ui.header.title {
     margin-top: 0;
 }
@@ -86,16 +87,19 @@ $base-blue-color: #2185d0;
         width: 300px;
     }
 }
-.ui.button > .info-icon {
+.ui.button > .question.circle.info-icon {
     margin: 0px 0px 2px 0px!important;
-
+    position: relative;
+  
     &:before {
         position: absolute;
+        bottom: -2px;
     }
-}
+  }
 .disabled-btn {
     cursor: default;
     opacity: .45!important;
     background-image: none!important;
     box-shadow: none!important;
-}
+    padding-top: 12px!important;
+  }}

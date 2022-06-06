@@ -139,6 +139,7 @@ export const editVpnGatewayAndFetch = (gatewayId, payload) => {
         const response = dispatch(editVpnGateway(gatewayId, payload));
 
         response.then(() => {
+            dispatch(fetchVpnGateway(gatewayId));
             dispatch(fetchVpnGateways(gatewayId));
             successNotification('');
         }, error => errorNotification(error));
