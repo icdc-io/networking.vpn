@@ -225,18 +225,9 @@ export const createVpnClientConnectionDeviceAndFetch = (clientConnectionId, payl
     };
 };
 
-const fetchQR = async (url, headers, payload) => {
-    let currentUrl = await base(url) ;
-       return  await fetch(currentUrl, {
-            method: 'POST',
-            headers: expandHeaders(headers),
-            body: JSON.stringify(payload)
-          }).then(response => response.blob().then(data => URL.createObjectURL(data)))
-}
-
 const createQRcode = (deviceId, payload) => ({
     type: ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_QR_CODE_URL,
-    payload: fetchQR(ActionTypes.vpnClientConnectionDevicesUrl(deviceId, 'qr'), { }, payload)
+    payload: createData(ActionTypes.vpnClientConnectionDevicesUrl(deviceId, 'qr'), { }, payload)
 })
 
 const createConfiguration = (deviceId, payload) => ({
