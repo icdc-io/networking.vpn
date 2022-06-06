@@ -129,7 +129,7 @@ const VpnDetailsTable = ({ t, tableName, headers, reduxStateName, reduxFetchStat
                     <Table.Header>
                         <Table.Row>{displayHeaders}</Table.Row>
                     </Table.Header>
-                    {fetchStatus === 'fulfilled' && formattedTableContent.length !== 0 && <Table.Body>
+                    {fetchStatus !== 'pending' && formattedTableContent.length !== 0 && <Table.Body>
                         {displayTableData}
                     </Table.Body>}
                 </Table>
