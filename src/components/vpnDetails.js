@@ -91,7 +91,9 @@ const VpnDetails = ({ t, history }) => {
                     <img src={svgVpn} />
                     <Header as='h3' className='title' color='blue'>{capitalizeFirstLetter(gateway.name || '')}</Header>
                 </div>
-                <ApiButton element='vpnGateway' user={user} locationUrl={baseUrls[user.location]} />
+                <div>
+                    <ApiButton element='vpnGateway' user={user} locationUrl={baseUrls[user.location]} />
+                </div>
             </div>
                 <Header as='h4' style={{ marginTop: 16 }}>{t('vpnDetails')}</Header>
                 <div className='vpn-details-container'>

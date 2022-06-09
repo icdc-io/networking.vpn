@@ -7,19 +7,23 @@ $base-blue-color: #2185d0;
 .gateway-title-wrapper {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: center;
+
+    div {
+        margin-bottom: 32px;
+    }
 
     .gateway-title {
         display: flex;
         min-width: 6rem;
         align-items: center;
-        margin-bottom: 32px;
+        margin-right: 1rem;
+
         img {
             padding-right: 0.5rem;
             height: 45px;
         }
-    }
-    div.dropdown-api {
-        margin-right: 0px;
     }
 }
 
@@ -27,15 +31,19 @@ $base-blue-color: #2185d0;
     display: flex;
     width: fit-content;
     justify-content: space-between;
-    height: 120px;
+    flex-wrap: wrap;
 
     .vpn-details {
         display: flex;
         flex-direction: column;
+        margin-bottom: 2rem;
+
+        &:nth-child(1) {
+            margin-right: 25px;
+        }
 
         &:nth-child(2) {
             font-weight: bold;
-            margin-left: 25px;
         }
     }
 }
@@ -66,6 +74,10 @@ $base-blue-color: #2185d0;
         height: 2px;
         background-color: #cdcdcd;
         z-index: 0;
+    }
+
+    .ui.menu {
+        overflow: auto hidden;
     }
 }
 .sub-menu-container {
