@@ -223,14 +223,17 @@ const ClientConnectionDevices = ({ t, history }) => {
                     </div>
                 </div>
 
-                <Table className='devices-table' basic='very' padded>
-                    <Table.Header>
-                        <Table.Row>{displayHeaders}</Table.Row>
-                    </Table.Header>
-                    {devicesFetchStatus === 'fulfilled' && <Table.Body>
-                        {displayTableData}
-                    </Table.Body>}
-                </Table>
+                <div className='table-container'>
+                    <Table className='devices-table' basic='very' padded>
+                        <Table.Header>
+                            <Table.Row>{displayHeaders}</Table.Row>
+                        </Table.Header>
+                        {devicesFetchStatus === 'fulfilled' && <Table.Body>
+                            {displayTableData}
+                        </Table.Body>}
+                    </Table>
+                </div>
+
                 {devicesFetchStatus === 'pending' && <Loader active inline='centered' />}
 
                 <CustomPagination

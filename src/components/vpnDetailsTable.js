@@ -124,7 +124,7 @@ const VpnDetailsTable = ({ t, tableName, headers, reduxStateName, reduxFetchStat
 
     return (
         <>
-            <div style={totalPaginationPages >= 10 ? { minHeight: 390 } : {}}>
+            <div className='table-container' style={totalPaginationPages >= 10 ? { minHeight: 390 } : {}}>
                 <Table className='details-table' basic='very' padded>
                     <Table.Header>
                         <Table.Row>{displayHeaders}</Table.Row>
