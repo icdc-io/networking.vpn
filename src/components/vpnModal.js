@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Dropdown, Icon, Modal, Popup } from 'semantic-ui-react';
 import VpnForm from './vpnForm';
+import { formatVpnGatewaysData, formatClientConnectionData, formatDevicesData } from './tools';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import {
@@ -19,16 +20,51 @@ import {
     createQRcodeAndFetch
 } from '../AppActions';
 import './vpnDetails.scss'
+const ipaddr = require('ipaddr.js');
 
 const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addContentMessage, editContentMessage, managementName, natSubnet }) => {
     const { id, connectionId } = useParams();
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
-    const handleClose = () => {setOpen(false); openConfigs && setOpenConfigs(false)};
+    const handleClose = () => { setOpen(false); openConfigs && setOpenConfigs(false) };
     const userEmail = JSON.parse(localStorage.getItem('user')).email;
     const [openConfigs, setOpenConfigs] = useState(false);
+    const gateway = useSelector(state => formatVpnGatewaysData(state.VpnStore.gateway));
     const urlQRstatus = useSelector(state => state.VpnStore.vpnClientConnectionDevicesQRcodeStatus);
     const configStatus = useSelector(state => state.VpnStore.vpnClientConnectionDevicesConfigStatus);
+    const natSubnetValue = useSelector(state => state.VpnStore.gateway.nat_subnet);
+    const vpnClientConnectionData = useSelector(state => formatClientConnectionData(state.VpnStore.vpnClientConnection));
+    const vpnClientConnectionDevicesData = useSelector(state => formatDevicesData(state.VpnStore.vpnClientConnectionDevices));
+    const vpnNatMapping = useSelector(state => state.VpnStore.vpnNatMapping);
+    const addr = gateway.natSubnet && ipaddr.parse(gateway.natSubnet.split('/')[0]);
+    const addrDevice = vpnClientConnectionData.subnet && ipaddr.parse(vpnClientConnectionData.subnet.split('/')[0]);
+
+    const getMapOption = (ip) => ip.kind() === 'ipv4' ? { splitter: '.', number: ip.octets.length - 1, key: 'octets' } :
+        { splitter: ':', number: ip.parts.length - 1, key: 'parts' };
+
+    const generateRandomIp = (addr) => Math.floor(Math.random() * (addr.kind() === 'ipv4' ? 256 : 65535));
+
+    const getRandomIp = (currentIp, vpnData, fieldKey, ip) => {
+        if (!currentIp) return undefined;
+
+        const { number, key, splitter } = getMapOption(currentIp);
+        const unavailableSubnets = vpnData?.map(item => ipaddr.parse(item[fieldKey])[key][number]);
+        let random = generateRandomIp(currentIp);
+        let flag = false;
+
+        while (!flag) {
+            if (!unavailableSubnets.includes(random)) {
+                let randomIp = currentIp.kind() === 'ipv4' ? random.toString() : random.toString(16);
+                let splitIp = ip.split(splitter);
+                flag = true;
+                return { [fieldKey]: `${splitIp.slice(0, splitIp.length - 1).join(splitter)}${splitter}${randomIp}` };
+            } else {
+                random = generateRandomIp(currentIp);
+            }
+        }
+    };
+
+    const randomIp = managementName === 'vpnDevices' ? getRandomIp(addrDevice, vpnClientConnectionDevicesData, 'ip', vpnClientConnectionData.subnet) : getRandomIp(addr, vpnNatMapping, 'vpn_ip', natSubnetValue);
 
     const managementMessages = {
         clientConnections: 'creatingClientConnection',
@@ -67,7 +103,7 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
                 return edit ? updateVpnPeerGatewayAndFetch(id, formValues.id, payload) : createVpnPeerGatewayAndFetch(id, payload);
             case 'natMapping':
                 payload = {
-                    vpn_ip: formValues.vpnIp,
+                    vpn_ip: formValues.vpn_ip,
                     local_ip: formValues.localIp,
                     host: formValues.hostname
                 };
@@ -110,23 +146,23 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
     };
 
     const button = (edit && !pencil) ?
-        <Dropdown.Item text={t('edit')} onClick={() => setOpen(true)} /> 
-        : (pencil && edit) 
-        ? <Icon name="pencil alternate" className='pencil' onClick={() => setOpen(true)} /> 
-        : privateKey ?  <Dropdown.Item text={t('configs')} onClick={() => setOpen(true)} />  
-        : (!natSubnet && managementName == 'natMapping') 
-        ? <Popup
-            on='hover'
-            pinned
-            trigger={<Button color='blue'  size='small' className='disabled-btn' >
-                    {t(addContentMessage)}<Icon name='question circle outline' size='large' className='info-icon'/>
-                </Button>}
-            inverted
-            className='vpn'
-            position='top right'
-        >{t('natPopup')}</Popup>
-        : <Button color='blue'  size='small'  onClick={() => setOpen(true)}> {t(addContentMessage)} </Button>;
-    
+        <Dropdown.Item text={t('edit')} onClick={() => setOpen(true)} />
+        : (pencil && edit)
+            ? <Icon name="pencil alternate" className='pencil' onClick={() => setOpen(true)} />
+            : privateKey ? <Dropdown.Item text={t('configs')} onClick={() => setOpen(true)} />
+                : (!natSubnet && managementName == 'natMapping')
+                    ? <Popup
+                        on='hover'
+                        pinned
+                        trigger={<Button color='blue' size='small' className='disabled-btn' >
+                            {t(addContentMessage)}<Icon name='question circle outline' size='large' className='info-icon' />
+                        </Button>}
+                        inverted
+                        className='vpn'
+                        position='top right'
+                    >{t('natPopup')}</Popup>
+                    : <Button color='blue' size='small' onClick={() => setOpen(true)}> {t(addContentMessage)} </Button>;
+
     return (
         window.insights.getRole() === 'admin' && <>
             {button}
@@ -137,7 +173,7 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
                 closeIcon
             >
                 <Modal.Header content={openConfigs ? t('configs') : t(editContentMessage || addContentMessage)} />
-                <Modal.Content style={{paddingTop: '0'}}>
+                <Modal.Content style={{ paddingTop: '0' }}>
                     {openConfigs ? <VpnForm
                         t={t}
                         handleClose={handleClose}
@@ -146,18 +182,19 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
                         fieldNames={formFields}
                         configs
                         managementName={managementName}
-                    /> : 
-                    <VpnForm
-                        t={t}
-                        handleClose={handleClose}
-                        onSubmit={onSubmit}
-                        initialValues={(edit || privateKey) && values}
-                        fieldNames={formFields}
-                        edit={edit}
-                        pencil={pencil}
-                        privateKey={privateKey}
-                        managementName={managementName}
-                    />}
+                    /> :
+                        <VpnForm
+                            t={t}
+                            handleClose={handleClose}
+                            onSubmit={onSubmit}
+                            initialValues={(edit || privateKey) ? values
+                                : randomIp}
+                            fieldNames={formFields}
+                            edit={edit}
+                            pencil={pencil}
+                            privateKey={privateKey}
+                            managementName={managementName}
+                        />}
                 </Modal.Content>
             </Modal>
         </>

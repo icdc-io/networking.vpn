@@ -74,8 +74,8 @@ const VpnDetails = ({ t, history }) => {
         {
             name: 'natMapping',
             menuItem: t('natMapping'),
-            headers: ['hostname', 'vpnIp', 'localIp', ''],
-            formFields: ['vpnIp', 'localIp', 'hostname'],
+            headers: ['hostname', 'vpn_ip', 'localIp', ''],
+            formFields: ['vpn_ip', 'localIp', 'hostname'],
             addContentMessage: 'addNatMapping'
         }
     ];

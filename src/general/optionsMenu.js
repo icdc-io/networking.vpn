@@ -40,7 +40,7 @@ const OptionsMenu = ({ t, type, instance, options, onClickAction }) => {
                     edit
                     key={key}
                     data={natResource}
-                    formFields={['hostname', 'vpnIp', 'localIp']}
+                    formFields={['hostname', 'vpn_ip', 'localIp']}
                     editContentMessage={'editNatMapping'}
                     managementName='natMapping'
                 />,
