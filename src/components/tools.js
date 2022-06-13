@@ -75,7 +75,7 @@ export const formatTableData = (data, tableName) => {
             return data.map(natMapping => ({
                 id: natMapping.id,
                 gatewayId: natMapping.gateway_id,
-                vpnIp: natMapping.vpn_ip,
+                vpn_ip: natMapping.vpn_ip,
                 localIp: natMapping.local_ip,
                 hostname: natMapping.host
             }));

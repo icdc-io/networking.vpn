@@ -67,7 +67,7 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
             privateKey: 'enterPrivateKey'
         },
         natMapping: {
-            vpnIp: 'enterVpnIp',
+            vpn_ip: 'enterVpnIp',
             localIp: 'enterLocalIp',
             hostname: 'enterHostname'
         }
@@ -89,7 +89,7 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
         },
         natMapping: {
             hostname: [hostname, maxLength63],
-            vpnIp: [ip],
+            vpn_ip: [ip],
             localIp: [ip]
         },
         gateway: {
