@@ -86,19 +86,6 @@ $base-blue-color: #2185d0;
     justify-content: flex-end;
     margin-top: 20px;
 }
-.ui.form div.hostname-field {
-    width: 100%;
-    display: flex;
-    align-items: flex-end;
-
-    p {
-        margin-bottom: 22px;
-        margin-left: 6px;
-    }
-    div.field div.ui.input {
-        width: 300px;
-    }
-}
 .ui.button > .question.circle.info-icon {
     margin: 0px 0px 2px 0px!important;
     position: relative;
@@ -115,3 +102,20 @@ $base-blue-color: #2185d0;
     box-shadow: none!important;
     padding-top: 12px!important;
   }}
+  .ui.form div.hostname-field {
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+
+    .field {
+        width: 100%;
+
+        div.ui.input {
+            width: 100%;
+        }
+    }
+    p {
+        margin-bottom: 22px;
+        margin-left: 6px;
+    }
+}
