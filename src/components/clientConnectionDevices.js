@@ -196,7 +196,7 @@ const ClientConnectionDevices = ({ t, history }) => {
         <>
             <ButtonBack back={t('back')} path={vpnGatewayPath(vpnClientConnectionData.gatewayId)} />
 
-            {dataStatusCheck(clientConnectionFetchStatus, <>
+            {dataStatusCheck(clientConnectionFetchStatus,t, <>
                 <Header as='h3' className='title' color='blue'>{capitalizeFirstLetter(vpnClientConnectionData.name || longDash)}</Header>
                 <Header as='h4' style={{ marginTop: 16 }}>{t('clientConnectionDetails')}</Header>
                 <div className='details-container'>
@@ -228,7 +228,7 @@ const ClientConnectionDevices = ({ t, history }) => {
                         <Table.Header>
                             <Table.Row>{displayHeaders}</Table.Row>
                         </Table.Header>
-                        {devicesFetchStatus === 'fulfilled' && <Table.Body>
+                        {devicesFetchStatus !== 'pending' && <Table.Body>
                             {displayTableData}
                         </Table.Body>}
                     </Table>
