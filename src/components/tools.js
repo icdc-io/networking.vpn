@@ -118,13 +118,13 @@ export const formatDevicesData = devices => devices.map(device => ({
  * @param {string} fetchStatus
  * @param {*} content
  */
-export const dataStatusCheck = (fetchStatus, content) => {
+export const dataStatusCheck = (fetchStatus, t, content) => {
     /* eslint-disable */
     switch (fetchStatus) {
         case 'pending':
             return <Loader active inline='centered' />;
         case 'rejected':
-            return <NoContent icon='desktop' textMessage={'wrong'} />;
+            return <NoContent icon='desktop' textMessage={t('wrong')} />;
         case 'fulfilled':
             return content;
     }

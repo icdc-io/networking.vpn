@@ -85,7 +85,7 @@ const VpnDetails = ({ t, history }) => {
         <div className='vpn-details-wrapper'>
             <ButtonBack back={t('back')} path={vpnGatewaysPath()} />
 
-            {dataStatusCheck(gatewayFetchStatus, <>
+            {dataStatusCheck(gatewayFetchStatus, t, <>
             <div className='gateway-title-wrapper'>
                 <div className='gateway-title'>
                     <img src={svgVpn} />
