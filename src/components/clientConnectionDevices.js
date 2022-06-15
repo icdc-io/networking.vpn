@@ -223,7 +223,7 @@ const ClientConnectionDevices = ({ t, history }) => {
                     </div>
                 </div>
 
-                <div className='table-container'>
+                <div className='table-container' style={totalPaginationPages >= 10 ? { minHeight: 390 } : {}}>
                     <Table className='devices-table' basic='very' padded>
                         <Table.Header>
                             <Table.Row>{displayHeaders}</Table.Row>
