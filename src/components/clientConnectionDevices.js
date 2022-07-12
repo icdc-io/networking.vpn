@@ -173,7 +173,7 @@ const ClientConnectionDevices = ({ t, history }) => {
         } else if (header === 'lastConnection') {
             content = formatDate(data.statistics.lastConnection) || longDash;
         } else if (header === '') {
-            content = window.insights.getRole() === 'admin' ? <OptionsMenu
+            content = user.role === 'admin' ? <OptionsMenu
                 t={t}
                 type='vpnDevices'
                 instance={data}

@@ -38,6 +38,7 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
     const vpnNatMapping = useSelector(state => state.VpnStore.vpnNatMapping);
     const addr = gateway.natSubnet && ipaddr.parse(gateway.natSubnet.split('/')[0]);
     const addrDevice = vpnClientConnectionData.subnet && ipaddr.parse(vpnClientConnectionData.subnet.split('/')[0]);
+    const user = useSelector(state => state.host.user);
 
     const getMapOption = (ip) => ip.kind() === 'ipv4' ? { splitter: '.', number: ip.octets.length - 1, key: 'octets' } :
         { splitter: ':', number: ip.parts.length - 1, key: 'parts' };
@@ -164,7 +165,7 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
                     : <Button color='blue' size='small' onClick={() => setOpen(true)}> {t(addContentMessage)} </Button>;
 
     return (
-        window.insights.getRole() === 'admin' && <>
+        user.role === 'admin' && <>
             {button}
             <Modal
                 size='tiny'

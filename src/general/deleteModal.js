@@ -8,12 +8,14 @@ import {
     deleteVpnNatMappingAndFetch,
     deleteVpnClientConnectionDeviceAndFetch
 } from '../AppActions';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 // import { vpnGatewaysPath } from '../Constants/routes';
 
 const DeleteModal = ({ type, instance, t, icon, button, history }) => {
     const [isVisible, setIsVisible] = useState(false);
+    const user = useSelector(state => state.host.user);
+
     const dispatch = useDispatch();
 
     const types = {
@@ -114,7 +116,7 @@ const DeleteModal = ({ type, instance, t, icon, button, history }) => {
             <Dropdown.Item onClick={showModal} className='delete'>{t(types[type].item)}</Dropdown.Item>;
 
     return (
-        window.insights.getRole() === 'admin' && <>
+        user.role === 'admin' && <>
             {buttonModal}
             <Modal open={isVisible} size='mini' onClick={closeModal} closeIcon>
                 <Header as='h3' content={t(types[type].header)} />
