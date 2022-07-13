@@ -114,7 +114,7 @@ const DeleteModal = ({ type, instance, t, icon, button, history }) => {
             <Dropdown.Item onClick={showModal} className='delete'>{t(types[type].item)}</Dropdown.Item>;
 
     return (
-        window.insights.getRole() === 'admin' && <>
+        (window.insights.getRole() === 'admin' ||  type == 'vpnDevices') && <>
             {buttonModal}
             <Modal open={isVisible} size='mini' onClick={closeModal} closeIcon>
                 <Header as='h3' content={t(types[type].header)} />

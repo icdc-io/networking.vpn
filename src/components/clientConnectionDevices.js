@@ -173,13 +173,13 @@ const ClientConnectionDevices = ({ t, history }) => {
         } else if (header === 'lastConnection') {
             content = formatDate(data.statistics.lastConnection) || longDash;
         } else if (header === '') {
-            content = window.insights.getRole() === 'admin' ? <OptionsMenu
+            content = <OptionsMenu
                 t={t}
                 type='vpnDevices'
                 instance={data}
                 options={['configs', 'enable', 'edit', 'delete' ]}
                 onClickAction={() => enableOrDisableDevice(data)}
-            /> : '';
+            />;
         }
 
         return (
