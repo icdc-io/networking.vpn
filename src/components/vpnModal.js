@@ -164,7 +164,7 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
                     : <Button color='blue' size='small' onClick={() => setOpen(true)}> {t(addContentMessage)} </Button>;
 
     return (
-        window.insights.getRole() === 'admin' && <>
+        (window.insights.getRole() === 'admin' || managementName == 'vpnDevices' || managementName == 'privateKey') && <>
             {button}
             <Modal
                 size='tiny'
