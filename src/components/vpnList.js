@@ -131,7 +131,7 @@ const VpnList = ({ t, items: gatewaysData }) => {
                  <ApiButton element='vpnGateway' user={user} locationUrl={baseUrls[user.location]} />
             </div>
 
-            <div className='table-container' style={{ height: 554 }}>
+            <div className='table-container' style={{ height: 590 }}>
                 <Table className='vpn-list-table' selectable={false} padded sortable basic='very'>
                     <Table.Header>
                         <Table.Row>{displayHeaders}</Table.Row>
