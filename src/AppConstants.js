@@ -25,7 +25,7 @@ export const VPN_NAT_MAPPING_CREATE = 'VPN_NAT_MAPPING_CREATE';
 export const VPN_NAT_MAPPING_UPDATE = 'VPN_NAT_MAPPING_UPDATE';
 export const VPN_NAT_MAPPING_DELETE = 'VPN_NAT_MAPPING_DELETE';
 
-export const vpnGatewayUrl = (id, management = '') => `/gateways/${id}/${management}`;
+export const vpnGatewayUrl = (id, management = '') => management ? `/gateways/${id}/${management}` : `/gateways/${id}`;
 export const vpnClientConnectionsUrl = (id, clientConnectionDetails) => `/connections/${id}${clientConnectionDetails ? '/' + clientConnectionDetails : ''}`;
 export const vpnClientConnectionDevicesUrl = (id, stats) => `/devices/${id}${stats ? '/' + stats : ''}`;
 export const vpnPeerGatewaysUrl = id => `/remote_gateways/${id}`;
