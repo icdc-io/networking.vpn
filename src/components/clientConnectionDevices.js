@@ -42,28 +42,75 @@ const ClientConnectionDevices = ({ t, history }) => {
 
     const ws = useRef(null);
 
+    const [stats, setStats] = useState([]);
+    const [handshake, setHandshake] = useState('');
+
+
     window.goToRootRoute = () => history.push('/vpn');
 
-    // useEffect(() => {
-    //     if (account) {
-    //         ws.current = new WebSocket('ws://10.254.20.22:3000/ws?dev_id[]=1&dev_id[]=2', ['actioncable-v1-json', window.insights.getToken(), account]);
-    //         ws.current.onopen = () => {
-    //             console.log('open')
-    //             const subscribe_msg = {
-    //                 command: 'subscribe',
-    //                 identifier: JSON.stringify({channel: 'DeviceStatisticChannel'})
-    //             };
-    //             ws.current.send(JSON.stringify(subscribe_msg));
-    //             console.log("Соединение открыто");
-    //         }
-    //         ws.current.onclose = () => console.log("Соединение закрыто");
-    //         gettingData();
-    //     }
-    // }, [account]);
+    let devicesIds = vpnClientConnectionDevicesData.map(el => `dev_id[]=${el.id}&`).join('').slice(0, -1);
 
-    // useEffect(() => {
-    //     return () => ws.current.close();
-    // }, []);
+    useEffect(() => {
+            if (account && devicesIds) {
+                
+
+                ws.current = new WebSocket(`wss://ws.icdc.d3.zby.icdc.io/ws/wireguard_manager/stats?${devicesIds}`, ['actioncable-v1-json',  window.insights.getToken(), account, role]);
+                ws.current.onopen = () => {
+                    console.log('open')
+                    const subscribe_msg = {
+                        command: 'subscribe',
+                        identifier: JSON.stringify({channel: 'DeviceStatisticChannel'})
+                    };
+                    ws.current.send(JSON.stringify(subscribe_msg));
+                    console.log("Соединение открыто");
+                }
+    
+                ws.current.onmessage = e => {
+                            const message = JSON.parse(e.data);
+                            if (message.type === "ping") {
+                                return;
+                            } else   setStats(message.message?.stats)
+                            // console.log("FROM RAILS: ", message);
+                            // console.log(message);
+                        };
+    
+                ws.current.onclose = () => console.log("Соединение закрыто");
+                // gettingData();
+            }
+        }, [account, devicesIds]);
+        
+        useEffect(() => {
+                let socket = new WebSocket('ws://localhost:5000')
+        
+                socket.onopen = () => {
+                    const message = {
+                        event: 'connection',
+                        username: 'test',
+                        id: Date.now()
+                    }
+                    socket.send(JSON.stringify(message))
+                }
+                socket.onmessage = (event) => {
+                    const message = JSON.parse(event.data)
+                }
+                socket.onclose= () => {
+                    console.log('Socket закрыт')
+                }
+                socket.onerror = () => {
+                    console.log('Socket произошла ошибка')
+                }
+        }, [])
+
+    useEffect(() => {
+        return () => ws.current.close();
+    }, []);
+
+    useEffect(() => {
+        console.log(stats);
+        if(stats != undefined) {
+            setHandshake(stats.map(el => el.slice(-1)).map(el => el[0]))
+        }
+    }, [stats])
 
     // const gettingData = useCallback(() => {
     //     if (!ws.current) return;
@@ -92,7 +139,7 @@ const ClientConnectionDevices = ({ t, history }) => {
     }, [dispatch, account, location, role, vpnClientConnectionData.gatewayId]);
 
     const formatDate = item => {
-        if (item) {
+        if (item && new Date(item).getFullYear() !== 1970) {
             const options = {
                 day: '2-digit',
                 month: '2-digit',
@@ -164,6 +211,8 @@ const ClientConnectionDevices = ({ t, history }) => {
     const tableCells = data => headers.map((header, key) => {
         let content = data[header] || longDash;
 
+        let currentHandshake = handshake.length > 0 && handshake.filter(el => el.device_id == data.id)[0]
+
         if (header === 'publicKey') {
             content = data[header] ? addPopup(content, header) : longDash;
         } else if (header === 'status') {
@@ -171,7 +220,7 @@ const ClientConnectionDevices = ({ t, history }) => {
         } else if (header === 'sent' || header === 'received') {
             content = (<DeviceStatistics statisticsData={data.statistics} field={header} />);
         } else if (header === 'lastConnection') {
-            content = formatDate(data.statistics.lastConnection) || longDash;
+            content = formatDate(currentHandshake && currentHandshake.handshake) || longDash;
         } else if (header === '') {
             content = <OptionsMenu
                 t={t}

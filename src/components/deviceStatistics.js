@@ -3,8 +3,9 @@ import { PropTypes } from 'prop-types';
 import { longDash } from './tools';
 
 const DeviceStatistics = ({ statisticsData, field }) => {
+    // console.log(statisticsData, field)
     return (
-        <div>{statisticsData[field] || longDash}</div>
+        <div>{`${statisticsData[field]} KB` || longDash}</div>
     );
 };
 
