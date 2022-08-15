@@ -1,17 +1,72 @@
-import React from 'react';
-import { PropTypes } from 'prop-types';
-import { longDash } from './tools';
+import React from "react";
+import { PropTypes } from "prop-types";
+import { longDash } from "./tools";
+import { Line } from "react-chartjs-2";
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Filler } from "chart.js";
 
-const DeviceStatistics = ({ statisticsData, field }) => {
-    // console.log(statisticsData, field)
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Filler);
+
+const DeviceStatistics = ({ statisticsData, field, testData }) => {
+
+    const options = {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: false,
+            },
+            title: {
+                display: false,
+            },
+        },
+        scales: {
+            x: {
+                display: false,
+            },
+            y: {
+                display: false,
+            },
+        },
+        animations: {
+            tension: {
+                duration: 1000,
+                easing: 'easeInQuint',
+                // from: 1,
+                // to: 0,
+                loop: true
+            }
+        },
+    };
+
+    const labels = ["", "", "", "", "", "", "", "", "", ""];
+// console.log(testData)
+    const data = {
+        labels,
+        datasets: [
+            {
+                fill: true,
+                // maintainAspectRatio: false,
+                //   label: false,
+                data: testData,
+                borderColor: "red",
+                borderWidth: 2,
+                backgroundColor: "#FFEBE5",
+                pointRadius: 0,
+            },
+        ],
+    };
+
     return (
-        <div>{`${statisticsData[field]} KB` || longDash}</div>
+        <div className="device-statistics-component">
+            <p>{`${statisticsData[field]} KB` || longDash}</p>
+            {/* {statisticsData[field] ? <Line options={options} data={data} /> : ""} uncomment to prod */} 
+            <Line options={options} data={data} />
+        </div>
     );
 };
 
 DeviceStatistics.propTypes = {
     statisticsData: PropTypes.object,
-    field: PropTypes.string
+    field: PropTypes.string,
 };
 
 export default DeviceStatistics;

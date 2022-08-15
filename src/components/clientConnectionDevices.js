@@ -79,7 +79,9 @@ const ClientConnectionDevices = ({ t, history }) => {
             }
         }, [account, devicesIds]);
         
-        useEffect(() => {
+        //!=========================================
+        const [testData, setTestData] = useState([]);
+    useEffect(() => {
                 let socket = new WebSocket('ws://localhost:5000')
         
                 socket.onopen = () => {
@@ -91,7 +93,15 @@ const ClientConnectionDevices = ({ t, history }) => {
                     socket.send(JSON.stringify(message))
                 }
                 socket.onmessage = (event) => {
-                    const message = JSON.parse(event.data)
+                    const message = JSON.parse(event.data);
+                    if (message.event === "message") {
+                        if(message.testData[0].length > 1){
+                            setTestData(message.testData)
+                        } else { setTestData(prev => [...prev].map(arr => [...arr, message.testData.filter(el => arr[0].device_id == el[0].device_id)[0][0]].slice(1)))
+                            
+                        }
+                    
+                    }
                 }
                 socket.onclose= () => {
                     console.log('Socket закрыт')
@@ -99,7 +109,9 @@ const ClientConnectionDevices = ({ t, history }) => {
                 socket.onerror = () => {
                     console.log('Socket произошла ошибка')
                 }
-        }, [])
+    }, [])
+    console.log('testData ==> ', testData)
+//!=========================================
 
     useEffect(() => {
         return () => ws.current.close();
@@ -218,7 +230,7 @@ const ClientConnectionDevices = ({ t, history }) => {
         } else if (header === 'status') {
             content = (<StatusLabel t={t} active={data[header]} />);
         } else if (header === 'sent' || header === 'received') {
-            content = (<DeviceStatistics statisticsData={data.statistics} field={header} />);
+            content = (<DeviceStatistics statisticsData={data.statistics} field={header} testData={testData.filter(el => el[0].device_id == data.id)[0].map(el => el[header])}/>);
         } else if (header === 'lastConnection') {
             content = formatDate(currentHandshake && currentHandshake.handshake) || longDash;
         } else if (header === '') {
