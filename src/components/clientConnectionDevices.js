@@ -75,8 +75,6 @@ const ClientConnectionDevices = ({ t, history }) => {
                     } else { 
                         setStats(prev => [...prev].map(arr => [...arr, message.message?.stats.filter(el => arr[0].device_id == el[0].device_id)[0][0]].slice(1)));
                     }}
-                            // console.log("FROM RAILS: ", message);
-                            // console.log(message);
                 };
     
                 ws.current.onclose = () => console.log("Соединение закрыто");
