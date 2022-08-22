@@ -64,53 +64,57 @@ const ClientConnectionDevices = ({ t, history }) => {
                     ws.current.send(JSON.stringify(subscribe_msg));
                     console.log("Соединение открыто");
                 }
-    
+
                 ws.current.onmessage = e => {
-                            const message = JSON.parse(e.data);
-                            if (message.type === "ping") {
-                                return;
-                            } else   setStats(message.message?.stats)
+                    const message = JSON.parse(e.data);
+                    if (message.type === "ping") {
+                        return;
+                    } else   { 
+                        if(message.message?.stats[0].length > 1){
+                        setStats(message.message?.stats)
+                    } else { 
+                        setStats(prev => [...prev].map(arr => [...arr, message.message?.stats.filter(el => arr[0].device_id == el[0].device_id)[0][0]].slice(1)));
+                    }}
                             // console.log("FROM RAILS: ", message);
                             // console.log(message);
-                        };
+                };
     
                 ws.current.onclose = () => console.log("Соединение закрыто");
-                // gettingData();
             }
         }, [account, devicesIds]);
         
         //!=========================================
-        const [testData, setTestData] = useState([]);
-    useEffect(() => {
-                let socket = new WebSocket('ws://localhost:5000')
+    //     const [testData, setTestData] = useState([]);
+    // useEffect(() => {
+    //             let socket = new WebSocket('ws://localhost:5000')
         
-                socket.onopen = () => {
-                    const message = {
-                        event: 'connection',
-                        username: 'test',
-                        id: Date.now()
-                    }
-                    socket.send(JSON.stringify(message))
-                }
-                socket.onmessage = (event) => {
-                    const message = JSON.parse(event.data);
-                    if (message.event === "message") {
-                        if(message.testData[0].length > 1){
-                            setTestData(message.testData)
-                        } else { setTestData(prev => [...prev].map(arr => [...arr, message.testData.filter(el => arr[0].device_id == el[0].device_id)[0][0]].slice(1)))
+    //             socket.onopen = () => {
+    //                 const message = {
+    //                     event: 'connection',
+    //                     username: 'test',
+    //                     id: Date.now()
+    //                 }
+    //                 socket.send(JSON.stringify(message))
+    //             }
+    //             socket.onmessage = (event) => {
+    //                 const message = JSON.parse(event.data);
+    //                 if (message.event === "message") {
+    //                     if(message.testData[0].length > 1){
+    //                         setTestData(message.testData)
+    //                     } else { setTestData(prev => [...prev].map(arr => [...arr, message.testData.filter(el => arr[0].device_id == el[0].device_id)[0][0]].slice(1)))
                             
-                        }
+    //                     }
                     
-                    }
-                }
-                socket.onclose= () => {
-                    console.log('Socket закрыт')
-                }
-                socket.onerror = () => {
-                    console.log('Socket произошла ошибка')
-                }
-    }, [])
-    console.log('testData ==> ', testData)
+    //                 }
+    //             }
+    //             socket.onclose= () => {
+    //                 console.log('Socket закрыт')
+    //             }
+    //             socket.onerror = () => {
+    //                 console.log('Socket произошла ошибка')
+    //             }
+    // }, [])
+    // console.log('testData ==> ', testData)
 //!=========================================
 
     useEffect(() => {
@@ -118,24 +122,10 @@ const ClientConnectionDevices = ({ t, history }) => {
     }, []);
 
     useEffect(() => {
-        console.log(stats);
         if(stats != undefined) {
             setHandshake(stats.map(el => el.slice(-1)).map(el => el[0]))
         }
     }, [stats])
-
-    // const gettingData = useCallback(() => {
-    //     if (!ws.current) return;
-
-    //     ws.current.onmessage = e => {
-    //         const message = JSON.parse(e.data);
-    //         if (message.type === "ping") {
-    //             return;
-    //         }
-    //         console.log("FROM RAILS: ", message);
-    //         console.log(message);
-    //     };
-    // }, []);
 
     // const vpnClientConnectionDevicesData = formatDevicesData(devices); //Uncomment to test pagintaion
 
@@ -223,14 +213,15 @@ const ClientConnectionDevices = ({ t, history }) => {
     const tableCells = data => headers.map((header, key) => {
         let content = data[header] || longDash;
 
-        let currentHandshake = handshake.length > 0 && handshake.filter(el => el.device_id == data.id)[0]
+        let currentHandshake = handshake.length > 0 && handshake.filter(el => el?.device_id == data.id)[0]
 
         if (header === 'publicKey') {
             content = data[header] ? addPopup(content, header) : longDash;
         } else if (header === 'status') {
             content = (<StatusLabel t={t} active={data[header]} />);
         } else if (header === 'sent' || header === 'received') {
-            content = (<DeviceStatistics statisticsData={data.statistics} field={header} testData={testData.filter(el => el[0].device_id == data.id)[0].map(el => el[header])}/>);
+            content = (<DeviceStatistics statisticsData={data.statistics} field={header} testData={stats.filter(el => el[0].device_id == data.id)[0]?.map(el => el && el[header])}/>);
+            // content = (<DeviceStatistics statisticsData={data.statistics} field={header} testData={testData.filter(el => el[0].device_id == data.id)[0]?.map(el => el && el[header])}/>);
         } else if (header === 'lastConnection') {
             content = formatDate(currentHandshake && currentHandshake.handshake) || longDash;
         } else if (header === '') {
