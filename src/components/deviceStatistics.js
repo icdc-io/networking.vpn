@@ -6,7 +6,7 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Filler);
 
-const DeviceStatistics = ({ statisticsData, field, testData }) => {
+const DeviceStatistics = ({ statisticsData, field, chartData }) => {
 
     const options = {
         responsive: true,
@@ -26,27 +26,17 @@ const DeviceStatistics = ({ statisticsData, field, testData }) => {
                 display: false,
             },
         },
-        animations: {
-            tension: {
-                duration: 1000,
-                easing: 'easeInQuint',
-                // from: 1,
-                // to: 0,
-                loop: true
-            }
-        },
+        animations: "none"
     };
 
     const labels = ["", "", "", "", "", "", "", "", "", ""];
-// console.log(testData)
+
     const data = {
         labels,
         datasets: [
             {
                 fill: true,
-                // maintainAspectRatio: false,
-                //   label: false,
-                data: testData,
+                data: chartData,
                 borderColor: "red",
                 borderWidth: 2,
                 backgroundColor: "#FFEBE5",
@@ -57,7 +47,7 @@ const DeviceStatistics = ({ statisticsData, field, testData }) => {
 
     return (
         <div className="device-statistics-component">
-            <p>{`${statisticsData[field]} KB` || longDash}</p>
+            <p>{statisticsData[field] ? `${statisticsData[field]} KB` : longDash}</p>
             {/* {statisticsData[field] ? <Line options={options} data={data} /> : ""} uncomment to prod */} 
             <Line options={options} data={data} />
         </div>

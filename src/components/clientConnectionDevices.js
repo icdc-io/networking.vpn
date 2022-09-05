@@ -70,48 +70,55 @@ const ClientConnectionDevices = ({ t, history }) => {
                     if (message.type === "ping") {
                         return;
                     } else   { 
-                        if(message.message?.stats[0].length > 1){
+                        // console.log(message.message?.stats)
+                        // setStats(message.message?.stats)
+                        if(message.message?.stats[0]?.length > 1){
                         setStats(message.message?.stats)
                     } else { 
                         setStats(prev => [...prev].map(arr => [...arr, message.message?.stats.filter(el => arr[0].device_id == el[0].device_id)[0][0]].slice(1)));
-                    }}
+                    }
+                }
                 };
     
                 ws.current.onclose = () => console.log("Соединение закрыто");
             }
+
         }, [account, devicesIds]);
-        
+
         //!=========================================
-    //     const [testData, setTestData] = useState([]);
-    // useEffect(() => {
-    //             let socket = new WebSocket('ws://localhost:5000')
+        const [testData, setTestData] = useState([]);
+    useEffect(() => {
+                let socket = new WebSocket('ws://localhost:5000')
         
-    //             socket.onopen = () => {
-    //                 const message = {
-    //                     event: 'connection',
-    //                     username: 'test',
-    //                     id: Date.now()
-    //                 }
-    //                 socket.send(JSON.stringify(message))
-    //             }
-    //             socket.onmessage = (event) => {
-    //                 const message = JSON.parse(event.data);
-    //                 if (message.event === "message") {
-    //                     if(message.testData[0].length > 1){
-    //                         setTestData(message.testData)
-    //                     } else { setTestData(prev => [...prev].map(arr => [...arr, message.testData.filter(el => arr[0].device_id == el[0].device_id)[0][0]].slice(1)))
-                            
-    //                     }
+                socket.onopen = () => {
+                    const message = {
+                        event: 'connection',
+                        username: 'test',
+                        id: Date.now()
+                    }
+                    socket.send(JSON.stringify(message))
+                }
+                socket.onmessage = (event) => {
+                    const message = JSON.parse(event.data);
+                    if (message.event === "message") {
+                        if(message?.testData[0].length > 1){
+                            setTestData(message.testData)
+                        } else {
+                
+                             setTestData(prev => // [[{},{},{},{},{},{},{},{},{},{}]]
+                                [...prev].map(arr => [...arr, message.testData.filter(el => arr[0].device_id == el[0].device_id)[0][0]].slice(1)))
+                            // console.log(testData.map(arr => [...arr, message.testData.filter(el => arr[0].device_id == el[0].device_id)[0][0]].slice(1)))
+                        }
                     
-    //                 }
-    //             }
-    //             socket.onclose= () => {
-    //                 console.log('Socket закрыт')
-    //             }
-    //             socket.onerror = () => {
-    //                 console.log('Socket произошла ошибка')
-    //             }
-    // }, [])
+                    }
+                }
+                socket.onclose= () => {
+                    console.log('Socket закрыт')
+                }
+                socket.onerror = () => {
+                    console.log('Socket произошла ошибка')
+                }
+    }, [])
     // console.log('testData ==> ', testData)
 //!=========================================
 
@@ -124,7 +131,7 @@ const ClientConnectionDevices = ({ t, history }) => {
             setHandshake(stats.map(el => el.slice(-1)).map(el => el[0]))
         }
     }, [stats])
-
+// console.log("STATS", stats)
     // const vpnClientConnectionDevicesData = formatDevicesData(devices); //Uncomment to test pagintaion
 
     useEffect(() => {
@@ -218,8 +225,8 @@ const ClientConnectionDevices = ({ t, history }) => {
         } else if (header === 'status') {
             content = (<StatusLabel t={t} active={data[header]} />);
         } else if (header === 'sent' || header === 'received') {
-            content = (<DeviceStatistics statisticsData={data.statistics} field={header} testData={stats.filter(el => el[0].device_id == data.id)[0]?.map(el => el && el[header])}/>);
-            // content = (<DeviceStatistics statisticsData={data.statistics} field={header} testData={testData.filter(el => el[0].device_id == data.id)[0]?.map(el => el && el[header])}/>);
+            content = (<DeviceStatistics statisticsData={data.statistics} field={header} chartData={stats.filter(el => el[0].device_id == data.id)[0]?.map(el => el && el[header])}/>);
+            // content = (<DeviceStatistics statisticsData={data.statistics} field={header} chartData={testData.filter(el => el[0].device_id == data.id)[0]?.map(el => el && el[header])}/>);
         } else if (header === 'lastConnection') {
             content = formatDate(currentHandshake && currentHandshake.handshake) || longDash;
         } else if (header === '') {
