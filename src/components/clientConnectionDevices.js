@@ -30,7 +30,7 @@ const ClientConnectionDevices = ({ t, history }) => {
     const devicesFetchStatus = useSelector((state) => state.VpnStore.vpnClientConnectionDevicesFetchStatus);
     const clientConnectionFetchStatus = useSelector((state) => state.VpnStore.vpnClientConnectionFetchStatus);
     // const gatewayFetchStatus = useSelector(state => state.VpnStore.gatewayFetchStatus);
-    const headers = ['name', 'ip', 'publicKey', 'status', 'sent', 'received', 'lastConnection', ''];
+    const headers = ['name', 'ip', 'publicKey', 'status', 'uploadSpeed', 'downloadSpeed', 'lastConnection', ''];
 
     const user = useSelector((state) => state.host.user);
     const baseUrls = useSelector((state) => state.host.baseUrls);
@@ -166,8 +166,8 @@ const ClientConnectionDevices = ({ t, history }) => {
                 content = data[header] ? addPopup(content, header) : longDash;
             } else if (header === 'status') {
                 content = <StatusLabel t={t} active={data[header]} />;
-            } else if (header === 'sent' || header === 'received') {
-                content = <DeviceStatistics statisticsData={currentDevice} field={header} t={t} />;
+            } else if (header === 'uploadSpeed' || header === 'downloadSpeed') {
+                content = <DeviceStatistics statisticsData={currentDevice} field={header === 'uploadSpeed' ? 'sent' : 'received'} t={t} />;
             } else if (header === 'lastConnection') {
                 content = formatDate(currentHandshake) || longDash;
             } else if (header === '') {
