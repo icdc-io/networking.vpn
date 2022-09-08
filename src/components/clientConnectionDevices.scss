@@ -50,3 +50,20 @@
 .ui.blue.header.title {
     width: max-content;
 }
+.device-statistics-component {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    min-width: 100px;
+    height: 50px;
+
+    p {
+        min-width: 30px;
+        margin: 0 10px 0 0;
+    }
+
+    canvas {
+        height: 50px !important;
+        width: 100px !important;
+    }
+}

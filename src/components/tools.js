@@ -108,7 +108,7 @@ export const formatDevicesData = devices => devices.map(device => ({
         createdAt: device.stat?.created_at,
         endpoint: device.stat?.endpoint,
         lastConnection: device.stat?.handshake,
-        received: device.stat?.recieved,
+        received: device.stat?.received,
         sent: device.stat?.sent
     }
 }));
