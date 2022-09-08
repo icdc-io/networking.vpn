@@ -50,13 +50,11 @@ const ClientConnectionDevices = ({ t, history }) => {
         if (account && devicesIds) {
             ws.current = new WebSocket(`wss://ws.icdc.d3.zby.icdc.io/ws/wireguard_manager/stats?${devicesIds}`, ['actioncable-v1-json', window.insights.getToken(), account, role]);
             ws.current.onopen = () => {
-                console.log('open');
                 const subscribe_msg = {
                     command: 'subscribe',
                     identifier: JSON.stringify({ channel: 'DeviceStatisticChannel' }),
                 };
                 ws.current.send(JSON.stringify(subscribe_msg));
-                console.log('Соединение открыто');
             };
 
             ws.current.onmessage = (e) => {
@@ -69,7 +67,7 @@ const ClientConnectionDevices = ({ t, history }) => {
                 }
             };
 
-            ws.current.onclose = () => console.log('Соединение закрыто');
+            //ws.current.onclose = () => console.log('Соединение закрыто');
         }
     }, [account, devicesIds]);
 
