@@ -6,7 +6,7 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Filler);
 
-const DeviceStatistics = ({ statisticsData, field, chartData }) => {
+const DeviceStatistics = ({ statisticsData, field, t }) => {
 
     const options = {
         responsive: true,
@@ -29,14 +29,14 @@ const DeviceStatistics = ({ statisticsData, field, chartData }) => {
         animations: "none"
     };
 
-    const labels = ["", "", "", "", "", "", "", "", "", ""];
+    const labels = ["", "", "", "", "", "", "", "", ""];
 
     const data = {
         labels,
         datasets: [
             {
                 fill: true,
-                data: chartData,
+                data: statisticsData && statisticsData[field],
                 borderColor: "red",
                 borderWidth: 2,
                 backgroundColor: "#FFEBE5",
@@ -47,8 +47,7 @@ const DeviceStatistics = ({ statisticsData, field, chartData }) => {
 
     return (
         <div className="device-statistics-component">
-            <p>{statisticsData[field] ? `${statisticsData[field]} KB` : longDash}</p>
-            {/* {statisticsData[field] ? <Line options={options} data={data} /> : ""} uncomment to prod */} 
+            <p>{statisticsData ? `${statisticsData[field][statisticsData[field].length - 1]} ${t('speed')}` : longDash}</p>
             <Line options={options} data={data} />
         </div>
     );

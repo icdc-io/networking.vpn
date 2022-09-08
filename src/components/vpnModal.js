@@ -26,7 +26,7 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
     const { id, connectionId } = useParams();
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
-    const handleClose = () => { setOpen(false); openConfigs && setOpenConfigs(false) };
+
     const userEmail = JSON.parse(localStorage.getItem('user')).email;
     const [openConfigs, setOpenConfigs] = useState(false);
     const gateway = useSelector(state => formatVpnGatewaysData(state.VpnStore.gateway));
@@ -39,6 +39,11 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
     const addr = gateway.natSubnet && ipaddr.parse(gateway.natSubnet.split('/')[0]);
     const addrDevice = vpnClientConnectionData.subnet && ipaddr.parse(vpnClientConnectionData.subnet.split('/')[0]);
     const user = useSelector(state => state.host.user);
+
+    const handleClose = () => { 
+        setOpen(false); 
+        openConfigs && setOpenConfigs(false) 
+    };
 
     const getMapOption = (ip) => ip.kind() === 'ipv4' ? { splitter: '.', number: ip.octets.length - 1, key: 'octets' } :
         { splitter: ':', number: ip.parts.length - 1, key: 'parts' };
