@@ -1,26 +1,26 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams, withRouter } from "react-router-dom";
-import { PropTypes } from "prop-types";
-import { Header, Loader, Popup, Table } from "semantic-ui-react";
-import { fetchVpnClientConnection, fetchVpnClientConnectionDevices, fetchVpnGateway, updateVpnClientConnectionDeviceAndFetch } from "../AppActions";
-import { vpnGatewayPath } from "../constants/routes";
-import ButtonBack from "../general/buttonBack";
-import "./clientConnectionDevices.scss";
-import { dataStatusCheck, formatClientConnectionData, formatDevicesData, formatVpnGatewaysData } from "./tools";
-import { capitalizeFirstLetter, longDash, truncate } from "./tools";
-import StatusLabel from "./statusLabel";
-import DeviceStatistics from "./deviceStatistics";
-import CustomPagination from "../general/customPagination";
-import OptionsMenu from "../general/optionsMenu";
-import VpnModal from "./vpnModal";
-import VpnCopyButton from "./vpnCopyButton";
-const ApiButton = React.lazy(() => import("container/ApiButton"));
+import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams, withRouter } from 'react-router-dom';
+import { PropTypes } from 'prop-types';
+import { Header, Loader, Popup, Table } from 'semantic-ui-react';
+import { fetchVpnClientConnection, fetchVpnClientConnectionDevices, fetchVpnGateway, updateVpnClientConnectionDeviceAndFetch } from '../AppActions';
+import { vpnGatewayPath } from '../constants/routes';
+import ButtonBack from '../general/buttonBack';
+import './clientConnectionDevices.scss';
+import { dataStatusCheck, formatClientConnectionData, formatDevicesData, formatVpnGatewaysData } from './tools';
+import { capitalizeFirstLetter, longDash, truncate } from './tools';
+import StatusLabel from './statusLabel';
+import DeviceStatistics from './deviceStatistics';
+import CustomPagination from '../general/customPagination';
+import OptionsMenu from '../general/optionsMenu';
+import VpnModal from './vpnModal';
+import VpnCopyButton from './vpnCopyButton';
+const ApiButton = React.lazy(() => import('container/ApiButton'));
 
 const ClientConnectionDevices = ({ t, history }) => {
     const { connectionId } = useParams();
     const dispatch = useDispatch();
-    const { account = "", location = "", role = "" } = useSelector((state) => state.host.user);
+    const { account = '', location = '', role = '' } = useSelector((state) => state.host.user);
     const [activePageNumber, setActivePageNumber] = useState(1);
     const totalPaginationPages = 10;
     const pageViseted = totalPaginationPages * (activePageNumber - 1);
@@ -30,7 +30,7 @@ const ClientConnectionDevices = ({ t, history }) => {
     const devicesFetchStatus = useSelector((state) => state.VpnStore.vpnClientConnectionDevicesFetchStatus);
     const clientConnectionFetchStatus = useSelector((state) => state.VpnStore.vpnClientConnectionFetchStatus);
     // const gatewayFetchStatus = useSelector(state => state.VpnStore.gatewayFetchStatus);
-    const headers = ["name", "ip", "publicKey", "status", "sent", "received", "lastConnection", ""];
+    const headers = ['name', 'ip', 'publicKey', 'status', 'sent', 'received', 'lastConnection', ''];
 
     const user = useSelector((state) => state.host.user);
     const baseUrls = useSelector((state) => state.host.baseUrls);
@@ -39,37 +39,37 @@ const ClientConnectionDevices = ({ t, history }) => {
 
     const [stats, setStats] = useState([]);
 
-    window.goToRootRoute = () => history.push("/vpn");
+    window.goToRootRoute = () => history.push('/vpn');
 
     let devicesIds = vpnClientConnectionDevicesData
         .map((el) => `dev_id[]=${el.id}&`)
-        .join("")
+        .join('')
         .slice(0, -1);
 
     useEffect(() => {
         if (account && devicesIds) {
-            ws.current = new WebSocket(`wss://ws.icdc.d3.zby.icdc.io/ws/wireguard_manager/stats?${devicesIds}`, ["actioncable-v1-json", window.insights.getToken(), account, role]);
+            ws.current = new WebSocket(`wss://ws.icdc.d3.zby.icdc.io/ws/wireguard_manager/stats?${devicesIds}`, ['actioncable-v1-json', window.insights.getToken(), account, role]);
             ws.current.onopen = () => {
-                console.log("open");
+                console.log('open');
                 const subscribe_msg = {
-                    command: "subscribe",
-                    identifier: JSON.stringify({ channel: "DeviceStatisticChannel" }),
+                    command: 'subscribe',
+                    identifier: JSON.stringify({ channel: 'DeviceStatisticChannel' }),
                 };
                 ws.current.send(JSON.stringify(subscribe_msg));
-                console.log("Соединение открыто");
+                console.log('Соединение открыто');
             };
 
             ws.current.onmessage = (e) => {
                 const message = JSON.parse(e.data);
 
-                if (message.type === "ping" || message.type === "confirm_subscription" || message.type === "welcome") {
+                if (message.type === 'ping' || message.type === 'confirm_subscription' || message.type === 'welcome') {
                     return;
                 } else {
                     setStats(message.message?.stats);
                 }
             };
 
-            ws.current.onclose = () => console.log("Соединение закрыто");
+            ws.current.onclose = () => console.log('Соединение закрыто');
         }
     }, [account, devicesIds]);
 
@@ -93,23 +93,23 @@ const ClientConnectionDevices = ({ t, history }) => {
     const formatDate = (item) => {
         if (item && new Date(item).getFullYear() !== 1970) {
             const options = {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: "true",
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: 'true',
             };
 
-            return new Date(item).toLocaleString("en-GB", options);
+            return new Date(item).toLocaleString('en-GB', options);
         }
 
         return;
     };
 
     const displayHeaders = headers.map((header, key) => (
-        <Table.HeaderCell key={key} style={header === "status" ? { paddingLeft: 40 } : {}}>
-            {header !== "" ? t([header]) : ""}
+        <Table.HeaderCell key={key} style={header === 'status' ? { paddingLeft: 40 } : {}}>
+            {header !== '' ? t([header]) : ''}
         </Table.HeaderCell>
     ));
 
@@ -162,20 +162,20 @@ const ClientConnectionDevices = ({ t, history }) => {
             let content = data[header] || longDash;
             let currentHandshake = stats.length > 0 && currentDevice?.handshake;
 
-            if (header === "publicKey") {
+            if (header === 'publicKey') {
                 content = data[header] ? addPopup(content, header) : longDash;
-            } else if (header === "status") {
+            } else if (header === 'status') {
                 content = <StatusLabel t={t} active={data[header]} />;
-            } else if (header === "sent" || header === "received") {
-                content = <DeviceStatistics statisticsData={currentDevice} field={header} t={t}/>;
-            } else if (header === "lastConnection") {
+            } else if (header === 'sent' || header === 'received') {
+                content = <DeviceStatistics statisticsData={currentDevice} field={header} t={t} />;
+            } else if (header === 'lastConnection') {
                 content = formatDate(currentHandshake) || longDash;
-            } else if (header === "") {
-                content = <OptionsMenu t={t} type="vpnDevices" instance={data} options={["configs", "enable", "edit", "delete"]} onClickAction={() => enableOrDisableDevice(data)} />;
+            } else if (header === '') {
+                content = <OptionsMenu t={t} type="vpnDevices" instance={data} options={['configs', 'enable', 'edit', 'delete']} onClickAction={() => enableOrDisableDevice(data)} />;
             }
 
             return (
-                <Table.Cell key={key} textAlign={header === "" ? "right" : "left"}>
+                <Table.Cell key={key} textAlign={header === '' ? 'right' : 'left'}>
                     {content}
                 </Table.Cell>
             );
@@ -185,7 +185,7 @@ const ClientConnectionDevices = ({ t, history }) => {
 
     return (
         <>
-            <ButtonBack back={t("back")} path={vpnGatewayPath(vpnClientConnectionData.gatewayId)} />
+            <ButtonBack back={t('back')} path={vpnGatewayPath(vpnClientConnectionData.gatewayId)} />
 
             {dataStatusCheck(
                 clientConnectionFetchStatus,
@@ -195,12 +195,12 @@ const ClientConnectionDevices = ({ t, history }) => {
                         {capitalizeFirstLetter(vpnClientConnectionData.name || longDash)}
                     </Header>
                     <Header as="h4" style={{ marginTop: 16 }}>
-                        {t("clientConnectionDetails")}
+                        {t('clientConnectionDetails')}
                     </Header>
                     <div className="details-container">
                         <div className="details">
-                            <div>{t("subnet")}</div>
-                            <div>{t("endpoint")}</div>
+                            <div>{t('subnet')}</div>
+                            <div>{t('endpoint')}</div>
                         </div>
                         <div className="details">
                             <div>{vpnClientConnectionData.subnet || longDash}</div>
@@ -210,11 +210,11 @@ const ClientConnectionDevices = ({ t, history }) => {
                     <div className="customized-hr"></div>
                     <div className="table-title-container">
                         <Header as="h4" style={{ marginTop: 16 }}>
-                            {t("devices")}
+                            {t('devices')}
                         </Header>
                         <div className="table-title-container-controls">
                             <ApiButton element="vpnDevices" connectionId={connectionId} user={user} locationUrl={baseUrls[user.location]} />
-                            <VpnModal t={t} formFields={["name", "ip", "publicKey", "routeSubnets", "keepAlive"]} addContentMessage={"addDevice"} managementName="vpnDevices" />
+                            <VpnModal t={t} formFields={['name', 'ip', 'publicKey', 'routeSubnets', 'keepAlive']} addContentMessage={'addDevice'} managementName="vpnDevices" />
                         </div>
                     </div>
 
@@ -223,11 +223,11 @@ const ClientConnectionDevices = ({ t, history }) => {
                             <Table.Header>
                                 <Table.Row>{displayHeaders}</Table.Row>
                             </Table.Header>
-                            {devicesFetchStatus !== "pending" && <Table.Body>{displayTableData}</Table.Body>}
+                            {devicesFetchStatus !== 'pending' && <Table.Body>{displayTableData}</Table.Body>}
                         </Table>
                     </div>
 
-                    {devicesFetchStatus === "pending" && <Loader active inline="centered" />}
+                    {devicesFetchStatus === 'pending' && <Loader active inline="centered" />}
 
                     <CustomPagination data={vpnClientConnectionDevicesData} totalPaginationPages={10} setActivePageNumber={setActivePageNumber} activePageNumber={activePageNumber} />
                 </>
