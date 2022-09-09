@@ -109,7 +109,7 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
     };
 
     const displayFields = fieldNames.map((item, key) => {
-        return (<div className={item == 'hostname' ? 'hostname-field' : ''}>
+        return (<div className={item == 'hostname' ? 'hostname-field' : ''} key={key}>
             <Field
                 type={item === 'routeSubnets' && 'select-multiple'}
                 key={key}
