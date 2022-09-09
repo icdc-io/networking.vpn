@@ -47,7 +47,7 @@ const DeviceStatistics = ({ statisticsData, field, t }) => {
 
     return (
         <div className="device-statistics-component">
-            <p>{statisticsData ? `${statisticsData[field][statisticsData[field].length - 1]} ${t('speed')}` : longDash}</p>
+            <p>{(statisticsData && statisticsData[field].length > 0) ? `${statisticsData[field][statisticsData[field].length - 1]} ${t('speed')}` : longDash}</p>
             <Line options={options} data={data} />
         </div>
     );

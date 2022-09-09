@@ -82,7 +82,7 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
 
     useEffect(() => {
         (urlQRstatus == 'fulfilled' && configStatus == 'fulfilled' && openConfigs) && setOpen(true)
-    }, [openConfigs, urlQRstatus]);
+    }, [openConfigs, urlQRstatus, configStatus]);
 
     const prepPayloadForSubmitingAndSubmitFunction = (id, formValues) => {
         let payload = {};

@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const StatusLabel = ({ t, active }) => {
+const StatusLabel = React.memo(({ t, active }) => {
     return (
         <div className={active ? 'status-label green-text' : 'status-label gray-text'}>
             {active ? t('enabled') : t('disabled')}
         </div>
     );
-};
+});
 
 StatusLabel.propTypes = {
     t: PropTypes.func,
