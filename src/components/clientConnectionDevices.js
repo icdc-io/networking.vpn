@@ -29,7 +29,7 @@ const ClientConnectionDevices = ({ t, history }) => {
     const vpnGatewayData = useSelector((state) => formatVpnGatewaysData(state.VpnStore.gateway));
     const devicesFetchStatus = useSelector((state) => state.VpnStore.vpnClientConnectionDevicesFetchStatus);
     const clientConnectionFetchStatus = useSelector((state) => state.VpnStore.vpnClientConnectionFetchStatus);
-        // const gatewayFetchStatus = useSelector(state => state.VpnStore.gatewayFetchStatus);
+    // const gatewayFetchStatus = useSelector(state => state.VpnStore.gatewayFetchStatus);
     const headers = ['name', 'ip', 'publicKey', 'status', 'uploadSpeed', 'downloadSpeed', 'lastConnection', ''];
 
     const user = useSelector((state) => state.host.user);
