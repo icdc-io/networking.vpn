@@ -117,7 +117,7 @@ export const VpnStore = (state = initialState, action) => {
             vpnClientConnectionDevicesFetchStatus: 'fulfilled'
         });
 
-        case ActionTypes.VPN_CLIENT_CONNECTION_DEVICES_CLEAN: 
+        case ActionTypes.VPN_CLIENT_CONNECTION_DEVICES_STATUS_CLEAN: 
         return state.set('vpnClientConnectionDevicesFetchStatus', '');
 
     case `${ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_CREATE}_PENDING`:

@@ -171,7 +171,7 @@ export const fetchVpnClientConnectionDevices = clientConnectionId => ({
 });
 
 export const cleanVpnClientConnectionDeviceStatus = () => ({
-    type: ActionTypes.VPN_CLIENT_CONNECTION_DEVICES_CLEAN
+    type: ActionTypes.VPN_CLIENT_CONNECTION_DEVICES_STATUS_CLEAN
 });
 
 const createVpnClientConnectionDevice = (clientConnectionId, payload) => ({
