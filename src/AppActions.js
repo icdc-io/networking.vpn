@@ -170,6 +170,10 @@ export const fetchVpnClientConnectionDevices = clientConnectionId => ({
     payload: fetchData(getFullPath(ActionTypes.vpnClientConnectionsUrl(clientConnectionId, 'devices'))).then(response => response)
 });
 
+export const cleanVpnClientConnectionDeviceStatus = () => ({
+    type: ActionTypes.VPN_CLIENT_CONNECTION_DEVICES_STATUS_CLEAN
+});
+
 const createVpnClientConnectionDevice = (clientConnectionId, payload) => ({
     type: ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_CREATE,
     payload: createData(getFullPath(ActionTypes.vpnClientConnectionsUrl(clientConnectionId, 'devices')), payload).then(response => response)

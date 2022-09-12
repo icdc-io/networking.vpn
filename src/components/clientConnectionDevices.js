@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams, withRouter } from 'react-router-dom';
 import { PropTypes } from 'prop-types';
 import { Header, Loader, Popup, Table } from 'semantic-ui-react';
-import { fetchVpnClientConnection, fetchVpnClientConnectionDevices, fetchVpnGateway, updateVpnClientConnectionDeviceAndFetch } from '../AppActions';
+import { cleanVpnClientConnectionDeviceStatus, fetchVpnClientConnection, fetchVpnClientConnectionDevices, fetchVpnGateway, updateVpnClientConnectionDeviceAndFetch } from '../AppActions';
 import { vpnGatewayPath } from '../constants/routes';
 import ButtonBack from '../general/buttonBack';
 import './clientConnectionDevices.scss';
@@ -41,7 +41,7 @@ const ClientConnectionDevices = ({ t, history }) => {
 
     window.goToRootRoute = () => history.push('/vpn');
 
-    let devicesIds = vpnClientConnectionDevicesData
+    let devicesIds = devicesFetchStatus === 'fulfilled' && vpnClientConnectionDevicesData
         .map((el) => `dev_id[]=${el.id}&`)
         .join('')
         .slice(0, -1);
@@ -72,7 +72,10 @@ const ClientConnectionDevices = ({ t, history }) => {
     }, [account, devicesIds]);
 
     useEffect(() => {
-        return () => ws.current.close();
+        return function cleanup() {
+            ws.current.close();
+            dispatch(cleanVpnClientConnectionDeviceStatus())
+           };
     }, []);
 
     // const vpnClientConnectionDevicesData = formatDevicesData(devices); //Uncomment to test pagintaion
