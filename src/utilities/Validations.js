@@ -18,7 +18,7 @@ const validateTranslations = {
         port: 'Please enter valid port',
         ttl: 'Sorry, TTL must be a number',
         ipOrHostname: 'Please enter a valid IP address or hostname',
-        mtu: 'Must be a number within the range of 1-9000',
+        mtu: 'Must be a number within the range of 1-1420',
         peerEndpoint: 'Must be in the formats hostname:port, ipv4:port or ipv6:port',
         publicKey: 'Must be a valid public key',
         publicKey: 'Must be a valid private key'
@@ -36,7 +36,7 @@ const validateTranslations = {
         port: 'Укажите верное значение порта',
         ttl: 'Извините, TTL должен быть числом (0-9)',
         ipOrHostname: 'Введите действительный IP-адреc или hostname',
-        mtu: 'Должно быть число в пределах 1-9000',
+        mtu: 'Должно быть число в пределах 1-1420',
         peerEndpoint: 'Должен быть в формате hostname:port, ipv4:port, ipv6:port',
         publicKey: 'Пожалуйста, введите действительный публичный ключ',
         pprivateKey: 'Пожалуйста, введите действительный приватный ключ'
@@ -55,7 +55,7 @@ export const required = value => (Array.isArray(value) ? value.length : value) ?
  * @returns If it's a number then it will return undefined, if not it will return an error
  */
 export const number = (value) => {
-    return /^\d+$/.test(value) ? undefined : validateTranslations[getLang()].number;
+    return /^\d+$/.test(value) || !value ? undefined : validateTranslations[getLang()].number;
 };
 
 export const minLength = min => value => (
@@ -251,7 +251,7 @@ export const priority = value => (
 );
 
 export const mtu = value => (
-    value && !number(value) && value >= 1 && value <= 9000 ? undefined : validateTranslations[getLang()].mtu
+    value && !number(value) && value >= 1 && value <= 1420 || !value ? undefined : validateTranslations[getLang()].mtu
 );
 
 export const peerEndpoint = value => {

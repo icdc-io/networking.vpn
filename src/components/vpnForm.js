@@ -12,13 +12,12 @@ import {
     mtu,
     name,
     number,
-    peerEndpoint,
     port,
     publicKey,
     isPrivateKey,
     required,
     nameWithSpace,
-    maxLength10,
+    maxLength10
 } from '../utilities/Validations';
 import { CustomAccordion } from '../general/customAccordion';
 import { useSelector } from 'react-redux';
@@ -101,7 +100,7 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
             ip: [ip, required],
             publicKey: [publicKey, required],
             routeSubnets: [],
-            keepAlive: [number, required]
+            keepAlive: [number]
         },
         privateKey: {
             privateKey: [isPrivateKey]
