@@ -48,14 +48,20 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
     const getMapOption = (ip) => ip.kind() === 'ipv4' ? { splitter: '.', number: ip.octets.length - 1, key: 'octets' } :
         { splitter: ':', number: ip.parts.length - 1, key: 'parts' };
 
-    const generateRandomIp = (addr) => Math.floor(Math.random() * (addr.kind() === 'ipv4' ? 256 : 65535));
+    const generateIp = (addr) => {
+        if(addr.kind() === 'ipv4') {
+            return 0;
+        } else {
+            return Math.floor(Math.random() * 65535);
+        }
+    }
 
-    const getRandomIp = (currentIp, vpnData, fieldKey, ip) => {
+    const getIp = (currentIp, vpnData, fieldKey, ip) => {
         if (!currentIp) return undefined;
 
         const { number, key, splitter } = getMapOption(currentIp);
         const unavailableSubnets = vpnData?.map(item => ipaddr.parse(item[fieldKey])[key][number]);
-        let random = generateRandomIp(currentIp);
+        let random = generateIp(currentIp);
         let flag = false;
 
         while (!flag) {
@@ -65,12 +71,12 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
                 flag = true;
                 return { [fieldKey]: `${splitIp.slice(0, splitIp.length - 1).join(splitter)}${splitter}${randomIp}` };
             } else {
-                random = generateRandomIp(currentIp);
+                currentIp.kind() === 'ipv4' && random <= 256 ? random++ : generateIp(currentIp); 
             }
         }
     };
 
-    const randomIp = managementName === 'vpnDevices' ? getRandomIp(addrDevice, vpnClientConnectionDevicesData, 'ip', vpnClientConnectionData.subnet) : getRandomIp(addr, vpnNatMapping, 'vpn_ip', natSubnetValue);
+    const randomIp = managementName === 'vpnDevices' ? getIp(addrDevice, vpnClientConnectionDevicesData, 'ip', vpnClientConnectionData.subnet) : getIp(addr, vpnNatMapping, 'vpn_ip', natSubnetValue);
 
     const managementMessages = {
         clientConnections: 'creatingClientConnection',
