@@ -99,7 +99,7 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
                     name: formValues.name,
                     ip: formValues.ip,
                     port: parseInt(formValues.port),
-                    mtu: parseInt(formValues.mtu) //! ====< initial value
+                    mtu: parseInt(formValues.mtu)
                 };
 
                 return edit ? updateVpnClientConnectionAndFetch(id, formValues.id, payload) : createVpnClientConnectionAndFetch(id, payload);
