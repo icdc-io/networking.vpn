@@ -133,7 +133,7 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
                     name: formValues.name,
                     ip: formValues.ip,
                     public_key: formValues.publicKey,
-                    keepalived: formValues.keepalived || 0,
+                    keepalived: formValues.keepAlive || 0,
                     enabled: true,
                     subnets: formValues.routeSubnets.join(','),
                     owner: userEmail
