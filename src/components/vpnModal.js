@@ -81,7 +81,6 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
         if(currentIp.kind() !== 'ipv4') {
             while (!flag) {
                 let randomIpv6 = Math.floor(Math.random() * 65535).toString(16);
-                console.log(randomIpv6)
                 if (!unavailableSubnets.includes(randomIpv6)) {
                     let splitIp = ip.split(splitter);
                     flag = true;
