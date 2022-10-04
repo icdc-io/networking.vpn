@@ -48,30 +48,63 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
     const getMapOption = (ip) => ip.kind() === 'ipv4' ? { splitter: '.', number: ip.octets.length - 1, key: 'octets' } :
         { splitter: ':', number: ip.parts.length - 1, key: 'parts' };
 
-    const generateIp = (addr) => {
-        if(addr.kind() === 'ipv4') {
-            return 0;
-        } else {
-            return Math.floor(Math.random() * 65535);
+    const convertToBinary = (ip) => {
+        const ipAddrBinary = ip.split('.').map(el => +el).map(e => e.toString(2))
+        .map(el => {
+            let temp = [];
+                for(let i = 0; i < 8 - el.length; i ++) {
+                    temp.push(0)
+                }
+            return temp.join('') + el
+        } )
+        let binaryValue = ipAddrBinary.join('');
+        return parseInt(binaryValue, 2)
+    };
+
+    const convertFromBinary = (bit) => {
+        const binaryValue = bit.toString(2).split('')
+        while(binaryValue.length < 32) {
+            binaryValue.unshift('0')
         }
-    }
+        const divideBits = binaryValue.join('').match(/.{1,8}/g);
+        const result = divideBits.map(el => parseInt(el, 2))
+        return result.join('.')
+    };
 
     const getIp = (currentIp, vpnData, fieldKey, ip) => {
         if (!currentIp) return undefined;
-
         const { number, key, splitter } = getMapOption(currentIp);
-        const unavailableSubnets = vpnData?.map(item => ipaddr.parse(item[fieldKey])[key][number]);
-        let random = generateIp(currentIp);
+
+        const unavailableSubnets = vpnData?.map(item => ipaddr.parse(item[fieldKey])[key][number]).concat([currentIp.octets[3], 0, 255]);
         let flag = false;
 
-        while (!flag) {
-            if (!unavailableSubnets.includes(random)) {
-                let randomIp = currentIp.kind() === 'ipv4' ? random.toString() : random.toString(16);
-                let splitIp = ip.split(splitter);
-                flag = true;
-                return { [fieldKey]: `${splitIp.slice(0, splitIp.length - 1).join(splitter)}${splitter}${randomIp}` };
-            } else {
-                currentIp.kind() === 'ipv4' && random <= 256 ? random++ : generateIp(currentIp); 
+        if(currentIp.kind() !== 'ipv4') {
+            while (!flag) {
+                let randomIpv6 = Math.floor(Math.random() * 65535).toString(16);
+                console.log(randomIpv6)
+                if (!unavailableSubnets.includes(randomIpv6)) {
+                    let splitIp = ip.split(splitter);
+                    flag = true;
+                    return { [fieldKey]: `${splitIp.slice(0, splitIp.length - 1).join(splitter)}${splitter}${randomIp}` };
+                }
+            }
+        } else {
+            const initIpAddr = currentIp.octets.map((el,i) => i == 3 ? 0 : el).join('.')
+            let binaryIp = convertToBinary(initIpAddr);
+            const mask = ip.split('/')[1];
+            const defaultMask = convertToBinary('255.255.255.255');
+            const ipMask = ipaddr.IPv4.subnetMaskFromPrefixLength(mask).octets.join('.');
+            const binaryMask = convertToBinary(ipMask);
+            const diapason = defaultMask - binaryMask;
+
+            for(let i = binaryIp; i <= binaryIp + diapason; i++) {
+                const fromBinaryIp = convertFromBinary(i);
+                const lastOctet = fromBinaryIp.split('.')[3];
+                if(unavailableSubnets.includes(+lastOctet)) {
+                    binaryIp++
+                } else {
+                    return {[fieldKey]: fromBinaryIp}
+                }
             }
         }
     };

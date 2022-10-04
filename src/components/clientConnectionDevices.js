@@ -48,7 +48,7 @@ const ClientConnectionDevices = ({ t, history }) => {
 
     useEffect(() => {
         if (account && devicesIds) {
-            ws.current = new WebSocket(`wss://ws.icdc.d3.zby.icdc.io/ws/wireguard_manager/stats?${devicesIds}`, ['actioncable-v1-json', window.insights.getToken(), account, role]);
+            ws.current = new WebSocket(`wss://ws.${location !== 'dby' ? location : 'icdc.d3.zby'}.icdc.io/ws/wireguard_manager/stats?${devicesIds}`, ['actioncable-v1-json', window.insights.getToken(), account, role]);
             ws.current.onopen = () => {
                 const subscribe_msg = {
                     command: 'subscribe',
