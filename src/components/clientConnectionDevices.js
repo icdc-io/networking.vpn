@@ -93,16 +93,20 @@ const ClientConnectionDevices = ({ t, history }) => {
 
     const formatDate = (item) => {
         if (item && new Date(item).getFullYear() !== 1970) {
-            const options = {
+            const dateOptions = {
                 day: '2-digit',
                 month: '2-digit',
                 year: 'numeric',
+            };
+            const timeOptions = {
                 hour: '2-digit',
                 minute: '2-digit',
                 hour12: 'true',
             };
 
-            return new Date(item).toLocaleString('en-GB', options);
+            const date = new Date(item).toLocaleDateString('en-GB', dateOptions);
+            const time = new Date(item).toLocaleTimeString('en-US', timeOptions);
+            return `${date}, ${time}`
         }
 
         return;
