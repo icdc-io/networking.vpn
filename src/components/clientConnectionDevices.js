@@ -44,11 +44,11 @@ const ClientConnectionDevices = ({ t, history }) => {
     let devicesIds = devicesFetchStatus === 'fulfilled' && vpnClientConnectionDevicesData
         .map((el) => `dev_id[]=${el.id}&`)
         .join('')
-        .slice(0, -1);
+        .slice(0, -1);    
 
     useEffect(() => {
         if (account && devicesIds) {
-            ws.current = new WebSocket(`wss://ws.${location !== 'dby' ? location : 'icdc.d3.zby'}.icdc.io/ws/wireguard_manager/stats?${devicesIds}`, ['actioncable-v1-json', window.insights.getToken(), account, role]);
+            ws.current = new WebSocket(`${baseUrls[location]}/ws/wireguard_manager/stats?${devicesIds}`, ['actioncable-v1-json', window.insights.getToken(), account, role]);
             ws.current.onopen = () => {
                 const subscribe_msg = {
                     command: 'subscribe',
