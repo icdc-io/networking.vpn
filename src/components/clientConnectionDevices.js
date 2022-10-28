@@ -44,11 +44,13 @@ const ClientConnectionDevices = ({ t, history }) => {
     let devicesIds = devicesFetchStatus === 'fulfilled' && vpnClientConnectionDevicesData
         .map((el) => `dev_id[]=${el.id}&`)
         .join('')
-        .slice(0, -1);    
+        .slice(0, -1);
+    
+    const [protocol, locationUrl] = baseUrls[location].split('http')[1].split('://');
 
     useEffect(() => {
         if (account && devicesIds) {
-            ws.current = new WebSocket(`${baseUrls[location].replace('http', 'ws')}/ws/wireguard_manager/stats?${devicesIds}`, ['actioncable-v1-json', window.insights.getToken(), account, role]);
+            ws.current = new WebSocket(`ws${protocol}://wgm.ws.${locationUrl}/ws/wireguard_manager/stats?${devicesIds}`, ['actioncable-v1-json', window.insights.getToken(), account, role]);
             ws.current.onopen = () => {
                 const subscribe_msg = {
                     command: 'subscribe',
