@@ -36,6 +36,8 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
     const vpnClientConnectionData = useSelector(state => formatClientConnectionData(state.VpnStore.vpnClientConnection));
     const vpnClientConnectionDevicesData = useSelector(state => formatDevicesData(state.VpnStore.vpnClientConnectionDevices));
     const vpnNatMapping = useSelector(state => state.VpnStore.vpnNatMapping);
+    const next_ip = useSelector(state => state.VpnStore.vpnClientConnectionsNextIp.next_ip);
+
     const addr = gateway.natSubnet && ipaddr.parse(gateway.natSubnet.split('/')[0]);
     const addrDevice = vpnClientConnectionData.subnet && ipaddr.parse(vpnClientConnectionData.subnet.split('/')[0]);
     const user = useSelector(state => state.host.user);
@@ -84,7 +86,7 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
                 if (!unavailableSubnets.includes(randomIpv6)) {
                     let splitIp = ip.split(splitter);
                     flag = true;
-                    return { [fieldKey]: `${splitIp.slice(0, splitIp.length - 1).join(splitter)}${splitter}${randomIp}` };
+                    return { [fieldKey]: `${splitIp.slice(0, splitIp.length - 1).join(splitter)}${splitter}${nextIp}` };
                 }
             }
         } else {
@@ -108,7 +110,7 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
         }
     };
 
-    const randomIp = managementName === 'vpnDevices' ? getIp(addrDevice, vpnClientConnectionDevicesData, 'ip', vpnClientConnectionData.subnet) : getIp(addr, vpnNatMapping, 'vpn_ip', natSubnetValue);
+    const nextIp = managementName === 'vpnDevices' ? {ip: next_ip} : getIp(addr, vpnNatMapping, 'vpn_ip', natSubnetValue);
 
     const managementMessages = {
         clientConnections: 'creatingClientConnection',
@@ -168,7 +170,7 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
                     keepalived: formValues.keepAlive || 0,
                     enabled: true,
                     subnets: formValues.routeSubnets.join(','),
-                    owner: userEmail
+                    owner: edit ? values.owner : userEmail
                 }
                 return edit ? updateVpnClientConnectionDeviceAndFetch(formValues.id, connectionId, payload) :
                     createVpnClientConnectionDeviceAndFetch(connectionId, payload)
@@ -232,7 +234,7 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
                             handleClose={handleClose}
                             onSubmit={onSubmit}
                             initialValues={(edit || privateKey) ? values
-                                : randomIp}
+                                : nextIp}
                             fieldNames={formFields}
                             edit={edit}
                             pencil={pencil}

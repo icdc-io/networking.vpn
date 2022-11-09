@@ -165,6 +165,11 @@ export const deleteVpnClientConnectionAndFetch = (clientConnectionId, gatewayId)
     };
 };
 
+export const fetchVpnClientConnectionsNextIp = id => ({
+    type: ActionTypes.VPN_CLIENT_CONNECTION_NEXT_IP_FETCH,
+    payload: fetchData(getFullPath(ActionTypes.vpnConnectionsNextIpUrl(id))).then(response => response)
+});
+
 export const fetchVpnClientConnectionDevices = clientConnectionId => ({
     type: ActionTypes.VPN_CLIENT_CONNECTION_DEVICES_FETCH,
     payload: fetchData(getFullPath(ActionTypes.vpnClientConnectionsUrl(clientConnectionId, 'devices'))).then(response => response)

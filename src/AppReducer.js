@@ -21,7 +21,9 @@ const initialState = Immutable({
     vpnPeerGateways: [],
     vpnPeerGatewaysFetchStatus: '',
     vpnNatMapping: [],
-    vpnNatMappingFetchSatus: ''
+    vpnNatMappingFetchSatus: '',
+    vpnClientConnectionsNextIp: '',
+    vpnClientConnectionsNextIpStatus: ''
 });
 
 export const VpnStore = (state = initialState, action) => {
@@ -117,9 +119,19 @@ export const VpnStore = (state = initialState, action) => {
             vpnClientConnectionDevicesFetchStatus: 'fulfilled'
         });
 
-        case ActionTypes.VPN_CLIENT_CONNECTION_DEVICES_STATUS_CLEAN: 
-        return state.set('vpnClientConnectionDevicesFetchStatus', '');
+    case ActionTypes.VPN_CLIENT_CONNECTION_DEVICES_STATUS_CLEAN: 
+    return state.set('vpnClientConnectionDevicesFetchStatus', '');
 
+    case `${ActionTypes.VPN_CLIENT_CONNECTION_NEXT_IP_FETCH}_PENDING`:
+        return state.set('vpnClientConnectionsNextIpStatus', 'pending');
+    case `${ActionTypes.VPN_CLIENT_CONNECTION_NEXT_IP_FETCH}_REJECTED`:
+        return state.set('vpnClientConnectionsNextIpStatus', 'rejected');
+    case `${ActionTypes.VPN_CLIENT_CONNECTION_NEXT_IP_FETCH}_FULFILLED`:
+        return Immutable.merge(state, {
+            vpnClientConnectionsNextIp: action.payload,
+            vpnClientConnectionsNextIpStatus: 'fulfilled'
+        });
+            
     case `${ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_CREATE}_PENDING`:
         return state.set('vpnClientConnectionDevicesFetchStatus', 'pending');
     case `${ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_CREATE}_REJECTED`:
