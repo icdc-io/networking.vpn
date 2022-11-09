@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams, withRouter } from 'react-router-dom';
 import { PropTypes } from 'prop-types';
 import { Header, Loader, Popup, Table } from 'semantic-ui-react';
-import { cleanVpnClientConnectionDeviceStatus, fetchVpnClientConnection, fetchVpnClientConnectionDevices, fetchVpnGateway, updateVpnClientConnectionDeviceAndFetch } from '../AppActions';
+import { cleanVpnClientConnectionDeviceStatus, fetchVpnClientConnection, fetchVpnClientConnectionDevices, fetchVpnClientConnectionsNextIp, fetchVpnGateway, updateVpnClientConnectionDeviceAndFetch } from '../AppActions';
 import { vpnGatewayPath } from '../constants/routes';
 import ButtonBack from '../general/buttonBack';
 import './clientConnectionDevices.scss';
@@ -47,6 +47,10 @@ const ClientConnectionDevices = ({ t, history }) => {
         .slice(0, -1);
     
     const [protocol, locationUrl] = baseUrls[location].split('http')[1].split('://');
+
+    useEffect(() => {
+        dispatch(fetchVpnClientConnectionsNextIp(connectionId))
+    }, [])
 
     useEffect(() => {
         if (account && devicesIds) {

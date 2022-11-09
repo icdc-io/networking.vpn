@@ -9,6 +9,7 @@ export const VPN_CLIENT_CONNECTION_FETCH = 'VPN_CLIENT_CONNECTION_FETCH';
 export const VPN_CLIENT_CONNECTION_CREATE = 'VPN_CLIENT_CONNECTION_CREATE';
 export const VPN_CLIENT_CONNECTION_UPDATE = 'VPN_CLIENT_CONNECTION_UPDATE';
 export const VPN_CLIENT_CONNECTION_DELETE = 'VPN_CLIENT_CONNECTION_DELETE';
+export const VPN_CLIENT_CONNECTION_NEXT_IP_FETCH = 'VPN_CLIENT_CONNECTION_NEXT_IP_FETCH';
 export const VPN_CLIENT_CONNECTION_DEVICE_STATS_FETCH = 'VPN_CLIENT_CONNECTION_DEVICE_STATS_FETCH';
 export const VPN_CLIENT_CONNECTION_DEVICES_STATUS_CLEAN = 'VPN_CLIENT_CONNECTION_DEVICES_STATUS_CLEAN';
 export const VPN_CLIENT_CONNECTION_DEVICES_FETCH = 'VPN_CLIENT_CONNECTION_DEVICES_FETCH';
@@ -31,6 +32,7 @@ export const vpnClientConnectionsUrl = (id, clientConnectionDetails) => `/connec
 export const vpnClientConnectionDevicesUrl = (id, stats) => `/devices/${id}${stats ? '/' + stats : ''}`;
 export const vpnPeerGatewaysUrl = id => `/remote_gateways/${id}`;
 export const vpnNatMappingUrl = id => `/nat_maps/${id}`;
+export const vpnConnectionsNextIpUrl = (id) => `/connections/${id}/next_ip`;
 
 export const notificationMessages = {
     ru: {
