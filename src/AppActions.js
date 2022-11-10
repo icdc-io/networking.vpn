@@ -190,6 +190,7 @@ export const createVpnClientConnectionDeviceAndFetch = (clientConnectionId, payl
 
         response.then(() => {
             dispatch(fetchVpnClientConnectionDevices(clientConnectionId));
+            dispatch(fetchVpnClientConnectionsNextIp(clientConnectionId))
             successNotification('');
         }, error => errorNotification(error));
     };
@@ -225,6 +226,7 @@ export const updateVpnClientConnectionDeviceAndFetch = (deviceId, clientConnecti
 
         response.then(() => {
             dispatch(fetchVpnClientConnectionDevices(clientConnectionId));
+            dispatch(fetchVpnClientConnectionsNextIp(clientConnectionId))
             successNotification('');
         }, error => errorNotification(error));
     };
@@ -241,6 +243,7 @@ export const deleteVpnClientConnectionDeviceAndFetch = (deviceId, clientConnecti
 
         response.then(() => {
             dispatch(fetchVpnClientConnectionDevices(clientConnectionId));
+            dispatch(fetchVpnClientConnectionsNextIp(clientConnectionId))
             successNotification('');
         }, error => errorNotification(error));
     };
