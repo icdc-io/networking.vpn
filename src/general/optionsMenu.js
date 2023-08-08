@@ -14,7 +14,7 @@ const OptionsMenu = ({ t, type, instance, options, onClickAction }) => {
                     edit
                     key={key}
                     data={clientConnection}
-                    formFields={['name', 'ip', 'port', 'mtu']}
+                    formFields={['name', 'deviceSubnet', 'gateway_ip', 'port', 'mtu']}
                     editContentMessage={'editClientConnection'}
                     managementName='clientConnections'
                 />,
@@ -27,7 +27,7 @@ const OptionsMenu = ({ t, type, instance, options, onClickAction }) => {
                     edit
                     key={key}
                     data={peerGateway}
-                    formFields={['name', 'ip', 'peerEndpoint', 'publicKey', 'routeSubnets']}
+                    formFields={['name', 'deviceSubnet', 'gateway_ip', 'peerEndpoint', 'publicKey', 'routeSubnets']}
                     editContentMessage={'editPeerGateway'}
                     managementName='peerGateways'
                 />,
