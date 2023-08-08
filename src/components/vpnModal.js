@@ -132,6 +132,8 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
                 payload = {
                     name: formValues.name,
                     ip: formValues.ip,
+                    subnet: formValues.deviceSubnet,
+                    gateway_ip: formValues.gateway_ip,
                     port: parseInt(formValues.port),
                     mtu: parseInt(formValues.mtu)
                 };
@@ -141,7 +143,8 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
                 payload = {
                     name: formValues.name,
                     endpoint: formValues.peerEndpoint,
-                    ip: formValues.ip,
+                    subnet: formValues.deviceSubnet,
+                    gateway_ip: formValues.gateway_ip,
                     public_key: formValues.publicKey,
                     subnets: formValues.routeSubnets.join(',')
                 };

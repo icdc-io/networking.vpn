@@ -56,8 +56,8 @@ export const formatTableData = (data, tableName) => {
                 id: clientConnection.id,
                 gatewayId: clientConnection.gateway_id,
                 name: clientConnection.name,
-                subnet: clientConnection.ip,
-                ip: clientConnection.ip,
+                deviceSubnet: clientConnection.subnet,
+                gateway_ip: clientConnection.gateway_ip,
                 port: clientConnection.port,
                 mtu: clientConnection.mtu, // Maximum transmission unit
             }));
@@ -66,7 +66,8 @@ export const formatTableData = (data, tableName) => {
                 id: peerGateway.id,
                 gatewayId: peerGateway.gateway_id,
                 name: peerGateway.name,
-                ip: peerGateway.ip,
+                deviceSubnet: peerGateway.subnet,
+                gateway_ip: peerGateway.gateway_ip,
                 peerEndpoint: peerGateway.endpoint,
                 publicKey: peerGateway.public_key,
                 routeSubnets: peerGateway.subnets
@@ -88,7 +89,7 @@ export const formatClientConnectionData = data => ({
     gatewayId: data.gateway_id,
     name: data.name,
     subnet: data.ip,
-    ip: data.ip,
+    gateway_ip: data.gateway_ip,
     port: data.port,
     mtu: data.mtu // Maximum transmission unit
 });

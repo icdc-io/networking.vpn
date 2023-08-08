@@ -60,16 +60,18 @@ const VpnDetails = ({ t, history }) => {
         {
             name: 'clientConnections',
             menuItem: t('clientConnections'),
-            headers: ['name', 'subnet', 'endpoint', ''],
-            formFields: ['name', 'ip', 'port', 'mtu'],
-            addContentMessage: 'addClientConnection'
+            headers: ['name', 'deviceSubnet', 'gateway_ip', 'endpoint', ''],
+            formFields: ['name', 'subnet', 'gateway_ip', 'port', 'mtu'],
+            createModalFields: ['name', 'deviceSubnet', 'gateway_ip', 'port', 'mtu'],
+            addContentMessage: 'addClientConnection',
         },
         {
             name: 'peerGateways',
             menuItem: t('peerGateways'),
-            headers: ['name', 'ip', 'peerEndpoint', 'publicKey', 'routeSubnets', ''],
-            formFields: ['name', 'ip', 'peerEndpoint', 'publicKey', 'routeSubnets'],
-            addContentMessage: 'addPeerGateway'
+            headers: ['name', 'deviceSubnet', 'gateway_ip', 'peerEndpoint', 'publicKey', 'routeSubnets', ''],
+            formFields: ['name', 'subnet', 'gateway_ip','peerEndpoint', 'publicKey', 'routeSubnets'],
+            createModalFields: ['name', 'deviceSubnet', 'gateway_ip', 'peerEndpoint', 'publicKey', 'routeSubnets'],
+            addContentMessage: 'addPeerGateway',
         },
         {
             name: 'natMapping',
@@ -145,7 +147,7 @@ const VpnDetails = ({ t, history }) => {
                         <VpnModal
                             t={t}
                             key={key}
-                            formFields={item.formFields}
+                            formFields={item.createModalFields}
                             addContentMessage={item.addContentMessage}
                             managementName={activeTab}
                             natSubnet={gateway.natSubnet}

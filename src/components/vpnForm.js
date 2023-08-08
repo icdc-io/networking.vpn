@@ -40,14 +40,16 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
     const placeholderMessages = {
         clientConnections: {
             name: 'enterName',
-            ip: 'enterIpWithPrefix',
+            deviceSubnet: 'enterIpWithPrefix',
+            gateway_ip: 'enterIp',
             port: 'enterPort',
             mtu: 'enterMtu'
         },
         peerGateways: {
             name: 'enterName',
             peerEndpoint: 'enterPeerEndpoint',
-            ip: 'enterIpWithPrefix',
+            deviceSubnet: 'enterIpWithPrefix',
+            gateway_ip: 'enterIp',
             publicKey: 'enterPublicKey',
             routeSubnets: 'enterRouteSubnets'
         },
@@ -75,13 +77,15 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
     const validations = {
         clientConnections: {
             name: [name, maxLength10],
-            ip: [ipWithSubnetPrefix],
+            deviceSubnet: [ipWithSubnetPrefix],
+            gateway_ip: [ip],
             port: [port],
             mtu: [mtu, maxLength4]
         },
         peerGateways: {
             name: [name, maxLength30],
-            ip: [ipWithSubnetPrefix],
+            deviceSubnet: [ipWithSubnetPrefix],
+            gateway_ip: [ip],
             peerEndpoint: [],
             publicKey: [publicKey],
             routeSubnets: []
