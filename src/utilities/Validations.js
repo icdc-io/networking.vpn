@@ -21,7 +21,7 @@ const validateTranslations = {
         mtu: 'Must be a number within the range of 1-1420',
         peerEndpoint: 'Must be in the formats hostname:port, ipv4:port or ipv6:port',
         publicKey: 'Must be a valid public key',
-        publicKey: 'Must be a valid private key'
+        privateKey: 'Must be a valid private key'
     },
     ru: {
         required: 'Обязательно для заполнения',
@@ -39,7 +39,7 @@ const validateTranslations = {
         mtu: 'Должно быть число в пределах 1-1420',
         peerEndpoint: 'Должен быть в формате hostname:port, ipv4:port, ipv6:port',
         publicKey: 'Пожалуйста, введите действительный публичный ключ',
-        pprivateKey: 'Пожалуйста, введите действительный приватный ключ'
+        privateKey: 'Пожалуйста, введите действительный приватный ключ'
     }
 };
 
