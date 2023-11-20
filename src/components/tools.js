@@ -88,7 +88,7 @@ export const formatClientConnectionData = data => ({
     id: data.id,
     gatewayId: data.gateway_id,
     name: data.name,
-    subnet: data.ip,
+    subnet: data.subnet,
     gateway_ip: data.gateway_ip,
     port: data.port,
     mtu: data.mtu // Maximum transmission unit
