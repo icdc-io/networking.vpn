@@ -13,8 +13,7 @@ export const CustomAccordion = ({t, configData, index, open, handleClick}) => {
     let link =  URL.createObjectURL(file);
 
     const copy = value => {
-        const singleLineValue = value.replaceAll('\n', '');
-        navigator.clipboard.writeText(singleLineValue)
+        navigator.clipboard.writeText(value)
             .catch(err => {
                 console.log('Something went wrong', err); // eslint-disable-line no-console
             });
