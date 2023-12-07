@@ -54,7 +54,7 @@ const ClientConnectionDevices = ({ t, history }) => {
 
     useEffect(() => {
         if (account && devicesIds) {
-            ws.current = new WebSocket(`ws${protocol}://${locationUrl.replace("api", "wireguard")}/ws/wireguard_manager/stats?${devicesIds}`, ['actioncable-v1-json', window.insights.getToken(), account, role]);
+            ws.current = new WebSocket(`ws${protocol}://wgm.ws.${locationUrl}/ws/wireguard_manager/stats?${devicesIds}`, ['actioncable-v1-json', window.insights.getToken(), account, role]);
             ws.current.onopen = () => {
                 const subscribe_msg = {
                     command: 'subscribe',
