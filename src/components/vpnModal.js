@@ -42,6 +42,8 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
     const addrDevice = vpnClientConnectionData.subnet && ipaddr.parse(vpnClientConnectionData.subnet.split('/')[0]);
     const user = useSelector(state => state.host.user);
 
+    console.log(user, 'user')
+
     const handleClose = () => { 
         setOpen(false); 
         openConfigs && setOpenConfigs(false) 
@@ -213,7 +215,7 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
                     : <Button color='blue' size='small' onClick={() => setOpen(true)}> {t(addContentMessage)} </Button>;
 
     return (
-        (user.role === 'admin' || managementName == 'vpnDevices' || managementName == 'privateKey') && <>
+        (user.role === 'admin' || user.role === 'owner' || managementName == 'vpnDevices' || managementName == 'privateKey') && <>
             {button}
             <Modal
                 size='tiny'
