@@ -21,9 +21,7 @@ const CustomChipInput = ({
     const [localError, setLocalError] = useState("");
     const user = useSelector(state => state.host.user);
 
-    // const user = {
-    //     role: 'member'
-    // }
+    const isAdminOrOwner = user.role === 'admin' || user.role === 'owner'
 
     const ref = useRef("");
 
@@ -95,10 +93,10 @@ const CustomChipInput = ({
                 <input
                     ref={ref}
                     {...input}
-                    placeholder={currentValues.length == 0 ? placeholder : ""}
+                    placeholder={currentValues.length == 0 && isAdminOrOwner ? placeholder : ""}
                     type="text"
                     value={value}
-                    disabled={user.role !== 'admin' && user.role !== 'owner'}
+                    disabled={!isAdminOrOwner}
                     onChange={onChange}
                     onKeyDown={keyDown}
                     onBlur={onBlur}

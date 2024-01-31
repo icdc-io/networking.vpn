@@ -18,10 +18,8 @@ const VpnDetailsTable = ({ t, tableName, headers, reduxStateName, reduxFetchStat
     const tableContentFromRedux = useSelector(state => state.VpnStore[reduxStateName]) || [];
     const formattedTableContent = tableContentFromRedux.length !== 0 ? formatTableData(tableContentFromRedux, tableName) : [];
     const fetchStatus = useSelector(state => state.VpnStore[reduxFetchStatus]);
-    // const user = useSelector(state => state.host.user);
-    const user = {
-        role: 'owner'
-    }
+    const user = useSelector(state => state.host.user);
+
 
     useEffect(() => {
         setActivePageNumber(1);

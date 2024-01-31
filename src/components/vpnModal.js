@@ -42,8 +42,6 @@ const VpnModal = ({ t, edit, pencil, privateKey, data: values, formFields, addCo
     const addrDevice = vpnClientConnectionData.subnet && ipaddr.parse(vpnClientConnectionData.subnet.split('/')[0]);
     const user = useSelector(state => state.host.user);
 
-    console.log(user, 'user')
-
     const handleClose = () => { 
         setOpen(false); 
         openConfigs && setOpenConfigs(false) 
