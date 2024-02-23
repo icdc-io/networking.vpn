@@ -24,6 +24,7 @@ import { useSelector } from 'react-redux';
 import './vpnDetails.scss'
 import CustomChipInput from '../general/customChipInput';
 import CustomDroopdown from '../general/customDropdown';
+import { returnBaseUrl } from 'container/ReturnBaseUrl';
 
 const GeneralInput = React.lazy(() => import('container/GeneralInput'));
 
@@ -34,6 +35,7 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
     const configStatus = useSelector(state => state.VpnStore.vpnClientConnectionDevicesConfigStatus);
     const configuration = useSelector(state => state.VpnStore.vpnClientConnectionDevicesConfig);
     const [selectedConfig, setSelectedConfig] = useState(0);
+    const baseUrls = useSelector(state => state.host.baseUrls);
 
     const buttonContent = edit ? t('save') : privateKey ? t('proceed') : t('add');
 
@@ -111,6 +113,8 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
         }
     };
 
+    const baseHostname = returnBaseUrl(baseUrls, user.location);
+
     const displayFields = fieldNames.map((item, key) => {
         return (<div className={item == 'hostname' ? 'hostname-field' : ''} key={key}>
             <Field
@@ -123,7 +127,7 @@ const VpnForm = ({ t, handleClose, handleSubmit, pristine, invalid, edit, pencil
                 validate={validations[managementName][item]}
                 props={initialValues && edit && { initial: initialValues[item] }}
                 placeholder={t(placeholderMessages[managementName][item])}
-            />{item == 'hostname' && <p>{`.${user.account}.vpn.${user.location}.icdc.io`}</p>}</div>
+            />{item == 'hostname' && <p>{`.${user.account}.vpn.${baseHostname}`}</p>}</div>
         );
     });
 
