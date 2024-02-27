@@ -3,7 +3,7 @@ import { Form, Label } from "semantic-ui-react";
 import PropTypes from "prop-types";
 import "./customChipInput.scss";
 import { ipWithSubnetPrefix } from "../utilities/Validations";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const CustomChipInput = ({
     input,
@@ -19,6 +19,9 @@ const CustomChipInput = ({
     const [currentValues, setCurrentValues] = useState(generalInitial);
     const [value, setValue] = useState("");
     const [localError, setLocalError] = useState("");
+    const user = useSelector(state => state.host.user);
+
+    const isAdminOrOwner = user.role === 'admin' || user.role === 'owner'
 
     const ref = useRef("");
 
@@ -90,9 +93,10 @@ const CustomChipInput = ({
                 <input
                     ref={ref}
                     {...input}
-                    placeholder={currentValues.length == 0 ? placeholder : ""}
+                    placeholder={currentValues.length == 0 && isAdminOrOwner ? placeholder : ""}
                     type="text"
                     value={value}
+                    disabled={!isAdminOrOwner}
                     onChange={onChange}
                     onKeyDown={keyDown}
                     onBlur={onBlur}

@@ -20,6 +20,7 @@ const VpnDetailsTable = ({ t, tableName, headers, reduxStateName, reduxFetchStat
     const fetchStatus = useSelector(state => state.VpnStore[reduxFetchStatus]);
     const user = useSelector(state => state.host.user);
 
+
     useEffect(() => {
         setActivePageNumber(1);
     }, [tableName]);
@@ -102,7 +103,7 @@ const VpnDetailsTable = ({ t, tableName, headers, reduxStateName, reduxFetchStat
                 type = 'vpnNatMapping';
             }
 
-            content = user.role === 'admin' ?
+            content = user.role === 'admin' || user.role === 'owner' ?
                 <OptionsMenu t={t} type={type} instance={data} options={['edit', 'delete']} /> : '';
         }
 
