@@ -19,7 +19,7 @@ const CustomDroopdown = ({
 
     const baseHostname = returnBaseUrl(baseUrls, user.location);
     const generalInitial = initial ? initial : "";
-    const optionsData = availableLocations[user.account].locations.map((el) => ({
+    const optionsData = availableLocations[user.account].locations.filter(location => location !== user.location).map((el) => ({
         text: `${user.account}.vpn.${baseHostname}:2200`,
         value: `${user.account}.vpn.${baseHostname}:2200`,
     }));
