@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import "./chipInput.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { peerEndpoint } from "../utilities/Validations";
-import { returnBaseUrl } from 'container/ReturnBaseUrl';
 
 const CustomDroopdown = ({
     label,
@@ -17,11 +16,15 @@ const CustomDroopdown = ({
     const availableLocations = useSelector(state => state.host.locationsAvailability);
     const baseUrls = useSelector(state => state.host.baseUrls);
 
-    const baseHostname = returnBaseUrl(baseUrls, user.location);
+    const returnBaseUrlForRemote = (baseUrl) => {
+        return baseUrl ? baseUrl.substr(baseUrl.indexOf('.') + 1) : "";
+    };
+      
     const generalInitial = initial ? initial : "";
+    
     const optionsData = availableLocations[user.account].locations.filter(location => location !== user.location).map((el) => ({
-        text: `${user.account}.vpn.${baseHostname}:2200`,
-        value: `${user.account}.vpn.${baseHostname}:2200`,
+        text: `${user.account}.vpn.${returnBaseUrlForRemote(baseUrls[el])}:2200`,
+        value: `${user.account}.vpn.${returnBaseUrlForRemote(baseUrls[el])}:2200`,
     }));
 
     const [options, setOptions] = useState(optionsData);
