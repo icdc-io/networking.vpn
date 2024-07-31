@@ -1,121 +1,123 @@
 $base-blue-color: #2185d0;
 
 .vpn-details-wrapper {
-.ui.header.title {
+  .ui.header.title {
     margin-top: 0;
-}
-.gateway-title-wrapper {
+  }
+  .gateway-title-wrapper {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
     align-items: center;
 
     div {
-        margin-bottom: 32px;
+      margin-bottom: 32px;
     }
 
     .gateway-title {
-        display: flex;
-        min-width: 6rem;
-        align-items: center;
-        margin-right: 1rem;
+      display: flex;
+      min-width: 6rem;
+      align-items: center;
+      margin-right: 1rem;
+      margin-top: 2rem;
 
-        img {
-            padding-right: 0.5rem;
-            height: 45px;
-        }
+      img {
+        padding-right: 0.5rem;
+        height: 45px;
+      }
     }
-}
+  }
 
-.vpn-details-container {
+  .vpn-details-container {
     display: flex;
     width: fit-content;
     justify-content: space-between;
     flex-wrap: wrap;
 
     .vpn-details {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 2rem;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 2rem;
 
-        &:nth-child(1) {
-            margin-right: 25px;
-        }
+      &:nth-child(1) {
+        margin-right: 25px;
+      }
 
-        &:nth-child(2) {
-            font-weight: bold;
-        }
+      &:nth-child(2) {
+        font-weight: bold;
+      }
     }
-}
+  }
 
-.ui.secondary.menu.submenu {
+  .ui.secondary.menu.submenu {
     z-index: 1;
     .item {
-        border-bottom-color: #cdcdcd;
-        &.active {
-            color: black !important;
-        }
+      border-bottom-color: #cdcdcd;
+      &.active {
+        color: black !important;
+      }
 
-        &:last-child {
-            border-radius: 0;
-        }
+      &:last-child {
+        border-radius: 0;
+      }
     }
-}
+  }
 
-.menu-container {
+  .menu-container {
     display: flex;
     justify-content: space-between;
     position: relative;
 
     span {
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-        height: 2px;
-        background-color: #cdcdcd;
-        z-index: 0;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 2px;
+      background-color: #cdcdcd;
+      z-index: 0;
     }
 
     .ui.menu {
-        overflow: auto hidden;
+      overflow: auto hidden;
     }
-}
-.sub-menu-container {
+  }
+  .sub-menu-container {
     width: 100%;
     display: flex;
     justify-content: flex-end;
     margin-top: 20px;
-}
-.ui.button > .question.circle.info-icon {
-    margin: 0px 0px 2px 0px!important;
+  }
+  .ui.button > .question.circle.info-icon {
+    margin: 0px 0px 2px 0px !important;
     position: relative;
-  
+
     &:before {
-        position: absolute;
-        bottom: -2px;
+      position: absolute;
+      bottom: -2px;
     }
   }
-.disabled-btn {
+  .disabled-btn {
     cursor: default;
-    opacity: .45!important;
-    background-image: none!important;
-    box-shadow: none!important;
-    padding-top: 12px!important;
-  }}
-  .ui.form div.hostname-field {
+    opacity: 0.45 !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    padding-top: 12px !important;
+  }
+}
+.ui.form div.hostname-field {
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+
+  .field {
     width: 100%;
-    display: flex;
-    align-items: flex-end;
 
-    .field {
-        width: 100%;
-
-        div.ui.input {
-            width: 100%;
-        }
+    div.ui.input {
+      width: 100%;
     }
-    p {
-        margin-bottom: 22px;
-        margin-left: 6px;
-    }
+  }
+  p {
+    margin-bottom: 22px;
+    margin-left: 6px;
+  }
 }

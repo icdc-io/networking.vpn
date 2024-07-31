@@ -1,17 +1,23 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
-const StatusLabel = React.memo(({ t, active }) => {
-    return (
-        <div className={active ? 'status-label green-text' : 'status-label gray-text'}>
-            {active ? t('enabled') : t('disabled')}
-        </div>
-    );
+const StatusLabel = React.memo(({ active }) => {
+  const { t } = useTranslation();
+
+  return (
+    <div
+      className={active ? "status-label green-text" : "status-label gray-text"}
+    >
+      {active ? t("enabled") : t("disabled")}
+    </div>
+  );
 });
 
+StatusLabel.displayName = "StatusLabel";
+
 StatusLabel.propTypes = {
-    t: PropTypes.func,
-    active: PropTypes.bool
+  active: PropTypes.bool,
 };
 
 export default StatusLabel;

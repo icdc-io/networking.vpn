@@ -1,30 +1,37 @@
-import React from 'react';
-import { Redirect, withRouter, Switch, Route } from 'react-router-dom';
-import { Segment } from 'semantic-ui-react';
-import { PropTypes } from 'prop-types';
-import { vpnGatewayPath, vpnGatewaysPath, vpnClientConnectionDevicesPath } from '../constants/routes';
+import React from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
+import { Segment } from "semantic-ui-react";
+import {
+  vpnGatewayPath,
+  vpnGatewaysPath,
+  vpnClientConnectionDevicesPath,
+} from "../constants/routes";
 
-const Vpn = React.lazy(() => import('./vpn'));
-const VpnDetails = React.lazy(() => import('./vpnDetails'));
-const ClientConnectionDevices = React.lazy(() => import('./clientConnectionDevices'));
+const Vpn = React.lazy(() => import("./vpn"));
+const VpnDetails = React.lazy(() => import("./vpnDetails"));
+const ClientConnectionDevices = React.lazy(
+  () => import("./clientConnectionDevices"),
+);
 
-const VpnOverview = ({ t }) => {
-    return (
-        <Segment
-            style={{ minHeight: 792 }}
-        >
-            <Switch>
-                <Route exact path={vpnGatewaysPath()} render={() => <Vpn t={t} />} />
-                <Route exact path={vpnGatewayPath()} render={() => <VpnDetails t={t} />} />
-                <Route exact path={vpnClientConnectionDevicesPath()} render={() => <ClientConnectionDevices t={t} />} />
-                <Redirect to={`/vpn/gateways`} />
-            </Switch>
-        </Segment>
-    );
+const VpnOverview = () => {
+  return (
+    <Segment style={{ minHeight: 792 }}>
+      <React.Suspense fallback={null}>
+        <Routes>
+          <Route path={vpnGatewaysPath()} Component={Vpn} />
+          <Route path={vpnGatewayPath()} Component={VpnDetails} />
+          <Route
+            path={`${vpnGatewayPath()}/${vpnClientConnectionDevicesPath()}`}
+            Component={ClientConnectionDevices}
+          />
+          <Route
+            path="*"
+            element={<Navigate to={vpnGatewaysPath()} replace />}
+          />
+        </Routes>
+      </React.Suspense>
+    </Segment>
+  );
 };
 
-VpnOverview.propTypes = {
-    intl: PropTypes.any
-};
-
-export default withRouter(VpnOverview);
+export default VpnOverview;

@@ -1,118 +1,118 @@
 .accordion {
-    width: 100%;
-    margin: 10px 0;
+  width: 100%;
+  margin: 10px 0;
 }
 .accordion section {
-    width: 100%;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 16px;
+  width: 100%;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16px;
 }
 .title-config {
+  display: flex;
+  justify-content: space-between;
+  height: 40px;
+  border: 1px solid #c4c4c4;
+  border-radius: 5px;
+  color: #2185d0;
+
+  span {
+    height: 100%;
+    padding: 10px 15px;
     display: flex;
-    justify-content: space-between;
-    height: 40px;
-    border: 1px solid #c4c4c4;
-    border-radius: 5px;
-    color: #2185d0;
+    align-items: center;
 
-    span {
-        height: 100%;
-        padding: 10px 15px;
-        display: flex;
-        align-items: center;
-
-        div {
-            margin: 10px 0px;
-        }
+    div {
+      margin: 10px 0px;
     }
-    &:hover {
-        cursor: pointer;
-    }
+  }
+  &:hover {
+    cursor: pointer;
+  }
 }
 .description-config {
-    border: 1px solid #2185d0;
-    border-top: none;
-    border-radius: 0px 0px 5px 5px;
+  border: 1px solid #2185d0;
+  border-top: none;
+  border-radius: 0px 0px 5px 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 15px;
+
+  .qr-wrapper {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    padding: 15px;
+    align-items: center;
 
-    .qr-wrapper {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-
-        img {
-            width: 70%;
-        }
-
-        .inctruction-item {
-            margin: 5px 0px;
-        }
+    img {
+      width: 70%;
     }
 
-    .os-wrapper {
-        .command {
-            background-color: #fafafa;
-            border: 1px solid #e2e2e2;
-            font-family: Consolas, Menlo, "Liberation Mono", Courier, monospace;
-            font-size: 0.84rem;
-            width: max-content;
-            padding: 4px 6px;
-            border-radius: 5px;
-            max-width: 100%;
-        }
-
-        .inctruction-item div {
-            margin: 10px 0px;
-        }
-    }
     .inctruction-item {
-        align-self: flex-start;
-        font-style: normal;
-        font-weight: 400;
-        font-size: 14px;
-        line-height: 1.2rem;
-        margin: 10px 0px;
+      margin: 5px 0px;
     }
-    .link-div {
-        width: 144px;
-        height: 36px;
-        position: absolute;
-        z-index: 1;
-        top: 15px;
+  }
+
+  .os-wrapper {
+    .command {
+      background-color: #fafafa;
+      border: 1px solid #e2e2e2;
+      font-family: Consolas, Menlo, "Liberation Mono", Courier, monospace;
+      font-size: 0.84rem;
+      width: max-content;
+      padding: 4px 6px;
+      border-radius: 5px;
+      max-width: 100%;
     }
+
+    .inctruction-item div {
+      margin: 10px 0px;
+    }
+  }
+  .inctruction-item {
+    align-self: flex-start;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.2rem;
+    margin: 10px 0px;
+  }
+  .link-div {
+    width: 144px;
+    height: 36px;
+    position: absolute;
+    z-index: 1;
+    top: 15px;
+  }
 }
 
 .api-dialog-snippet-wrapper {
-    border: solid 1px #c8cfee;
-    border-radius: 4px;
-    background: #f5f7ff;
+  border: solid 1px #c8cfee;
+  border-radius: 4px;
+  background: #f5f7ff;
 
-    pre {
-        margin: 0 !important;
-        border-radius: 5px;
-    }
-    .code-snippet-wrapper .language-bash {
-        word-break: break-all !important;
-    }
-    code span {
-        font-size: 10px;
-    }
-    .header-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 1px solid #c8cfee;
-        padding: 7px;
-        padding-right: 0px;
+  pre {
+    margin: 0 !important;
+    border-radius: 5px;
+  }
+  .code-snippet-wrapper .language-bash {
+    word-break: break-all !important;
+  }
+  code span {
+    font-size: 10px;
+  }
+  .header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #c8cfee;
+    padding: 7px;
+    padding-right: 0px;
 
-        button {
-            background: none;
-            border: none;
-            color: rgba(0, 0, 0, 0.6);
-        }
+    button {
+      background: none;
+      border: none;
+      color: rgba(0, 0, 0, 0.6);
     }
+  }
 }

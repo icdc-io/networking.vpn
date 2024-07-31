@@ -2,101 +2,93 @@ import React, { useEffect, useState } from "react";
 import { Form, Label, Dropdown } from "semantic-ui-react";
 import PropTypes from "prop-types";
 import "./chipInput.scss";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { peerEndpoint } from "../utilities/Validations";
 
-const CustomDroopdown = ({
-    label,
-    meta: { error, touched },
-    initial,
-    placeholder,
+const CustomDropdown = ({
+  customInitialValue,
+  meta,
+  input,
+  placeholder,
+  label,
 }) => {
-    const dispatch = useDispatch();
-    const user = useSelector((state) => state.host.user);
-    const availableLocations = useSelector(state => state.host.locationsAvailability);
-    const baseUrls = useSelector(state => state.host.baseUrls);
+  const user = useSelector((state) => state.host.user);
+  const availableLocations = useSelector(
+    (state) => state.host.fullAccountsInfo,
+  );
+  const baseUrls = useSelector((state) => state.host.baseUrls);
 
-    const returnBaseUrlForRemote = (baseUrl) => {
-        return baseUrl ? baseUrl.substr(baseUrl.indexOf('.') + 1) : "";
-    };
-      
-    const generalInitial = initial ? initial : "";
-    
-    const optionsData = availableLocations[user.account].locations.filter(location => location !== user.location).map((el) => ({
-        text: `${user.account}.vpn.${returnBaseUrlForRemote(baseUrls[el])}:2200`,
-        value: `${user.account}.vpn.${returnBaseUrlForRemote(baseUrls[el])}:2200`,
+  const returnBaseUrlForRemote = (baseUrl) => {
+    return baseUrl ? baseUrl.substr(baseUrl.indexOf(".") + 1) : "";
+  };
+
+  const generalInitial = customInitialValue || "";
+
+  const optionsData = availableLocations[user.account].locations
+    .filter((location) => location !== user.location)
+    .map((el) => ({
+      text: `${user.account}.vpn.${returnBaseUrlForRemote(baseUrls[el])}:2200`,
+      value: `${user.account}.vpn.${returnBaseUrlForRemote(baseUrls[el])}:2200`,
     }));
 
-    const [options, setOptions] = useState(optionsData);
-    const [value, setValue] = useState(generalInitial);
-    const [localError, setLocalError] = useState("");
+  const [options, setOptions] = useState(optionsData);
+  const [value, setValue] = useState(generalInitial);
+  const [localError, setLocalError] = useState("");
 
-    useEffect(() => {
-        initial &&
-            setOptions((prev) => [{ text: initial, value: initial }, ...prev]);
-    }, [initial]);
+  useEffect(() => {
+    customInitialValue &&
+      setOptions((prev) => [
+        { text: customInitialValue, value: customInitialValue },
+        ...prev,
+      ]);
+  }, [customInitialValue]);
 
-    useEffect(() => {
-        dispatch({
-            meta: {
-                form: "createVpn",
-                field: "peerEndpoint",
-                touch: false,
-                persistentSubmitErrors: false,
-            },
-            payload: value,
-            type: "@@redux-form/CHANGE",
-        });
-    }, [value]);
+  const handleAddition = (_e, { value }) => {
+    !localError &&
+      setOptions((prevState) => [{ text: value, value }, ...prevState]);
+  };
+  const handleChange = (_e, { value }) => {
+    setLocalError(peerEndpoint(value));
+    setValue(value);
+    input.onChange(value);
+  };
 
-    const handleAddition = (_e, { value }) => {
-        !localError && setOptions((prevState) => [{ text: value, value }, ...prevState]);
-    };
-    const handleChange = (_e, { value }) => {
-        setLocalError(peerEndpoint(value));
-        setValue(value);
-
-    };
-
-    return (
-        <Form.Field
-            error={(touched && error) || localError}
-            style={{ marginTop: 20 }}
-        >
-            <label>{label}</label>
-            <Dropdown
-                options={options}
-                search
-                selection
-                fluid
-                allowAdditions
-                additionLabel=""
-                placeholder={placeholder}
-                value={value}
-                onChange={handleChange}
-                onAddItem={handleAddition}
-            />
-            {((touched && error) || localError) && (
-                <div>
-                    <Label pointing color="red" prompt>
-                        {localError || error}
-                    </Label>
-                </div>
-            )}
-        </Form.Field>
-    );
+  return (
+    <Form.Field
+      error={(meta.touched && meta.error) || localError}
+      style={{ marginTop: 20 }}
+    >
+      <label>{label}</label>
+      <Dropdown
+        options={options}
+        search
+        selection
+        fluid
+        allowAdditions
+        additionLabel=""
+        placeholder={placeholder}
+        value={value}
+        onChange={handleChange}
+        onAddItem={handleAddition}
+      />
+      {((meta.touched && meta.error) || localError) && (
+        <div>
+          <Label pointing color="red" prompt>
+            {localError || meta.error}
+          </Label>
+        </div>
+      )}
+    </Form.Field>
+  );
 };
 
-CustomDroopdown.propTypes = {
-    input: PropTypes.any,
-    label: PropTypes.any,
-    meta: PropTypes.any,
-    readOnly: PropTypes.bool,
-    placeholder: PropTypes.string,
-    fieldValue: PropTypes.string,
-    style: PropTypes.any,
-    dnsType: PropTypes.string,
-    initial: PropTypes.string,
+CustomDropdown.propTypes = {
+  input: PropTypes.any,
+  label: PropTypes.any,
+  meta: PropTypes.object,
+  readOnly: PropTypes.bool,
+  placeholder: PropTypes.string,
+  customInitialValue: PropTypes.string,
 };
 
-export default CustomDroopdown;
+export default CustomDropdown;

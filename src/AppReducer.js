@@ -1,239 +1,240 @@
 /* eslint camelcase: 0 */
-import * as ActionTypes from './AppConstants';
-import Immutable from 'seamless-immutable';
+import * as ActionTypes from "./AppConstants";
+import Immutable from "seamless-immutable";
 
 // eslint-disable-next-line new-cap
 const initialState = Immutable({
-    gateways: [],
-    gatewaysFetchStatus: '',
-    gateway: {},
-    gatewayFetchStatus: '',
-    vpnClientConnections: [],
-    vpnClientConnectionsFetchStatus: '',
-    vpnClientConnection: {},
-    vpnClientConnectionFetchStatus: '',
-    vpnClientConnectionDevices: [],
-    vpnClientConnectionDevicesFetchStatus: '',
-    vpnClientConnectionDevicesQRcode: [],
-    vpnClientConnectionDevicesQRcodeStatus: '',
-    vpnClientConnectionDevicesConfig:'',
-    vpnClientConnectionDevicesConfigStatus: '',
-    vpnPeerGateways: [],
-    vpnPeerGatewaysFetchStatus: '',
-    vpnNatMapping: [],
-    vpnNatMappingFetchSatus: '',
-    vpnClientConnectionsNextIp: '',
-    vpnClientConnectionsNextIpStatus: ''
+  gateways: [],
+  gatewaysFetchStatus: "",
+  gateway: {},
+  gatewayFetchStatus: "",
+  vpnClientConnections: [],
+  vpnClientConnectionsFetchStatus: "",
+  vpnClientConnection: {},
+  vpnClientConnectionFetchStatus: "",
+  vpnClientConnectionDevices: [],
+  vpnClientConnectionDevicesFetchStatus: "",
+  vpnClientConnectionDevicesQRcode: [],
+  vpnClientConnectionDevicesQRcodeStatus: "",
+  vpnClientConnectionDevicesConfig: "",
+  vpnClientConnectionDevicesConfigStatus: "",
+  vpnPeerGateways: [],
+  vpnPeerGatewaysFetchStatus: "",
+  vpnNatMapping: [],
+  vpnNatMappingFetchSatus: "",
+  vpnClientConnectionsNextIp: "",
+  vpnClientConnectionsNextIpStatus: "",
 });
 
 export const VpnStore = (state = initialState, action) => {
-    switch (action.type) {
-
+  switch (action.type) {
     case `${ActionTypes.VPN_GATEWAYS_FETCH}_PENDING`:
-        return state.set('gatewaysFetchStatus', 'pending');
+      return state.set("gatewaysFetchStatus", "pending");
     case `${ActionTypes.VPN_GATEWAYS_FETCH}_REJECTED`:
-        return state.set('gatewaysFetchStatus', 'rejected');
+      return state.set("gatewaysFetchStatus", "rejected");
     case `${ActionTypes.VPN_GATEWAYS_FETCH}_FULFILLED`:
-        return Immutable.merge(state, {
-            gateways: action.payload,
-            gatewaysFetchStatus: 'fulfilled'
-        });
+      return Immutable.merge(state, {
+        gateways: action.payload,
+        gatewaysFetchStatus: "fulfilled",
+      });
 
-        // case `${ActionTypes.VPN_GATEWAY_CREATE}_PENDING`:
-        //     return state.set('gatewaysFetchStatus', 'pending');
-        // case `${ActionTypes.VPN_GATEWAY_CREATE}_REJECTED`:
-        //     return state.set('gatewaysFetchStatus', 'rejected');
-        // case `${ActionTypes.VPN_GATEWAY_CREATE}_FULFILLED`:
-        //     return Immutable.merge(state, {
-        //         gateways: [...state.gateways, action.payload],
-        //         gatewaysFetchStatus: 'fulfilled'
-        //     });
+    // case `${ActionTypes.VPN_GATEWAY_CREATE}_PENDING`:
+    //     return state.set('gatewaysFetchStatus', 'pending');
+    // case `${ActionTypes.VPN_GATEWAY_CREATE}_REJECTED`:
+    //     return state.set('gatewaysFetchStatus', 'rejected');
+    // case `${ActionTypes.VPN_GATEWAY_CREATE}_FULFILLED`:
+    //     return Immutable.merge(state, {
+    //         gateways: [...state.gateways, action.payload],
+    //         gatewaysFetchStatus: 'fulfilled'
+    //     });
 
     case `${ActionTypes.VPN_GATEWAY_UPDATE}_PENDING`:
-        return state.set('gatewaysFetchStatus', 'pending');
+      return state.set("gatewaysFetchStatus", "pending");
     case `${ActionTypes.VPN_GATEWAY_UPDATE}_REJECTED`:
-        return state.set('gatewaysFetchStatus', 'rejected');
+      return state.set("gatewaysFetchStatus", "rejected");
     case `${ActionTypes.VPN_GATEWAY_UPDATE}_FULFILLED`:
-        return Immutable.merge(state, {
-            gateways: [...state.gateways, action.payload],
-            gatewaysFetchStatus: 'fulfilled'
-        });
+      return Immutable.merge(state, {
+        gateways: [...state.gateways, action.payload],
+        gatewaysFetchStatus: "fulfilled",
+      });
 
     case `${ActionTypes.VPN_GATEWAY_FETCH}_PENDING`:
-        return state.set('gatewayFetchStatus', 'pending');
+      return state.set("gatewayFetchStatus", "pending");
     case `${ActionTypes.VPN_GATEWAY_FETCH}_REJECTED`:
-        return state.set('gatewayFetchStatus', 'rejected');
+      return state.set("gatewayFetchStatus", "rejected");
     case `${ActionTypes.VPN_GATEWAY_FETCH}_FULFILLED`:
-        return Immutable.merge(state, {
-            gateway: action.payload,
-            gatewayFetchStatus: 'fulfilled'
-        });
+      return Immutable.merge(state, {
+        gateway: action.payload,
+        gatewayFetchStatus: "fulfilled",
+      });
 
     case `${ActionTypes.VPN_CLIENT_CONNECTIONS_FETCH}_PENDING`:
-        return state.set('vpnClientConnectionsFetchStatus', 'pending');
+      return state.set("vpnClientConnectionsFetchStatus", "pending");
     case `${ActionTypes.VPN_CLIENT_CONNECTIONS_FETCH}_REJECTED`:
-        return state.set('vpnClientConnectionsFetchStatus', 'rejected');
+      return state.set("vpnClientConnectionsFetchStatus", "rejected");
     case `${ActionTypes.VPN_CLIENT_CONNECTIONS_FETCH}_FULFILLED`:
-        return Immutable.merge(state, {
-            vpnClientConnections: action.payload,
-            vpnClientConnectionsFetchStatus: 'fulfilled'
-        });
+      return Immutable.merge(state, {
+        vpnClientConnections: action.payload,
+        vpnClientConnectionsFetchStatus: "fulfilled",
+      });
 
     case `${ActionTypes.VPN_CLIENT_CONNECTION_FETCH}_PENDING`:
-        return state.set('vpnClientConnectionFetchStatus', 'pending');
+      return state.set("vpnClientConnectionFetchStatus", "pending");
     case `${ActionTypes.VPN_CLIENT_CONNECTION_FETCH}_REJECTED`:
-        return state.set('vpnClientConnectionFetchStatus', 'rejected');
+      return state.set("vpnClientConnectionFetchStatus", "rejected");
     case `${ActionTypes.VPN_CLIENT_CONNECTION_FETCH}_FULFILLED`:
-        return Immutable.merge(state, {
-            vpnClientConnection: action.payload,
-            vpnClientConnectionFetchStatus: 'fulfilled'
-        });
+      return Immutable.merge(state, {
+        vpnClientConnection: action.payload,
+        vpnClientConnectionFetchStatus: "fulfilled",
+      });
 
     case `${ActionTypes.VPN_CLIENT_CONNECTION_CREATE}_PENDING`:
-        return state.set('vpnClientConnectionsFetchStatus', 'pending');
+      return state.set("vpnClientConnectionsFetchStatus", "pending");
     case `${ActionTypes.VPN_CLIENT_CONNECTION_CREATE}_REJECTED`:
-        return state.set('vpnClientConnectionsFetchStatus', 'rejected');
+      return state.set("vpnClientConnectionsFetchStatus", "rejected");
     case `${ActionTypes.VPN_CLIENT_CONNECTION_CREATE}_FULFILLED`:
-        return Immutable.merge(state, {
-            vpnClientConnections: [action.payload, ...state.vpnClientConnections],
-            vpnClientConnectionsFetchStatus: 'fulfilled'
-        });
+      return Immutable.merge(state, {
+        vpnClientConnections: [action.payload, ...state.vpnClientConnections],
+        vpnClientConnectionsFetchStatus: "fulfilled",
+      });
 
     case `${ActionTypes.VPN_CLIENT_CONNECTION_UPDATE}_PENDING`:
-        return state.set('vpnClientConnectionsFetchStatus', 'pending');
+      return state.set("vpnClientConnectionsFetchStatus", "pending");
     case `${ActionTypes.VPN_CLIENT_CONNECTION_UPDATE}_REJECTED`:
-        return state.set('vpnClientConnectionsFetchStatus', 'rejected');
+      return state.set("vpnClientConnectionsFetchStatus", "rejected");
     case `${ActionTypes.VPN_CLIENT_CONNECTION_UPDATE}_FULFILLED`:
-        return Immutable.merge(state, {
-            vpnClientConnections: [...state.vpnClientConnections, action.payload],
-            vpnClientConnectionsFetchStatus: 'fulfilled'
-        });
+      return Immutable.merge(state, {
+        vpnClientConnections: [...state.vpnClientConnections, action.payload],
+        vpnClientConnectionsFetchStatus: "fulfilled",
+      });
 
     case `${ActionTypes.VPN_CLIENT_CONNECTION_DEVICES_FETCH}_PENDING`:
-        return state.set('vpnClientConnectionDevicesFetchStatus', 'pending');
+      return state.set("vpnClientConnectionDevicesFetchStatus", "pending");
     case `${ActionTypes.VPN_CLIENT_CONNECTION_DEVICES_FETCH}_REJECTED`:
-        return state.set('vpnClientConnectionDevicesFetchStatus', 'rejected');
+      return state.set("vpnClientConnectionDevicesFetchStatus", "rejected");
     case `${ActionTypes.VPN_CLIENT_CONNECTION_DEVICES_FETCH}_FULFILLED`:
-        return Immutable.merge(state, {
-            vpnClientConnectionDevices: action.payload,
-            vpnClientConnectionDevicesFetchStatus: 'fulfilled'
-        });
+      return Immutable.merge(state, {
+        vpnClientConnectionDevices: action.payload,
+        vpnClientConnectionDevicesFetchStatus: "fulfilled",
+      });
 
-    case ActionTypes.VPN_CLIENT_CONNECTION_DEVICES_STATUS_CLEAN: 
-    return state.set('vpnClientConnectionDevicesFetchStatus', '');
+    case ActionTypes.VPN_CLIENT_CONNECTION_DEVICES_STATUS_CLEAN:
+      return state.set("vpnClientConnectionDevicesFetchStatus", "");
 
     case `${ActionTypes.VPN_CLIENT_CONNECTION_NEXT_IP_FETCH}_PENDING`:
-        return state.set('vpnClientConnectionsNextIpStatus', 'pending');
+      return state.set("vpnClientConnectionsNextIpStatus", "pending");
     case `${ActionTypes.VPN_CLIENT_CONNECTION_NEXT_IP_FETCH}_REJECTED`:
-        return state.set('vpnClientConnectionsNextIpStatus', 'rejected');
+      return state.set("vpnClientConnectionsNextIpStatus", "rejected");
     case `${ActionTypes.VPN_CLIENT_CONNECTION_NEXT_IP_FETCH}_FULFILLED`:
-        return Immutable.merge(state, {
-            vpnClientConnectionsNextIp: action.payload,
-            vpnClientConnectionsNextIpStatus: 'fulfilled'
-        });
-            
+      return Immutable.merge(state, {
+        vpnClientConnectionsNextIp: action.payload,
+        vpnClientConnectionsNextIpStatus: "fulfilled",
+      });
+
     case `${ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_CREATE}_PENDING`:
-        return state.set('vpnClientConnectionDevicesFetchStatus', 'pending');
+      return state.set("vpnClientConnectionDevicesFetchStatus", "pending");
     case `${ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_CREATE}_REJECTED`:
-        return state.set('vpnClientConnectionDevicesFetchStatus', 'rejected');
+      return state.set("vpnClientConnectionDevicesFetchStatus", "rejected");
     case `${ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_CREATE}_FULFILLED`:
-        return Immutable.merge(state, {
-            vpnClientConnectionDevices: [action.payload, ...state.vpnClientConnectionDevices],
-            vpnClientConnectionDevicesFetchStatus: 'fulfilled'
-        });
+      return Immutable.merge(state, {
+        vpnClientConnectionDevices: [
+          action.payload,
+          ...state.vpnClientConnectionDevices,
+        ],
+        vpnClientConnectionDevicesFetchStatus: "fulfilled",
+      });
 
     case `${ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_UPDATE}_PENDING`:
-        return state.set('vpnClientConnectionDevicesFetchStatus', 'pending');
+      return state.set("vpnClientConnectionDevicesFetchStatus", "pending");
     case `${ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_UPDATE}_REJECTED`:
-        return state.set('vpnClientConnectionDevicesFetchStatus', 'rejected');
+      return state.set("vpnClientConnectionDevicesFetchStatus", "rejected");
     case `${ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_UPDATE}_FULFILLED`:
-        return Immutable.merge(state, {
-            // vpnClientConnectionDevices: [action.payload, ...state.vpnClientConnectionDevices],
-            vpnClientConnectionDevicesFetchStatus: 'fulfilled'
-        });
-        
+      return Immutable.merge(state, {
+        // vpnClientConnectionDevices: [action.payload, ...state.vpnClientConnectionDevices],
+        vpnClientConnectionDevicesFetchStatus: "fulfilled",
+      });
+
     case `${ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_QR_CODE_URL}_PENDING`:
-        return state.set('vpnClientConnectionDevicesQRcodeStatus', 'pending');
+      return state.set("vpnClientConnectionDevicesQRcodeStatus", "pending");
     case `${ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_QR_CODE_URL}_REJECTED`:
-        return state.set('vpnClientConnectionDevicesQRcodeStatus', 'rejected');
+      return state.set("vpnClientConnectionDevicesQRcodeStatus", "rejected");
     case `${ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_QR_CODE_URL}_FULFILLED`:
-        return Immutable.merge(state, {
-            vpnClientConnectionDevicesQRcode: action.payload,
-            vpnClientConnectionDevicesQRcodeStatus: 'fulfilled'
-        });
+      return Immutable.merge(state, {
+        vpnClientConnectionDevicesQRcode: action.payload,
+        vpnClientConnectionDevicesQRcodeStatus: "fulfilled",
+      });
 
     case `${ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_CONFIGURATION}_PENDING`:
-        return state.set('vpnClientConnectionDevicesConfigStatus', 'pending');
+      return state.set("vpnClientConnectionDevicesConfigStatus", "pending");
     case `${ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_CONFIGURATION}_REJECTED`:
-        return state.set('vpnClientConnectionDevicesConfigStatus', 'rejected');
+      return state.set("vpnClientConnectionDevicesConfigStatus", "rejected");
     case `${ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_CONFIGURATION}_FULFILLED`:
-        return Immutable.merge(state, {
-            vpnClientConnectionDevicesConfig: action.payload.trim(),
-            vpnClientConnectionDevicesConfigStatus: 'fulfilled'
-        });
+      return Immutable.merge(state, {
+        vpnClientConnectionDevicesConfig: action.payload.trim(),
+        vpnClientConnectionDevicesConfigStatus: "fulfilled",
+      });
 
     case `${ActionTypes.VPN_PEER_GATEWAYS_FETCH}_PENDING`:
-        return state.set('vpnPeerGatewaysFetchStatus', 'pending');
+      return state.set("vpnPeerGatewaysFetchStatus", "pending");
     case `${ActionTypes.VPN_PEER_GATEWAYS_FETCH}_REJECTED`:
-        return state.set('vpnPeerGatewaysFetchStatus', 'rejected');
+      return state.set("vpnPeerGatewaysFetchStatus", "rejected");
     case `${ActionTypes.VPN_PEER_GATEWAYS_FETCH}_FULFILLED`:
-        return Immutable.merge(state, {
-            vpnPeerGateways: action.payload,
-            vpnPeerGatewaysFetchStatus: 'fulfilled'
-        });
+      return Immutable.merge(state, {
+        vpnPeerGateways: action.payload,
+        vpnPeerGatewaysFetchStatus: "fulfilled",
+      });
 
     case `${ActionTypes.VPN_PEER_GATEWAY_CREATE}_PENDING`:
-        return state.set('vpnPeerGatewaysFetchStatus', 'pending');
+      return state.set("vpnPeerGatewaysFetchStatus", "pending");
     case `${ActionTypes.VPN_PEER_GATEWAY_CREATE}_REJECTED`:
-        return state.set('vpnPeerGatewaysFetchStatus', 'rejected');
+      return state.set("vpnPeerGatewaysFetchStatus", "rejected");
     case `${ActionTypes.VPN_PEER_GATEWAY_CREATE}_FULFILLED`:
-        return Immutable.merge(state, {
-            vpnPeerGateways: [action.payload, ...state.vpnPeerGateways],
-            vpnPeerGatewaysFetchStatus: 'fulfilled'
-        });
+      return Immutable.merge(state, {
+        vpnPeerGateways: [action.payload, ...state.vpnPeerGateways],
+        vpnPeerGatewaysFetchStatus: "fulfilled",
+      });
 
     case `${ActionTypes.VPN_PEER_GATEWAY_UPDATE}_PENDING`:
-        return state.set('vpnPeerGatewaysFetchStatus', 'pending');
+      return state.set("vpnPeerGatewaysFetchStatus", "pending");
     case `${ActionTypes.VPN_PEER_GATEWAY_UPDATE}_REJECTED`:
-        return state.set('vpnPeerGatewaysFetchStatus', 'rejected');
+      return state.set("vpnPeerGatewaysFetchStatus", "rejected");
     case `${ActionTypes.VPN_PEER_GATEWAY_UPDATE}_FULFILLED`:
-        return Immutable.merge(state, {
-            vpnPeerGateways: [...state.vpnPeerGateways, action.payload],
-            vpnPeerGatewaysFetchStatus: 'fulfilled'
-        });
+      return Immutable.merge(state, {
+        vpnPeerGateways: [...state.vpnPeerGateways, action.payload],
+        vpnPeerGatewaysFetchStatus: "fulfilled",
+      });
 
     case `${ActionTypes.VPN_NAT_MAPPING_FETCH}_PENDING`:
-        return state.set('vpnNatMappingFetchSatus', 'pending');
+      return state.set("vpnNatMappingFetchSatus", "pending");
     case `${ActionTypes.VPN_NAT_MAPPING_FETCH}_REJECTED`:
-        return state.set('vpnNatMappingFetchSatus', 'rejected');
+      return state.set("vpnNatMappingFetchSatus", "rejected");
     case `${ActionTypes.VPN_NAT_MAPPING_FETCH}_FULFILLED`:
-        return Immutable.merge(state, {
-            vpnNatMapping: action.payload,
-            vpnNatMappingFetchSatus: 'fulfilled'
-        });
+      return Immutable.merge(state, {
+        vpnNatMapping: action.payload,
+        vpnNatMappingFetchSatus: "fulfilled",
+      });
 
     case `${ActionTypes.VPN_NAT_MAPPING_CREATE}_PENDING`:
-        return state.set('vpnNatMappingFetchSatus', 'pending');
+      return state.set("vpnNatMappingFetchSatus", "pending");
     case `${ActionTypes.VPN_NAT_MAPPING_CREATE}_REJECTED`:
-        return state.set('vpnNatMappingFetchSatus', 'rejected');
+      return state.set("vpnNatMappingFetchSatus", "rejected");
     case `${ActionTypes.VPN_NAT_MAPPING_CREATE}_FULFILLED`:
-        return Immutable.merge(state, {
-            vpnNatMapping: [...state.vpnNatMapping, action.payload],
-            vpnNatMappingFetchSatus: 'fulfilled'
-        });
+      return Immutable.merge(state, {
+        vpnNatMapping: [...state.vpnNatMapping, action.payload],
+        vpnNatMappingFetchSatus: "fulfilled",
+      });
 
     case `${ActionTypes.VPN_NAT_MAPPING_UPDATE}_PENDING`:
-        return state.set('vpnNatMappingFetchSatus', 'pending');
+      return state.set("vpnNatMappingFetchSatus", "pending");
     case `${ActionTypes.VPN_NAT_MAPPING_UPDATE}_REJECTED`:
-        return state.set('vpnNatMappingFetchSatus', 'rejected');
+      return state.set("vpnNatMappingFetchSatus", "rejected");
     case `${ActionTypes.VPN_NAT_MAPPING_UPDATE}_FULFILLED`:
-        return Immutable.merge(state, {
-            vpnNatMapping: [...state.vpnNatMapping, action.payload],
-            vpnNatMappingFetchSatus: 'fulfilled'
-        });
+      return Immutable.merge(state, {
+        vpnNatMapping: [...state.vpnNatMapping, action.payload],
+        vpnNatMappingFetchSatus: "fulfilled",
+      });
 
     default:
-        return state;
-    }
-
+      return state;
+  }
 };

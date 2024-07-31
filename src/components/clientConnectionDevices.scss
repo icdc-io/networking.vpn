@@ -1,69 +1,69 @@
 .details-container {
+  display: flex;
+  width: fit-content;
+  justify-content: space-between;
+
+  .details {
     display: flex;
-    width: fit-content;
-    justify-content: space-between;
+    flex-direction: column;
 
-    .details {
-        display: flex;
-        flex-direction: column;
-
-        &:nth-child(2) {
-            font-weight: bold;
-            margin-left: 25px;
-        }
+    &:nth-child(2) {
+      font-weight: bold;
+      margin-left: 25px;
     }
+  }
 }
 
 .table-title-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-top: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 6px;
 
-    .table-title-container-controls {
-        display: flex;
-    }
+  .table-title-container-controls {
+    display: flex;
+  }
 }
 
 .devices-table {
-    margin-top: 15px;
+  margin-top: 15px;
 
-    tbody {
-        tr:hover {
-            background: none !important;
-        }
+  tbody {
+    tr:hover {
+      background: none !important;
     }
+  }
 
-    thead > tr > th:first-child,
-    tbody > tr > td:first-child {
-        padding-left: 16px !important;
-    }
+  thead > tr > th:first-child,
+  tbody > tr > td:first-child {
+    padding-left: 16px !important;
+  }
 
-    tbody > tr > td:last-child {
-        padding-right: 16px !important;
-    }
+  tbody > tr > td:last-child {
+    padding-right: 16px !important;
+  }
 
-    .flex {
-        align-items: center;
-    }
+  .flex {
+    align-items: center;
+  }
 }
 .ui.blue.header.title {
-    width: max-content;
+  width: max-content;
 }
 .device-statistics-component {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    min-width: 100px;
-    height: 50px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-width: 100px;
+  height: 50px;
 
-    p {
-        min-width: 30px;
-        margin: 0 10px 0 0;
-    }
+  p {
+    min-width: 30px;
+    margin: 0 10px 0 0;
+  }
 
-    canvas {
-        height: 50px !important;
-        width: 100px !important;
-    }
+  canvas {
+    height: 50px !important;
+    width: 100px !important;
+  }
 }
