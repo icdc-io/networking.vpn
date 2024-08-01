@@ -1,5 +1,5 @@
 import React from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import { Segment } from "semantic-ui-react";
 import {
   vpnGatewayPath,
@@ -13,24 +13,29 @@ const ClientConnectionDevices = React.lazy(
   () => import("./clientConnectionDevices"),
 );
 
-const VpnOverview = () => {
+const RootComponent = () => {
   return (
     <Segment style={{ minHeight: 792 }}>
-      <React.Suspense fallback={null}>
-        <Routes>
-          <Route path={vpnGatewaysPath()} Component={Vpn} />
+      <Outlet />
+    </Segment>
+  );
+};
+
+const VpnOverview = () => {
+  return (
+    <React.Suspense fallback={null}>
+      <Routes>
+        <Route path={vpnGatewaysPath()} Component={RootComponent}>
+          <Route index Component={Vpn} />
           <Route path={vpnGatewayPath()} Component={VpnDetails} />
           <Route
             path={`${vpnGatewayPath()}/${vpnClientConnectionDevicesPath()}`}
             Component={ClientConnectionDevices}
           />
-          <Route
-            path="*"
-            element={<Navigate to={vpnGatewaysPath()} replace />}
-          />
-        </Routes>
-      </React.Suspense>
-    </Segment>
+        </Route>
+        <Route path="*" element={<Navigate to={vpnGatewaysPath()} replace />} />
+      </Routes>
+    </React.Suspense>
   );
 };
 
