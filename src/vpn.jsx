@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import VpnOverview from "./components/overview";
-import { Provider } from "react-redux";
 import { VpnStore } from "./AppReducer";
 import { Loader } from "semantic-ui-react";
 import PropTypes from "prop-types";
@@ -14,11 +13,7 @@ const Balancer = ({ store }) => {
     setIsLoaded(true);
   }, []);
 
-  return (
-    <Provider store={store}>
-      {isLoaded ? <VpnOverview /> : <Loader active inline="centered" />}
-    </Provider>
-  );
+  return isLoaded ? <VpnOverview /> : <Loader active inline="centered" />;
 };
 
 Balancer.propTypes = {
