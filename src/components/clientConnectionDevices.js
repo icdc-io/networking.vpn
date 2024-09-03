@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Header, Loader, Popup, Table } from "semantic-ui-react";
@@ -11,6 +12,10 @@ import {
   updateVpnClientConnectionDeviceAndFetch,
 } from "../AppActions";
 import ButtonBack from "../general/buttonBack";
+import CustomPagination from "../general/customPagination";
+import OptionsMenu from "../general/optionsMenu";
+import DeviceStatistics from "./deviceStatistics";
+import StatusLabel from "./statusLabel";
 import {
   dataStatusCheck,
   formatClientConnectionData,
@@ -18,13 +23,8 @@ import {
   formatVpnGatewaysData,
 } from "./tools";
 import { capitalizeFirstLetter, longDash, truncate } from "./tools";
-import StatusLabel from "./statusLabel";
-import DeviceStatistics from "./deviceStatistics";
-import CustomPagination from "../general/customPagination";
-import OptionsMenu from "../general/optionsMenu";
-import VpnModal from "./vpnModal";
 import VpnCopyButton from "./vpnCopyButton";
-import { useTranslation } from "react-i18next";
+import VpnModal from "./vpnModal";
 import "./clientConnectionDevices.scss";
 
 const ApiButton = React.lazy(() => import("container/ApiButton"));
@@ -76,7 +76,7 @@ const ClientConnectionDevices = () => {
 
   const [stats, setStats] = useState([]);
 
-  let devicesIds =
+  const devicesIds =
     devicesFetchStatus === "fulfilled" &&
     vpnClientConnectionDevicesData
       .map((el) => `dev_id[]=${el.id}&`)
@@ -114,9 +114,8 @@ const ClientConnectionDevices = () => {
           message.type === "welcome"
         ) {
           return;
-        } else {
-          setStats(message.message?.stats);
         }
+        setStats(message.message?.stats);
       };
 
       //ws.current.onclose = () => console.log('Соединение закрыто');
@@ -225,9 +224,9 @@ const ClientConnectionDevices = () => {
 
   const tableCells = (data) =>
     headers.map((header, key) => {
-      let currentDevice = stats.find((el) => el.device_id === data.id);
+      const currentDevice = stats.find((el) => el.device_id === data.id);
       let content = data[header] || longDash;
-      let currentHandshake = stats.length > 0 && currentDevice?.handshake;
+      const currentHandshake = stats.length > 0 && currentDevice?.handshake;
 
       if (header === "publicKey") {
         content = data[header] ? addPopup(content, header) : longDash;
@@ -291,7 +290,7 @@ const ClientConnectionDevices = () => {
               </div>
             </div>
           </div>
-          <div className="customized-hr"></div>
+          <div className="customized-hr" />
           <div className="table-title-container">
             <Header as="h4" style={{ marginTop: 16 }}>
               {t("devices")}

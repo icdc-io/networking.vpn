@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
-import { Table } from "semantic-ui-react";
 import _ from "lodash";
+import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
+import { Table } from "semantic-ui-react";
 import "./vpnList.scss";
+import { useTranslation } from "react-i18next";
 // import DeleteModal from '../../GeneralComponents/deleteModal';
 import { Link } from "react-router-dom";
-import { longDash } from "./tools";
-import searchMethod from "../utilities/searchFunction";
 import CustomPagination from "../general/customPagination";
-import svgVpn from "../static/svgVpn.svg";
-import { formatVpnGatewaysData } from "./tools";
 import OptionsMenu from "../general/optionsMenu";
-import { useTranslation } from "react-i18next";
+import svgVpn from "../static/svgVpn.svg";
+import searchMethod from "../utilities/searchFunction";
+import { longDash } from "./tools";
+import { formatVpnGatewaysData } from "./tools";
 
 const VpnList = ({ items: gatewaysData, searchTerm }) => {
   const { t } = useTranslation();
@@ -69,7 +69,7 @@ const VpnList = ({ items: gatewaysData, searchTerm }) => {
       if (header.name === "name") {
         content = (
           <div className="gateway-name-container">
-            <img src={svgVpn} />
+            <img src={svgVpn} alt="Gateway" />
             <Link to={`${gateway.id}`}>{content}</Link>
           </div>
         );

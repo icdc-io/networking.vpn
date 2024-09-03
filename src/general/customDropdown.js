@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { Form, Label, Dropdown } from "semantic-ui-react";
 import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
+import { Dropdown, Form, Label } from "semantic-ui-react";
 import "./chipInput.scss";
 import { useSelector } from "react-redux";
 import { peerEndpoint } from "../utilities/Validations";

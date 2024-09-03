@@ -1,6 +1,6 @@
+import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { Pagination } from "semantic-ui-react";
-import PropTypes from "prop-types";
 
 const CustomPagination = ({
   data,

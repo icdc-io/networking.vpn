@@ -1,10 +1,10 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import "./customAccordion.scss";
-import { Button, Icon } from "semantic-ui-react";
+import { PropTypes } from "prop-types";
 import DangerousHTML from "react-dangerous-html";
 import { useTranslation } from "react-i18next";
-import { PropTypes } from "prop-types";
+import { Button, Icon } from "semantic-ui-react";
 
 const CodeSnippet = React.lazy(() => import("container/CodeSnippet"));
 
@@ -16,7 +16,7 @@ export const CustomAccordion = ({ configData, index, open, handleClick }) => {
   const user = useSelector((state) => state.host.user);
 
   const file = new Blob([configData.config], { type: "text/plain" });
-  let link = URL.createObjectURL(file);
+  const link = URL.createObjectURL(file);
 
   const copy = (value) => {
     navigator.clipboard.writeText(value).catch((err) => {
@@ -123,7 +123,7 @@ export const CustomAccordion = ({ configData, index, open, handleClick }) => {
               <div style={{ position: "relative" }}>
                 <div style={{ width: "144px" }}>
                   <a href={link} download={`${fileName}.conf`}>
-                    <div className="link-div"></div>
+                    <div className="link-div" />
                   </a>
                 </div>
                 <Button

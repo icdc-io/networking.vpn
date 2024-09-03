@@ -1,18 +1,18 @@
-import React from "react";
-import { PropTypes } from "prop-types";
-import { longDash } from "./tools";
-import { Line } from "react-chartjs-2";
 import {
-  Chart as ChartJS,
   CategoryScale,
+  Chart as ChartJS,
+  Filler,
+  LineElement,
   LinearScale,
   PointElement,
-  LineElement,
   Title,
   Tooltip,
-  Filler,
 } from "chart.js";
+import { PropTypes } from "prop-types";
+import React from "react";
+import { Line } from "react-chartjs-2";
 import { useTranslation } from "react-i18next";
+import { longDash } from "./tools";
 
 ChartJS.register(
   CategoryScale,
@@ -54,7 +54,7 @@ const DeviceStatistics = ({ statisticsData, field }) => {
     datasets: [
       {
         fill: true,
-        data: statisticsData && statisticsData[field],
+        data: statisticsData?.[field],
         borderColor: "red",
         borderWidth: 2,
         backgroundColor: "#FFEBE5",

@@ -1,9 +1,9 @@
+import PropTypes from "prop-types";
 import React, { useEffect, useRef, useState } from "react";
 import { Form, Label } from "semantic-ui-react";
-import PropTypes from "prop-types";
 import "./customChipInput.scss";
-import { ipWithSubnetPrefix } from "../utilities/Validations";
 import { useSelector } from "react-redux";
+import { ipWithSubnetPrefix } from "../utilities/Validations";
 
 const CustomChipInput = ({
   customInitialValue,
@@ -31,8 +31,8 @@ const CustomChipInput = ({
   const onChange = (e) => {
     const currentValue = e.currentTarget.value;
     const isDivider =
-      currentValue[currentValue.length - 1] == "," ||
-      currentValue[currentValue.length - 1] == ";";
+      currentValue[currentValue.length - 1] === "," ||
+      currentValue[currentValue.length - 1] === ";";
 
     if (isDivider) {
       setValue(currentValue.trim().slice(0, -1));
@@ -54,7 +54,7 @@ const CustomChipInput = ({
     if (
       value.trim().length &&
       !localError &&
-      (e.keyCode == 32 || e.keyCode == 13)
+      (e.keyCode === 32 || e.keyCode === 13)
     ) {
       setCurrentValues((prev) => [...prev, value]);
       setValue("");
@@ -82,19 +82,19 @@ const CustomChipInput = ({
       <label>{label}</label>
       <div className="input-wrapper" onClick={() => ref.current.focus()}>
         {currentValues.map((el, i) => (
-          <a key={i}>
+          <span className="subnet" key={i}>
             {el}
             <i
               className="delete icon custom-delete-icon"
               onClick={() => onDelete(i)}
-            ></i>
-          </a>
+            />
+          </span>
         ))}
         <input
           ref={ref}
           {...input}
           placeholder={
-            currentValues.length == 0 && isAdminOrOwner ? placeholder : ""
+            currentValues.length === 0 && isAdminOrOwner ? placeholder : ""
           }
           type="text"
           value={value}
@@ -102,7 +102,7 @@ const CustomChipInput = ({
           onChange={onChange}
           onKeyDown={keyDown}
           onBlur={onBlur}
-          className={currentValues.length == 0 ? "full-width" : ""}
+          className={currentValues.length === 0 ? "full-width" : ""}
         />
       </div>
       {isError && (

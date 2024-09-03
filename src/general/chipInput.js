@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { Label, Dropdown } from "semantic-ui-react";
 import PropTypes from "prop-types";
+import React, { useState } from "react";
+import { Dropdown, Label } from "semantic-ui-react";
 import "./chipInput.scss";
+import { Field } from "react-final-form";
 // import { useDispatch } from "react-redux";
 import { ipWithSubnetPrefix } from "../utilities/Validations";
-import { Field } from "react-final-form";
 
 const ChipInput = ({ label, meta: { error, touched }, initial }) => {
   //   const dispatch = useDispatch();
@@ -51,7 +51,7 @@ const ChipInput = ({ label, meta: { error, touched }, initial }) => {
 
   return (
     <Field
-      error={(touched && error) || localError ? true : false}
+      error={!!((touched && error) || localError)}
       style={{ marginTop: 20 }}
     >
       <label>{label}</label>

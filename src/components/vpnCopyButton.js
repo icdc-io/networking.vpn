@@ -1,6 +1,6 @@
+import { PropTypes } from "prop-types";
 import React, { useState } from "react";
 import { Button, Icon } from "semantic-ui-react";
-import { PropTypes } from "prop-types";
 
 const VpnCopyButton = ({ copiedContent }) => {
   const [trigger, setTrigger] = useState(false);

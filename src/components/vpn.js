@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
+import DangerousHTML from "react-dangerous-html";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
+import { Input, Loader } from "semantic-ui-react";
 import { fetchVpnGateways } from "../AppActions";
 // import { gateways } from '../../vpnMockData';
 import VpnList from "./vpnList";
-import { Input, Loader } from "semantic-ui-react";
-import DangerousHTML from "react-dangerous-html";
-import { useTranslation } from "react-i18next";
 // import VpnModal from './vpnModal';
 // const ContentPage = React.lazy(() => import("container/ContentPage"));
 const ApiButton = React.lazy(() => import("container/ApiButton"));

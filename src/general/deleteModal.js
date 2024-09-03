@@ -1,15 +1,15 @@
-import React, { useState, useCallback } from "react";
-import { Modal, Button, Header, Dropdown, Icon } from "semantic-ui-react";
 import PropTypes from "prop-types";
+import React, { useState, useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { Button, Dropdown, Header, Icon, Modal } from "semantic-ui-react";
 import {
   // deleteVpnGatewayAndFetch,
   deleteVpnClientConnectionAndFetch,
-  deleteVpnPeerGatewayAndFetch,
-  deleteVpnNatMappingAndFetch,
   deleteVpnClientConnectionDeviceAndFetch,
+  deleteVpnNatMappingAndFetch,
+  deleteVpnPeerGatewayAndFetch,
 } from "../AppActions";
-import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
 // import { vpnGatewaysPath } from '../Constants/routes';
 
 const DeleteModal = ({ type, instance, icon, button }) => {
@@ -124,7 +124,7 @@ const DeleteModal = ({ type, instance, icon, button }) => {
   );
 
   return (
-    (user.role === "admin" || type == "vpnDevices") && (
+    (user.role === "admin" || type === "vpnDevices") && (
       <>
         {buttonModal}
         <Modal open={isVisible} size="mini" onClick={closeModal} closeIcon>

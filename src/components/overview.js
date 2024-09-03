@@ -2,9 +2,9 @@ import React from "react";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import { Segment } from "semantic-ui-react";
 import {
+  vpnClientConnectionDevicesPath,
   vpnGatewayPath,
   vpnGatewaysPath,
-  vpnClientConnectionDevicesPath,
 } from "../constants/routes";
 
 const Vpn = React.lazy(() => import("./vpn"));

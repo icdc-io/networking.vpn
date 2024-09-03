@@ -1,22 +1,22 @@
 /* eslint-disable */
 import React, { useEffect, useState } from "react";
-import ButtonBack from "../general/buttonBack";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { Header, Menu } from "semantic-ui-react";
 import {
   fetchVpnClientConnections,
   fetchVpnGateway,
-  fetchVpnPeerGateways,
   fetchVpnNatMapping,
+  fetchVpnPeerGateways,
 } from "../AppActions";
-import { useDispatch, useSelector } from "react-redux";
+import ButtonBack from "../general/buttonBack";
 import { dataStatusCheck, formatVpnGatewaysData } from "./tools";
-import { Header, Menu } from "semantic-ui-react";
 import "./vpnDetails.scss";
-import svgVpn from "../static/svgVpn.svg";
-import VpnDetailsTable from "./vpnDetailsTable";
-import { capitalizeFirstLetter, longDash } from "./tools";
-import VpnModal from "./vpnModal";
 import { useTranslation } from "react-i18next";
+import svgVpn from "../static/svgVpn.svg";
+import { capitalizeFirstLetter, longDash } from "./tools";
+import VpnDetailsTable from "./vpnDetailsTable";
+import VpnModal from "./vpnModal";
 
 const ApiButton = React.lazy(() => import("container/ApiButton"));
 
@@ -132,7 +132,7 @@ const VpnDetails = () => {
         <>
           <div className="gateway-title-wrapper">
             <div className="gateway-title">
-              <img src={svgVpn} />
+              <img src={svgVpn} alt="Vpn" />
               <Header as="h3" className="title" color="blue">
                 {capitalizeFirstLetter(gateway.name || "")}
               </Header>
@@ -188,7 +188,7 @@ const VpnDetails = () => {
                 />
               ))}
             </Menu>
-            <span></span>
+            <span />
           </div>
           <div className="sub-menu-container">
             <React.Suspense fallback={null}>

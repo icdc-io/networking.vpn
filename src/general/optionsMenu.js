@@ -1,10 +1,10 @@
+import PropTypes from "prop-types";
 /* eslint-disable react/display-name */
 import React from "react";
-import PropTypes from "prop-types";
-import { Dropdown } from "semantic-ui-react";
-import DeleteModal from "./deleteModal";
-import VpnModal from "../components/vpnModal";
 import { useTranslation } from "react-i18next";
+import { Dropdown } from "semantic-ui-react";
+import VpnModal from "../components/vpnModal";
+import DeleteModal from "./deleteModal";
 
 const OptionsMenu = ({ type, instance, options, onClickAction }) => {
   const { t } = useTranslation();

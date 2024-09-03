@@ -1,26 +1,26 @@
+import PropTypes from "prop-types";
 /* eslint camelcase: 0 */
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
-import { Button, Dropdown, Icon, Modal, Popup } from "semantic-ui-react";
-import VpnForm from "./vpnForm";
-import {
-  formatVpnGatewaysData /*formatClientConnectionData, formatDevicesData*/,
-} from "./tools";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { Button, Dropdown, Icon, Modal, Popup } from "semantic-ui-react";
 import {
+  createQRcodeAndFetch,
   createVpnClientConnectionAndFetch,
   createVpnClientConnectionDeviceAndFetch,
   createVpnNatMappingAndFetch,
   createVpnPeerGatewayAndFetch,
+  editVpnGatewayAndFetch,
   infoNotification,
   updateVpnClientConnectionAndFetch,
   updateVpnClientConnectionDeviceAndFetch,
   updateVpnNatMappingAndFetch,
   updateVpnPeerGatewayAndFetch,
-  editVpnGatewayAndFetch,
-  createQRcodeAndFetch,
 } from "../AppActions";
+import {
+  formatVpnGatewaysData /*formatClientConnectionData, formatDevicesData*/,
+} from "./tools";
+import VpnForm from "./vpnForm";
 import "./vpnDetails.scss";
 import { useTranslation } from "react-i18next";
 const ipaddr = require("ipaddr.js");
@@ -83,14 +83,14 @@ const VpnModal = ({
       .map((el) => +el)
       .map((e) => e.toString(2))
       .map((el) => {
-        let temp = [];
+        const temp = [];
         for (let i = 0; i < 8 - el.length; i++) {
           temp.push(0);
         }
         return temp.join("") + el;
       });
-    let binaryValue = ipAddrBinary.join("");
-    return parseInt(binaryValue, 2);
+    const binaryValue = ipAddrBinary.join("");
+    return Number.parseInt(binaryValue, 2);
   };
 
   const convertFromBinary = (bit) => {
@@ -99,7 +99,7 @@ const VpnModal = ({
       binaryValue.unshift("0");
     }
     const divideBits = binaryValue.join("").match(/.{1,8}/g);
-    const result = divideBits.map((el) => parseInt(el, 2));
+    const result = divideBits.map((el) => Number.parseInt(el, 2));
     return result.join(".");
   };
 
@@ -114,9 +114,9 @@ const VpnModal = ({
 
     if (currentIp.kind() !== "ipv4") {
       while (!flag) {
-        let randomIpv6 = Math.floor(Math.random() * 65535).toString(16);
+        const randomIpv6 = Math.floor(Math.random() * 65535).toString(16);
         if (!unavailableSubnets.includes(randomIpv6)) {
-          let splitIp = ip.split(splitter);
+          const splitIp = ip.split(splitter);
           flag = true;
           return {
             [fieldKey]: `${splitIp.slice(0, splitIp.length - 1).join(splitter)}${splitter}${nextIp}`,
@@ -125,7 +125,7 @@ const VpnModal = ({
       }
     } else {
       const initIpAddr = currentIp.octets
-        .map((el, i) => (i == 3 ? 0 : el))
+        .map((el, i) => (i === 3 ? 0 : el))
         .join(".");
       let binaryIp = convertToBinary(initIpAddr);
       const mask = ip.split("/")[1];
@@ -161,8 +161,8 @@ const VpnModal = ({
   };
 
   useEffect(() => {
-    urlQRstatus == "fulfilled" &&
-      configStatus == "fulfilled" &&
+    urlQRstatus === "fulfilled" &&
+      configStatus === "fulfilled" &&
       openConfigs &&
       setOpen(true);
   }, [openConfigs, urlQRstatus, configStatus]);
@@ -177,8 +177,8 @@ const VpnModal = ({
           ip: formValues.ip,
           subnet: formValues.deviceSubnet,
           gateway_ip: formValues.gateway_ip,
-          port: parseInt(formValues.port),
-          mtu: parseInt(formValues.mtu),
+          port: Number.parseInt(formValues.port),
+          mtu: Number.parseInt(formValues.mtu),
         };
 
         return edit
@@ -241,8 +241,8 @@ const VpnModal = ({
   };
 
   const onSubmit = (values) => {
-    let messageText = managementMessages[managementName];
-    messageText == "creatingConfig" && setOpenConfigs(true);
+    const messageText = managementMessages[managementName];
+    messageText === "creatingConfig" && setOpenConfigs(true);
     !edit && infoNotification(t([messageText]));
     dispatch(
       prepPayloadForSubmitingAndSubmitFunction(
@@ -264,7 +264,7 @@ const VpnModal = ({
       />
     ) : privateKey ? (
       <Dropdown.Item text={t("configs")} onClick={() => setOpen(true)} />
-    ) : !natSubnet && managementName == "natMapping" ? (
+    ) : !natSubnet && managementName === "natMapping" ? (
       <Popup
         on="hover"
         pinned
@@ -294,8 +294,8 @@ const VpnModal = ({
   return (
     (user.role === "admin" ||
       user.role === "owner" ||
-      managementName == "vpnDevices" ||
-      managementName == "privateKey") && (
+      managementName === "vpnDevices" ||
+      managementName === "privateKey") && (
       <>
         {button}
         <Modal size="tiny" open={open} onClose={handleClose} closeIcon>

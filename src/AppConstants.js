@@ -39,9 +39,9 @@ export const VPN_NAT_MAPPING_DELETE = "VPN_NAT_MAPPING_DELETE";
 export const vpnGatewayUrl = (id, management = "") =>
   management ? `/gateways/${id}/${management}` : `/gateways/${id}`;
 export const vpnClientConnectionsUrl = (id, clientConnectionDetails) =>
-  `/connections/${id}${clientConnectionDetails ? "/" + clientConnectionDetails : ""}`;
+  `/connections/${id}${clientConnectionDetails ? `/${clientConnectionDetails}` : ""}`;
 export const vpnClientConnectionDevicesUrl = (id, stats) =>
-  `/devices/${id}${stats ? "/" + stats : ""}`;
+  `/devices/${id}${stats ? `/${stats}` : ""}`;
 export const vpnPeerGatewaysUrl = (id) => `/remote_gateways/${id}`;
 export const vpnNatMappingUrl = (id) => `/nat_maps/${id}`;
 export const vpnConnectionsNextIpUrl = (id) => `/connections/${id}/next_ip`;
@@ -55,7 +55,8 @@ export const notificationMessages = {
     routerNotExist: "Сетевого маршрутизатора с таким ID не существует",
     unauthorized: "Пользователь не авторизирован",
     // removalProcessStarted: 'Процесс удаления запущен',
-    cannotDeleteGroupWithAssignedVmsNics: `Невозможно удалить группу безопасности с назначенными NICs`,
+    cannotDeleteGroupWithAssignedVmsNics:
+      "Невозможно удалить группу безопасности с назначенными NICs",
     ruleAlreadyExists: "Правило уже существует",
   },
   en: {

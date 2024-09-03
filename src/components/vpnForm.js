@@ -1,32 +1,32 @@
-import React, { useState } from "react";
-import { Button, Modal } from "semantic-ui-react";
 import PropTypes from "prop-types";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import { Button, Modal } from "semantic-ui-react";
+import { CustomAccordion } from "../general/customAccordion";
 import {
   hostname,
   ip,
   ipWithSubnetPrefix,
-  maxLength30,
+  isPrivateKey,
   maxLength4,
+  maxLength10,
+  maxLength30,
   maxLength63,
   mtu,
   name,
+  nameWithSpace,
   number,
+  peerEndpoint,
   port,
   publicKey,
-  isPrivateKey,
   required,
-  nameWithSpace,
-  maxLength10,
-  peerEndpoint,
 } from "../utilities/Validations";
-import { CustomAccordion } from "../general/customAccordion";
-import { useSelector } from "react-redux";
 import "./vpnDetails.scss";
+import { returnBaseUrl } from "container/ReturnBaseUrl";
+import { Field, Form } from "react-final-form";
+import { useTranslation } from "react-i18next";
 import CustomChipInput from "../general/customChipInput";
 import CustomDropdown from "../general/customDropdown";
-import { returnBaseUrl } from "container/ReturnBaseUrl";
-import { useTranslation } from "react-i18next";
-import { Field, Form } from "react-final-form";
 import { composeValidators } from "../utilities/composeValidators";
 
 const GeneralInput = React.lazy(
@@ -139,7 +139,7 @@ const VpnForm = ({
   const displayFields = fieldNames.map((item, key) => {
     const initial = initialValues && edit ? initialValues[item] : undefined;
     return (
-      <div className={item == "hostname" ? "hostname-field" : ""} key={key}>
+      <div className={item === "hostname" ? "hostname-field" : ""} key={key}>
         <Field
           // type={item === "routeSubnets" && "select-multiple"}
           key={key}
@@ -161,7 +161,7 @@ const VpnForm = ({
           validate={composeValidators(...validations[managementName][item])}
           placeholder={t(placeholderMessages[managementName][item])}
         />
-        {item == "hostname" && <p>{`.${user.account}.vpn.${baseHostname}`}</p>}
+        {item === "hostname" && <p>{`.${user.account}.vpn.${baseHostname}`}</p>}
       </div>
     );
   });
@@ -201,7 +201,7 @@ const VpnForm = ({
       key={index}
       index={index}
       configData={el}
-      open={selectedConfig == index}
+      open={selectedConfig === index}
       handleClick={setSelectedConfig}
     />
   ));
@@ -213,14 +213,14 @@ const VpnForm = ({
           {(pencil || privateKey || configs) && (
             <>
               <label htmlFor="">{t("name")}</label>
-              <p>{initialValues["name"]}</p>
+              <p>{initialValues.name}</p>
             </>
           )}
           {!configs && displayFields}
           {privateKey && (
             <div className="privateKeyInfo">{t("privateKeyInfo")}</div>
           )}
-          {configs && configStatus == "fulfilled" && (
+          {configs && configStatus === "fulfilled" && (
             <>
               <label htmlFor="">{t("files")}</label>
               {deviceConfigs}

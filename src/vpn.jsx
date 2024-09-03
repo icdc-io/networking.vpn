@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import VpnOverview from "./components/overview";
-import { VpnStore } from "./AppReducer";
-import { Loader } from "semantic-ui-react";
 import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
+import { Loader } from "semantic-ui-react";
+import { VpnStore } from "./AppReducer";
+import VpnOverview from "./components/overview";
 import "./App.scss";
 
 const Balancer = ({ store }) => {
