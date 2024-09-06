@@ -23,19 +23,24 @@ const RootComponent = () => {
 
 const VpnOverview = () => {
   return (
-    <React.Suspense fallback={null}>
-      <Routes>
-        <Route path={vpnGatewaysPath()} Component={RootComponent}>
-          <Route index Component={Vpn} />
-          <Route path={vpnGatewayPath()} Component={VpnDetails} />
+    <div className="networking_vpn">
+      <React.Suspense fallback={null}>
+        <Routes>
+          <Route path={vpnGatewaysPath()} Component={RootComponent}>
+            <Route index Component={Vpn} />
+            <Route path={vpnGatewayPath()} Component={VpnDetails} />
+            <Route
+              path={`${vpnGatewayPath()}/${vpnClientConnectionDevicesPath()}`}
+              Component={ClientConnectionDevices}
+            />
+          </Route>
           <Route
-            path={`${vpnGatewayPath()}/${vpnClientConnectionDevicesPath()}`}
-            Component={ClientConnectionDevices}
+            path="*"
+            element={<Navigate to={vpnGatewaysPath()} replace />}
           />
-        </Route>
-        <Route path="*" element={<Navigate to={vpnGatewaysPath()} replace />} />
-      </Routes>
-    </React.Suspense>
+        </Routes>
+      </React.Suspense>
+    </div>
   );
 };
 

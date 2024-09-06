@@ -25,7 +25,6 @@ import {
 import { capitalizeFirstLetter, longDash, truncate } from "./tools";
 import VpnCopyButton from "./vpnCopyButton";
 import VpnModal from "./vpnModal";
-import "./clientConnectionDevices.scss";
 
 const ApiButton = React.lazy(() => import("container/ApiButton"));
 

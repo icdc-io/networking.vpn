@@ -1,9 +1,8 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import "./customAccordion.scss";
 import { PropTypes } from "prop-types";
+import React from "react";
 import DangerousHTML from "react-dangerous-html";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 import { Button, Icon } from "semantic-ui-react";
 
 const CodeSnippet = React.lazy(() => import("container/CodeSnippet"));

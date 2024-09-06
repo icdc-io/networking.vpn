@@ -1,11 +1,10 @@
 import { PropTypes } from "prop-types";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Loader, Popup, Table } from "semantic-ui-react";
 import { vpnClientConnectionDevicesPath } from "../constants/routes";
-import "./vpnDetailsTable.scss";
-import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
 import CustomPagination from "../general/customPagination";
 import OptionsMenu from "../general/optionsMenu";
 import { longDash } from "./tools";

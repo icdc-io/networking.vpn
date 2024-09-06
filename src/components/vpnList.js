@@ -1,11 +1,10 @@
 import _ from "lodash";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
-import { Table } from "semantic-ui-react";
-import "./vpnList.scss";
 import { useTranslation } from "react-i18next";
 // import DeleteModal from '../../GeneralComponents/deleteModal';
 import { Link } from "react-router-dom";
+import { Table } from "semantic-ui-react";
 import CustomPagination from "../general/customPagination";
 import OptionsMenu from "../general/optionsMenu";
 import svgVpn from "../static/svgVpn.svg";

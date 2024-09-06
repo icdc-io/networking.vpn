@@ -1,5 +1,6 @@
 /* eslint-disable */
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Header, Menu } from "semantic-ui-react";
@@ -10,10 +11,8 @@ import {
   fetchVpnPeerGateways,
 } from "../AppActions";
 import ButtonBack from "../general/buttonBack";
-import { dataStatusCheck, formatVpnGatewaysData } from "./tools";
-import "./vpnDetails.scss";
-import { useTranslation } from "react-i18next";
 import svgVpn from "../static/svgVpn.svg";
+import { dataStatusCheck, formatVpnGatewaysData } from "./tools";
 import { capitalizeFirstLetter, longDash } from "./tools";
 import VpnDetailsTable from "./vpnDetailsTable";
 import VpnModal from "./vpnModal";

@@ -1,94 +1,126 @@
-.customized-hr {
-  border: solid 1px #d3d3d3;
-  height: 1px;
-  width: 100%;
-  margin-top: 30px;
-}
-
-.small-input {
-  height: 32px;
-}
-
-.empty-table {
-  text-align: center;
-  color: grey;
-  font-weight: 600;
-  margin-top: 46px;
-  margin-bottom: 46px;
-}
-
-.status-label {
-  width: 100px;
-  text-align: center;
-  border-radius: 17px;
-  margin-right: 10px;
-  padding: 5px;
-}
-
-.green-text {
-  color: #00a711;
-  background-color: #eaf8ea;
-}
-
-.gray-text {
-  color: #1d1d1d;
-  background-color: #ececec;
-}
-
-.popup-dots {
-  cursor: pointer;
-  width: 16px;
-  height: 16px;
-  background: #ededed;
-  border-radius: 2px;
-  color: #6a6a6a;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-}
-.pencil:hover {
-  cursor: pointer;
-}
-label {
-  display: block;
-  margin: 0 0 0.28571429rem 0;
-  color: rgba(0, 0, 0, 0.87);
-  font-size: 0.92857143em;
-  font-weight: 700;
-  text-transform: none;
-}
-.privateKeyInfo {
-  width: 100%;
-  height: 109px;
-  background: #fff7e4;
-  border: 1px solid #b99e59;
-  border-radius: 6px;
-  font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 164.69%;
-  color: #b99e59;
-  padding: 14px;
-  margin-top: 20px;
-}
-
-.custom-pagination {
-  text-align: center;
-  padding-top: 15px;
-
-  .item {
-    &:hover {
-      background-color: #dededf !important;
-      border-radius: 5% !important;
+.networking_vpn {
+  .customized-hr {
+    border: solid 1px #d3d3d3;
+    height: 1px;
+    width: 100%;
+    margin-top: 30px;
+  }
+  
+  .small-input {
+    height: 32px;
+  }
+  
+  .empty-table {
+    text-align: center;
+    color: grey;
+    font-weight: 600;
+    margin-top: 46px;
+    margin-bottom: 46px;
+  }
+  
+  .status-label {
+    width: 100px;
+    text-align: center;
+    border-radius: 17px;
+    margin-right: 10px;
+    padding: 5px;
+  }
+  
+  .green-text {
+    color: #00a711;
+    background-color: #eaf8ea;
+  }
+  
+  .gray-text {
+    color: #1d1d1d;
+    background-color: #ececec;
+  }
+  
+  .popup-dots {
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    background: #ededed;
+    border-radius: 2px;
+    color: #6a6a6a;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .pencil:hover {
+    cursor: pointer;
+  }
+  label {
+    display: block;
+    margin: 0 0 0.28571429rem 0;
+    color: rgba(0, 0, 0, 0.87);
+    font-size: 0.92857143em;
+    font-weight: 700;
+    text-transform: none;
+  }
+  
+  
+  .custom-pagination {
+    text-align: center;
+    padding-top: 15px;
+  
+    .item {
+      &:hover {
+        background-color: #dededf !important;
+        border-radius: 5% !important;
+      }
+    }
+  
+    &.hidden {
+      display: none;
     }
   }
 
-  &.hidden {
-    display: none;
-  }
+  @import url("./components/clientConnectionDevices.scss");
+  @import url("./components/vpnDetails.scss");
+  @import url("./components/vpnDetailsTable.scss");
+  @import url("./components/vpnList.scss");
+  @import url("./general/chipInput.scss");
+  @import url("./general/customAccordion.scss");
+  @import url("./general/customChipInput.scss");
 }
 
-.ui.form.vpn-form .field {
-  margin-top: 1rem;
+.networking_vpn_modal {
+  .ui.form.vpn-form .field {
+    margin-top: 1rem;
+  }
+
+  .privateKeyInfo {
+    width: 100%;
+    height: 109px;
+    background: #fff7e4;
+    border: 1px solid #b99e59;
+    border-radius: 6px;
+    font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 164.69%;
+    color: #b99e59;
+    padding: 14px;
+    margin-top: 20px;
+  }
+
+  .ui.form div.hostname-field {
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+  
+    .field {
+      width: 100%;
+  
+      div.ui.input {
+        width: 100%;
+      }
+    }
+    p {
+      margin-bottom: 22px;
+      margin-left: 6px;
+    }
+  }  
 }

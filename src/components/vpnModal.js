@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 /* eslint camelcase: 0 */
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Button, Dropdown, Icon, Modal, Popup } from "semantic-ui-react";
@@ -21,8 +22,6 @@ import {
   formatVpnGatewaysData /*formatClientConnectionData, formatDevicesData*/,
 } from "./tools";
 import VpnForm from "./vpnForm";
-import "./vpnDetails.scss";
-import { useTranslation } from "react-i18next";
 const ipaddr = require("ipaddr.js");
 
 const VpnModal = ({
@@ -298,7 +297,13 @@ const VpnModal = ({
       managementName === "privateKey") && (
       <>
         {button}
-        <Modal size="tiny" open={open} onClose={handleClose} closeIcon>
+        <Modal
+          size="tiny"
+          open={open}
+          onClose={handleClose}
+          closeIcon
+          className="networking_vpn_modal"
+        >
           <Modal.Header
             content={
               openConfigs

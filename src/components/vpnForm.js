@@ -1,8 +1,13 @@
+import { returnBaseUrl } from "container/ReturnBaseUrl";
 import PropTypes from "prop-types";
 import React, { useState } from "react";
+import { Field, Form } from "react-final-form";
+import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { Button, Modal } from "semantic-ui-react";
 import { CustomAccordion } from "../general/customAccordion";
+import CustomChipInput from "../general/customChipInput";
+import CustomDropdown from "../general/customDropdown";
 import {
   hostname,
   ip,
@@ -21,12 +26,6 @@ import {
   publicKey,
   required,
 } from "../utilities/Validations";
-import "./vpnDetails.scss";
-import { returnBaseUrl } from "container/ReturnBaseUrl";
-import { Field, Form } from "react-final-form";
-import { useTranslation } from "react-i18next";
-import CustomChipInput from "../general/customChipInput";
-import CustomDropdown from "../general/customDropdown";
 import { composeValidators } from "../utilities/composeValidators";
 
 const GeneralInput = React.lazy(

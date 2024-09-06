@@ -1,8 +1,7 @@
 import PropTypes from "prop-types";
 import React, { useState } from "react";
-import { Dropdown, Label } from "semantic-ui-react";
-import "./chipInput.scss";
 import { Field } from "react-final-form";
+import { Dropdown, Label } from "semantic-ui-react";
 // import { useDispatch } from "react-redux";
 import { ipWithSubnetPrefix } from "../utilities/Validations";
 

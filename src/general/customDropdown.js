@@ -1,8 +1,7 @@
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
-import { Dropdown, Form, Label } from "semantic-ui-react";
-import "./chipInput.scss";
 import { useSelector } from "react-redux";
+import { Dropdown, Form, Label } from "semantic-ui-react";
 import { peerEndpoint } from "../utilities/Validations";
 
 const CustomDropdown = ({

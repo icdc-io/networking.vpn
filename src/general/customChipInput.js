@@ -1,8 +1,7 @@
 import PropTypes from "prop-types";
 import React, { useEffect, useRef, useState } from "react";
-import { Form, Label } from "semantic-ui-react";
-import "./customChipInput.scss";
 import { useSelector } from "react-redux";
+import { Form, Label } from "semantic-ui-react";
 import { ipWithSubnetPrefix } from "../utilities/Validations";
 
 const CustomChipInput = ({
