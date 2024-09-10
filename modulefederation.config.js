@@ -3,7 +3,7 @@ const { dependencies } = require("./package.json");
 const isEnvProduction = process.env.NODE_ENV === "production";
 
 module.exports = {
-  name: "vpn",
+  name: "networking_vpn",
   filename: "remoteEntry.js",
   exposes: {
     "./vpn": "./src/vpn.jsx",
