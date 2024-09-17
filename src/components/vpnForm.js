@@ -206,7 +206,7 @@ const VpnForm = ({
   ));
 
   return (
-    <Form onSubmit={onSubmit}>
+    <Form onSubmit={onSubmit} initialValues={initialValues}>
       {({ handleSubmit, pristine, invalid }) => (
         <form onSubmit={handleSubmit} className="ui form vpn-form">
           {(pencil || privateKey || configs) && (

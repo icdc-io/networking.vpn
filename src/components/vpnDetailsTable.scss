@@ -21,6 +21,11 @@
   }
 }
 
+.TooltipContent.vpn {
+  max-width: 300px;
+  left: -12px;
+}
+
 .ui.inverted.popup.vpn {
   left: -12px !important;
   max-width: 300px;

@@ -28,6 +28,7 @@
     "redux-logger": "^3.0.6"
   },
   "dependencies": {
+    "@radix-ui/react-tooltip": "^1.1.2",
     "chart.js": "^3.9.1",
     "ip-regex": "^5.0.0",
     "ipaddr.js": "^2.2.0",

@@ -1,4 +1,13 @@
 .networking_vpn {
+  min-height: 830px;
+  display: flex;
+  flex-direction: column;
+
+  .gw_description {
+    margin: 16px 0;
+    color: #969696;
+  }
+
   .customized-hr {
     border: solid 1px #d3d3d3;
     height: 1px;
@@ -63,6 +72,7 @@
   .custom-pagination {
     text-align: center;
     padding-top: 15px;
+    margin-top: auto;
   
     .item {
       &:hover {

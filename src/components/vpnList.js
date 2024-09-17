@@ -120,7 +120,7 @@ const VpnList = ({ items: gatewaysData, searchTerm }) => {
 
   return (
     <>
-      <div className="table-container" style={{ height: 590 }}>
+      <div className="table-container">
         <Table
           className="vpn-list-table"
           selectable={false}

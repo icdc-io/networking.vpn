@@ -1,10 +1,9 @@
 import PropTypes from "prop-types";
-/* eslint camelcase: 0 */
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { Button, Dropdown, Icon, Modal, Popup } from "semantic-ui-react";
+import { Button, Dropdown, Icon, Modal } from "semantic-ui-react";
 import {
   createQRcodeAndFetch,
   createVpnClientConnectionAndFetch,
@@ -23,6 +22,7 @@ import {
 } from "./tools";
 import VpnForm from "./vpnForm";
 const ipaddr = require("ipaddr.js");
+const Popup = React.lazy(() => import("container/Popup"));
 
 const VpnModal = ({
   edit,
@@ -39,12 +39,11 @@ const VpnModal = ({
   const { id, connectionId } = useParams();
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
-
-  const userEmail = JSON.parse(localStorage.getItem("user")).email;
   const [openConfigs, setOpenConfigs] = useState(false);
   const gateway = useSelector((state) =>
     formatVpnGatewaysData(state.VpnStore.gateway),
   );
+  const userEmail = useSelector((state) => state.host.email);
   const urlQRstatus = useSelector(
     (state) => state.VpnStore.vpnClientConnectionDevicesQRcodeStatus,
   );
@@ -168,7 +167,6 @@ const VpnModal = ({
 
   const prepPayloadForSubmitingAndSubmitFunction = (id, formValues) => {
     let payload = {};
-    /* eslint-disable */
     switch (managementName) {
       case "clientConnections":
         payload = {
@@ -181,7 +179,7 @@ const VpnModal = ({
         };
 
         return edit
-          ? updateVpnClientConnectionAndFetch(id, formValues.id, payload)
+          ? updateVpnClientConnectionAndFetch(id, values.id, payload)
           : createVpnClientConnectionAndFetch(id, payload);
       case "peerGateways":
         payload = {
@@ -194,7 +192,7 @@ const VpnModal = ({
         };
 
         return edit
-          ? updateVpnPeerGatewayAndFetch(id, formValues.id, payload)
+          ? updateVpnPeerGatewayAndFetch(id, values.id, payload)
           : createVpnPeerGatewayAndFetch(id, payload);
       case "natMapping":
         payload = {
@@ -204,7 +202,7 @@ const VpnModal = ({
         };
 
         return edit
-          ? updateVpnNatMappingAndFetch(id, formValues.id, payload)
+          ? updateVpnNatMappingAndFetch(id, values.id, payload)
           : createVpnNatMappingAndFetch(id, payload);
       case "gateway":
         payload = {
@@ -212,7 +210,7 @@ const VpnModal = ({
           nat_subnet: formValues.natSubnet,
         };
 
-        return editVpnGatewayAndFetch(formValues.id, payload);
+        return editVpnGatewayAndFetch(values.id, payload);
       case "vpnDevices":
         payload = {
           name: formValues.name,
@@ -225,7 +223,7 @@ const VpnModal = ({
         };
         return edit
           ? updateVpnClientConnectionDeviceAndFetch(
-              formValues.id,
+              values.id,
               connectionId,
               payload,
             )
@@ -264,24 +262,15 @@ const VpnModal = ({
     ) : privateKey ? (
       <Dropdown.Item text={t("configs")} onClick={() => setOpen(true)} />
     ) : !natSubnet && managementName === "natMapping" ? (
-      <Popup
-        on="hover"
-        pinned
-        trigger={
-          <Button color="blue" size="small" className="disabled-btn">
-            {t(addContentMessage)}
-            <Icon
-              name="question circle outline"
-              size="large"
-              className="info-icon"
-            />
-          </Button>
-        }
-        inverted
-        className="vpn"
-        position="top right"
-      >
-        {t("natPopup")}
+      <Popup content={t("natPopup")} align="start" className="vpn">
+        <button className="ui blue small button disabled-btn" type="button">
+          {t(addContentMessage)}
+          <Icon
+            name="question circle outline"
+            size="large"
+            className="info-icon"
+          />
+        </button>
       </Popup>
     ) : (
       <Button color="blue" size="small" onClick={() => setOpen(true)}>

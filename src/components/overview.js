@@ -14,16 +14,12 @@ const ClientConnectionDevices = React.lazy(
 );
 
 const RootComponent = () => {
-  return (
-    <Segment style={{ minHeight: 792 }}>
-      <Outlet />
-    </Segment>
-  );
+  return <Outlet />;
 };
 
 const VpnOverview = () => {
   return (
-    <div className="networking_vpn">
+    <Segment className="networking_vpn">
       <React.Suspense fallback={null}>
         <Routes>
           <Route path={vpnGatewaysPath()} Component={RootComponent}>
@@ -40,7 +36,7 @@ const VpnOverview = () => {
           />
         </Routes>
       </React.Suspense>
-    </div>
+    </Segment>
   );
 };
 

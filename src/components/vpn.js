@@ -33,7 +33,7 @@ const Vpn = () => {
   return (
     <>
       <h4>{t("vpnGateways")}</h4>
-      <div style={{ color: "#969696", marginBottom: 16 }}>
+      <div className="gw_description">
         {<DangerousHTML html={t("vpnDescription", { tag: "<br />" })} />}
       </div>
 
