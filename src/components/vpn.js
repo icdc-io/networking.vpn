@@ -4,11 +4,10 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { Input, Loader } from "semantic-ui-react";
 import { fetchVpnGateways } from "../AppActions";
-// import { gateways } from '../../vpnMockData';
 import VpnList from "./vpnList";
-// import VpnModal from './vpnModal';
-// const ContentPage = React.lazy(() => import("container/ContentPage"));
+
 const ApiButton = React.lazy(() => import("container/ApiButton"));
+const ErrorScreen = React.lazy(() => import("container/ErrorScreen"));
 
 const Vpn = () => {
   const { t } = useTranslation();
@@ -52,7 +51,7 @@ const Vpn = () => {
         />
       </div>
       {isError ? (
-        "Error"
+        <ErrorScreen />
       ) : isLoading ? (
         <Loader active inline="centered" />
       ) : (
