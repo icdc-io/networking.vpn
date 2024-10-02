@@ -5,7 +5,7 @@ import { Button } from "semantic-ui-react";
 
 const ButtonBack = ({ back, path }) => {
   return (
-    <Link to={path} replace="path">
+    <Link to={path} relative="route">
       <Button
         className="back back__top"
         labelPosition="left"

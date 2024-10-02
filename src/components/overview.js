@@ -24,11 +24,13 @@ const VpnOverview = () => {
         <Routes>
           <Route path={vpnGatewaysPath()} Component={RootComponent}>
             <Route index Component={Vpn} />
-            <Route path={vpnGatewayPath()} Component={VpnDetails} />
-            <Route
-              path={`${vpnGatewayPath()}/${vpnClientConnectionDevicesPath()}`}
-              Component={ClientConnectionDevices}
-            />
+            <Route path={vpnGatewayPath()} Component={RootComponent}>
+              <Route index Component={VpnDetails} />
+              <Route
+                path={`${vpnClientConnectionDevicesPath()}`}
+                Component={ClientConnectionDevices}
+              />
+            </Route>
           </Route>
           <Route
             path="*"

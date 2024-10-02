@@ -5,7 +5,9 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { Button, Icon } from "semantic-ui-react";
 
-const CodeSnippet = React.lazy(() => import("container/CodeSnippet"));
+const CodeSnippet = React.lazy(
+  () => import("container/networking/CodeSnippet"),
+);
 
 export const CustomAccordion = ({ configData, index, open, handleClick }) => {
   const { t } = useTranslation();

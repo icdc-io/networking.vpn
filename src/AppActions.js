@@ -47,7 +47,7 @@ const errorHandler = (error) => {
 };
 
 const errorNotification = (error) => {
-  const errorInfo = error.response.data;
+  const errorInfo = error.response?.data;
   const errorTypeCheck =
     errorInfo instanceof Object ? errorInfo.message : errorInfo;
   toast.error(
@@ -289,7 +289,7 @@ const createQRcode = (deviceId, payload) => ({
   payload: createData(
     getFullPath(ActionTypes.vpnClientConnectionDevicesUrl(deviceId, "qr")),
     payload,
-  ),
+  ).then((res) => res.text()),
 });
 
 const createConfiguration = (deviceId, payload) => ({
@@ -297,7 +297,7 @@ const createConfiguration = (deviceId, payload) => ({
   payload: createData(
     getFullPath(ActionTypes.vpnClientConnectionDevicesUrl(deviceId, "config")),
     payload,
-  ),
+  ).then((res) => res.text()),
 });
 
 export const createQRcodeAndFetch = (deviceId, payload) => {
