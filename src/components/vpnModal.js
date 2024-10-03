@@ -207,7 +207,7 @@ const VpnModal = ({
       case "gateway":
         payload = {
           name: formValues.name,
-          nat_subnet: formValues.natSubnet,
+          nat_subnet: formValues.natSubnet || "",
         };
 
         return editVpnGatewayAndFetch(values.id, payload);
