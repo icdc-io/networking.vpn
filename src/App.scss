@@ -1,4 +1,5 @@
 .networking_vpn {
+	gap: 1rem;
   min-height: 830px;
   display: flex;
   flex-direction: column;
@@ -23,8 +24,7 @@
     text-align: center;
     color: grey;
     font-weight: 600;
-    margin-top: 46px;
-    margin-bottom: 46px;
+    padding: 3rem 0;
   }
   
   .status-label {
@@ -71,8 +71,8 @@
   
   .custom-pagination {
     text-align: center;
-    padding-top: 15px;
-    margin-top: auto;
+    padding-top: 1rem;
+    margin-bottom: auto;
   
     .item {
       &:hover {
@@ -129,7 +129,6 @@
       width: 100% !important;
     }
     .subnet {
-      margin: 6px 0 0;
       height: fit-content;
       user-select: none;
       display: inline-block;
@@ -166,89 +165,122 @@
 }
 
 .networking_vpn_modal {
-  .ui.form.vpn-form .field {
-    margin-top: 1rem;
+  // .ui.form.vpn-form .field {
+  //   margin-top: 1rem;
+  // }
+
+  // label {
+  //   display: block;
+  //   margin: 0 0 0.28571429rem 0;
+  //   color: rgba(0, 0, 0, 0.87);
+  //   font-size: 0.92857143em;
+  //   font-weight: 700;
+  //   text-transform: none;
+  // }
+
+  .configs_modal {
+    min-width: 600px;
   }
 
-  label {
-    display: block;
-    margin: 0 0 0.28571429rem 0;
-    color: rgba(0, 0, 0, 0.87);
-    font-size: 0.92857143em;
-    font-weight: 700;
-    text-transform: none;
-  }
+	.multiselect_input {
+		padding: 4px 12px;
+		.selected_items {
+			// padding-left: 12px;
+		}
+		input {
+			padding: 0;
+			height: 26px;
+			flex-basis: 120px;
+    	flex-grow: 1;
+		}
+	}
 
-  .input-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    column-gap: 6px;
-    width: 100%;
-    cursor: text;
-    min-width: 0;
-    word-wrap: break-word;
-    line-height: 1em;
-    white-space: normal;
-    outline: 0;
-    transform: rotateZ(0);
-    min-height: 2.71428571em;
-    background: #fff;
-    color: rgba(0, 0, 0, 0.87);
-    box-shadow: none;
-    border: 1px solid rgba(34, 36, 38, 0.15);
-    border-radius: 0.28571429rem;
-    transition:
-      box-shadow 0.1s ease,
-      width 0.1s ease;
-    font-size: 1em;
-    position: relative;
-    -webkit-tap-highlight-color: transparent;
-    padding: 0 10px;
+	.host_input {
+		display: flex;
+		align-items: flex-end;
+		gap: 0.5rem;
+
+		.input_container {
+			flex-grow: 1;
+		}
+
+		.host_value {
+			height: 32px;
+		}
+	}
+
+	.subnet {
+		height: fit-content;
+		user-select: none;
+		display: flex;
+		gap: 0.5rem;
+		vertical-align: top;
+		white-space: normal;
+		font-size: 1em;
+		padding: 0.357em;
+		box-shadow: 0 0 0 1px rgb(34 36 38 / 15%) inset;
+		line-height: 1;
+		background-color: #e8e8e8;
+		background-image: none;
+		color: rgba(0, 0, 0, 0.6);
+		text-transform: none;
+		font-weight: 700;
+		border: 0 solid rgba(0, 0, 0, 0);
+		border-radius: 0.28571429rem;
+		text-decoration: none;
+
+		.custom-delete-icon {
+			&:hover {
+				color: black;
+				cursor: pointer;
+			}
+		}
+	}
+
+  // .input-wrapper {
+  //   display: flex;
+  //   flex-wrap: wrap;
+  //   column-gap: 6px;
+  //   width: 100%;
+  //   cursor: text;
+  //   min-width: 0;
+  //   word-wrap: break-word;
+  //   line-height: 1em;
+  //   white-space: normal;
+  //   outline: 0;
+  //   transform: rotateZ(0);
+  //   min-height: 2.71428571em;
+  //   background: #fff;
+  //   color: rgba(0, 0, 0, 0.87);
+  //   box-shadow: none;
+  //   border: 1px solid rgba(34, 36, 38, 0.15);
+  //   border-radius: 0.28571429rem;
+  //   transition:
+  //     box-shadow 0.1s ease,
+  //     width 0.1s ease;
+  //   font-size: 1em;
+  //   position: relative;
+  //   -webkit-tap-highlight-color: transparent;
+  //   padding: 0 10px;
   
-    input {
-      position: static;
-      padding: 9.5px 10px !important;
-      flex-grow: 1;
-      flex-basis: 100px;
-      background: none rgba(0, 0, 0, 0) !important;
-      border: none !important;
-      box-shadow: none !important;
-      -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
-      top: 0;
-      left: 1px;
-      padding-left: 0 !important;
-    }
-    .full-width {
-      width: 100% !important;
-    }
-    .subnet {
-      margin: 6px 0 0;
-      height: fit-content;
-      user-select: none;
-      display: inline-block;
-      vertical-align: top;
-      white-space: normal;
-      font-size: 1em;
-      padding: 0.357em 0 0.357em 0.786em;
-      box-shadow: 0 0 0 1px rgb(34 36 38 / 15%) inset;
-      line-height: 1;
-      background-color: #e8e8e8;
-      background-image: none;
-      color: rgba(0, 0, 0, 0.6);
-      text-transform: none;
-      font-weight: 700;
-      border: 0 solid rgba(0, 0, 0, 0);
-      border-radius: 0.28571429rem;
-      text-decoration: none;
-  
-      .custom-delete-icon {
-        &:hover {
-          color: black;
-          cursor: pointer;
-        }
-      }
-    }
-  }
+  //   input {
+  //     position: static;
+  //     padding: 9.5px 10px !important;
+  //     flex-grow: 1;
+  //     flex-basis: 100px;
+  //     background: none rgba(0, 0, 0, 0) !important;
+  //     border: none !important;
+  //     box-shadow: none !important;
+  //     -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  //     top: 0;
+  //     left: 1px;
+  //     padding-left: 0 !important;
+  //   }
+  //   .full-width {
+  //     width: 100% !important;
+  //   }
+
+  // }
 
   .privateKeyInfo {
     width: 100%;

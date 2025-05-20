@@ -4,33 +4,37 @@
   align-items: baseline;
 }
 
-.ui.table.vpn-list-table {
-  font-size: 16px;
-  thead {
-    th.sorted {
-      background: none !important;
-    }
-
-    th {
-      &:hover {
-        background: none;
-        color: black;
-      }
-    }
-
-    th + th {
-      // Target all th exept the first one
-      cursor: default;
-    }
-    tr th {
-      border-left: none;
-    }
-  }
-
-  tbody > tr:hover {
-    background: white !important;
-  }
+.vpn-list .table-container{
+	min-height: 30rem;
 }
+
+// .ui.table.vpn-list-table {
+//   font-size: 16px;
+//   thead {
+//     th.sorted {
+//       background: none !important;
+//     }
+
+//     th {
+//       &:hover {
+//         background: none;
+//         color: black;
+//       }
+//     }
+
+//     th + th {
+//       // Target all th exept the first one
+//       cursor: default;
+//     }
+//     tr th {
+//       border-left: none;
+//     }
+//   }
+
+//   tbody > tr:hover {
+//     background: white !important;
+//   }
+// }
 
 .gateway-name-container {
   display: flex;

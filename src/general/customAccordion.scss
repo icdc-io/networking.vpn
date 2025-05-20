@@ -85,34 +85,3 @@
     top: 15px;
   }
 }
-
-.api-dialog-snippet-wrapper {
-  border: solid 1px #c8cfee;
-  border-radius: 4px;
-  background: #f5f7ff;
-
-  pre {
-    margin: 0 !important;
-    border-radius: 5px;
-  }
-  .code-snippet-wrapper .language-bash {
-    word-break: break-all !important;
-  }
-  code span {
-    font-size: 10px;
-  }
-  .header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #c8cfee;
-    padding: 7px;
-    padding-right: 0px;
-
-    button {
-      background: none;
-      border: none;
-      color: rgba(0, 0, 0, 0.6);
-    }
-  }
-}

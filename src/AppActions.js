@@ -1,85 +1,24 @@
-import { createData, deleteData, fetchData, updateData } from "container/Api";
-import { toast } from "sonner";
+import {
+	createData,
+	deleteData,
+	fetchData,
+	showErrorNotification,
+	showSuccessNotification,
+	updateData,
+} from "container/Api";
 import * as ActionTypes from "./AppConstants";
 
-const notificationOptions = { position: "top-right", hideAfter: 7 };
-
-const errorHandler = (error) => {
-  if (!error) return "";
-
-  if (error.includes("Could not find security_group with such id")) {
-    return ActionTypes.notificationMessages[
-      localStorage.getItem("icdc-lang") || "en"
-    ].sgNotExist;
-  }
-
-  if (error.includes("Firewall rule edit error")) {
-    return ActionTypes.notificationMessages[
-      localStorage.getItem("icdc-lang") || "en"
-    ].ruleEditError;
-  }
-
-  if (error.includes("Could not find network_router with such id")) {
-    return ActionTypes.notificationMessages[
-      localStorage.getItem("icdc-lang") || "en"
-    ].routerNotExist;
-  }
-
-  if (error.includes("401")) {
-    return ActionTypes.notificationMessages[
-      localStorage.getItem("icdc-lang") || "en"
-    ].unauthorized;
-  }
-
-  if (error.includes("Rule already exists")) {
-    return ActionTypes.notificationMessages[
-      localStorage.getItem("icdc-lang") || "en"
-    ].ruleAlreadyExists;
-  }
-
-  if (error.includes(`Can't delete security group with assigned NICs`)) {
-    return ActionTypes.notificationMessages[
-      localStorage.getItem("icdc-lang") || "en"
-    ].cannotDeleteGroupWithAssignedVmsNics;
-  }
-
-  return error;
-};
-
 const errorNotification = (error) => {
-  const errorInfo = error.response?.data;
-  const errorTypeCheck =
-    errorInfo instanceof Object ? errorInfo.message : errorInfo;
-  toast.error(
-    <b>
-      {
-        ActionTypes.notificationMessages[
-          localStorage.getItem("icdc-lang") || "en"
-        ].error
-      }
-      <br />
-      {errorHandler(errorTypeCheck)}
-    </b>,
-    notificationOptions,
-  );
+	showErrorNotification(error);
 };
 
-const successNotification = (msg) =>
-  toast.success(
-    ActionTypes.notificationMessages[localStorage.getItem("icdc-lang") || "en"]
-      .success + msg,
-    notificationOptions,
-  );
-
-export const infoNotification = (msg) => toast.info(msg, notificationOptions);
-
-const getFullPath = (url) => "/api/wireguard/v1" + url;
+export const getFullPath = (url) => `/api/wireguard/v1${url}`;
 
 export const fetchVpnGateways = () => ({
-  type: ActionTypes.VPN_GATEWAYS_FETCH,
-  payload: fetchData(getFullPath(ActionTypes.VPN_GATEWAYS_URL)).then(
-    (response) => response,
-  ),
+	type: ActionTypes.VPN_GATEWAYS_FETCH,
+	payload: fetchData(getFullPath(ActionTypes.VPN_GATEWAYS_URL)).then(
+		(response) => response,
+	),
 });
 
 // ------------- THIS IS PAUSED IN DEVELOPEMENT DO NOT DELETE -------------
@@ -100,10 +39,10 @@ export const fetchVpnGateways = () => ({
 // };
 
 export const fetchVpnGateway = (gatewayId) => ({
-  type: ActionTypes.VPN_GATEWAY_FETCH,
-  payload: fetchData(getFullPath(ActionTypes.vpnGatewayUrl(gatewayId))).then(
-    (response) => response,
-  ),
+	type: ActionTypes.VPN_GATEWAY_FETCH,
+	payload: fetchData(getFullPath(ActionTypes.vpnGatewayUrl(gatewayId))).then(
+		(response) => response,
+	),
 });
 
 // ------------- THIS IS PAUSED IN DEVELOPEMENT DO NOT DELETE -------------
@@ -124,393 +63,359 @@ export const fetchVpnGateway = (gatewayId) => ({
 // };
 
 export const editVpnGateway = (gatewayId, payload) => ({
-  type: ActionTypes.VPN_GATEWAY_UPDATE,
-  payload: updateData(
-    getFullPath(ActionTypes.vpnGatewayUrl(gatewayId)),
-    payload,
-  ),
+	type: ActionTypes.VPN_GATEWAY_UPDATE,
+	payload: updateData(
+		getFullPath(ActionTypes.vpnGatewayUrl(gatewayId)),
+		payload,
+	),
 });
 
-export const editVpnGatewayAndFetch = (gatewayId, payload) => {
-  return (dispatch) => {
-    const response = dispatch(editVpnGateway(gatewayId, payload));
+const handleError = (e) => {
+	showErrorNotification(e);
+	throw new Error(e);
+};
 
-    response.then(
-      () => {
-        dispatch(fetchVpnGateway(gatewayId));
-        dispatch(fetchVpnGateways(gatewayId));
-        successNotification("");
-      },
-      (error) => errorNotification(error),
-    );
-  };
+export const editVpnGatewayAndFetch = (gatewayId, payload) => {
+	return (dispatch) => {
+		const response = dispatch(editVpnGateway(gatewayId, payload));
+
+		return response.then(() => {
+			dispatch(fetchVpnGateway(gatewayId));
+			dispatch(fetchVpnGateways(gatewayId));
+			showSuccessNotification("");
+		}, handleError);
+	};
 };
 
 export const fetchVpnClientConnections = (gatewayId) => ({
-  type: ActionTypes.VPN_CLIENT_CONNECTIONS_FETCH,
-  payload: fetchData(
-    getFullPath(ActionTypes.vpnGatewayUrl(gatewayId, "connections")),
-  ).then((response) => response),
+	type: ActionTypes.VPN_CLIENT_CONNECTIONS_FETCH,
+	payload: fetchData(
+		getFullPath(ActionTypes.vpnGatewayUrl(gatewayId, "connections")),
+	).then((response) => response),
 });
 
 export const fetchVpnClientConnection = (clientConnectionId) => ({
-  type: ActionTypes.VPN_CLIENT_CONNECTION_FETCH,
-  payload: fetchData(
-    getFullPath(ActionTypes.vpnClientConnectionsUrl(clientConnectionId)),
-  ).then((response) => response),
+	type: ActionTypes.VPN_CLIENT_CONNECTION_FETCH,
+	payload: fetchData(
+		getFullPath(ActionTypes.vpnClientConnectionsUrl(clientConnectionId)),
+	).then((response) => response),
 });
 
 const createVpnClientConnection = (gatewayId, payload) => ({
-  type: ActionTypes.VPN_CLIENT_CONNECTION_CREATE,
-  payload: createData(
-    getFullPath(ActionTypes.vpnGatewayUrl(gatewayId, "connections")),
-    payload,
-  ).then((response) => response),
+	type: ActionTypes.VPN_CLIENT_CONNECTION_CREATE,
+	payload: createData(
+		getFullPath(ActionTypes.vpnGatewayUrl(gatewayId, "connections")),
+		payload,
+	).then((response) => response),
 });
 
 export const createVpnClientConnectionAndFetch = (gatewayId, payload) => {
-  return (dispatch) => {
-    const response = dispatch(createVpnClientConnection(gatewayId, payload));
+	return (dispatch) => {
+		const response = dispatch(createVpnClientConnection(gatewayId, payload));
 
-    response.then(
-      () => {
-        dispatch(fetchVpnClientConnections(gatewayId));
-        successNotification("");
-      },
-      (error) => errorNotification(error),
-    );
-  };
+		return response.then(() => {
+			dispatch(fetchVpnClientConnections(gatewayId));
+			showSuccessNotification("");
+		}, handleError);
+	};
 };
 
 const updateVpnClientConnection = (clientConnectionId, payload) => ({
-  type: ActionTypes.VPN_CLIENT_CONNECTION_UPDATE,
-  payload: updateData(
-    getFullPath(ActionTypes.vpnClientConnectionsUrl(clientConnectionId)),
-    payload,
-  ).then((response) => response),
+	type: ActionTypes.VPN_CLIENT_CONNECTION_UPDATE,
+	payload: updateData(
+		getFullPath(ActionTypes.vpnClientConnectionsUrl(clientConnectionId)),
+		payload,
+	).then((response) => response),
 });
 
 export const updateVpnClientConnectionAndFetch = (
-  gatewayId,
-  clientConnectionId,
-  payload,
+	gatewayId,
+	clientConnectionId,
+	payload,
 ) => {
-  return (dispatch) => {
-    const response = dispatch(
-      updateVpnClientConnection(clientConnectionId, payload),
-    );
+	return (dispatch) => {
+		const response = dispatch(
+			updateVpnClientConnection(clientConnectionId, payload),
+		);
 
-    response.then(
-      () => {
-        dispatch(fetchVpnClientConnections(gatewayId));
-        successNotification("");
-      },
-      (error) => errorNotification(error),
-    );
-  };
+		return response.then(() => {
+			dispatch(fetchVpnClientConnections(gatewayId));
+			showSuccessNotification("");
+		}, handleError);
+	};
 };
 
 const deleteVpnClientConnection = (clientConnectionId) => ({
-  type: ActionTypes.VPN_CLIENT_CONNECTION_DELETE,
-  payload: deleteData(
-    getFullPath(ActionTypes.vpnClientConnectionsUrl(clientConnectionId)),
-  ),
+	type: ActionTypes.VPN_CLIENT_CONNECTION_DELETE,
+	payload: deleteData(
+		getFullPath(ActionTypes.vpnClientConnectionsUrl(clientConnectionId)),
+	),
 });
 
 export const deleteVpnClientConnectionAndFetch = (
-  clientConnectionId,
-  gatewayId,
+	clientConnectionId,
+	gatewayId,
 ) => {
-  return (dispatch) => {
-    const response = dispatch(deleteVpnClientConnection(clientConnectionId));
+	return (dispatch) => {
+		const response = dispatch(deleteVpnClientConnection(clientConnectionId));
 
-    response.then(
-      () => {
-        dispatch(fetchVpnClientConnections(gatewayId));
-        successNotification("");
-      },
-      (error) => errorNotification(error),
-    );
-  };
+		return response.then(() => {
+			dispatch(fetchVpnClientConnections(gatewayId));
+			showSuccessNotification("");
+		}, handleError);
+	};
 };
 
 export const fetchVpnClientConnectionsNextIp = (id) => ({
-  type: ActionTypes.VPN_CLIENT_CONNECTION_NEXT_IP_FETCH,
-  payload: fetchData(getFullPath(ActionTypes.vpnConnectionsNextIpUrl(id))).then(
-    (response) => response,
-  ),
+	type: ActionTypes.VPN_CLIENT_CONNECTION_NEXT_IP_FETCH,
+	payload: fetchData(getFullPath(ActionTypes.vpnConnectionsNextIpUrl(id))).then(
+		(response) => response,
+	),
 });
 
 export const fetchVpnClientConnectionDevices = (clientConnectionId) => ({
-  type: ActionTypes.VPN_CLIENT_CONNECTION_DEVICES_FETCH,
-  payload: fetchData(
-    getFullPath(
-      ActionTypes.vpnClientConnectionsUrl(clientConnectionId, "devices"),
-    ),
-  ).then((response) => response),
+	type: ActionTypes.VPN_CLIENT_CONNECTION_DEVICES_FETCH,
+	payload: fetchData(
+		getFullPath(
+			ActionTypes.vpnClientConnectionsUrl(clientConnectionId, "devices"),
+		),
+	).then((response) => response),
 });
 
 export const cleanVpnClientConnectionDeviceStatus = () => ({
-  type: ActionTypes.VPN_CLIENT_CONNECTION_DEVICES_STATUS_CLEAN,
+	type: ActionTypes.VPN_CLIENT_CONNECTION_DEVICES_STATUS_CLEAN,
 });
 
 const createVpnClientConnectionDevice = (clientConnectionId, payload) => ({
-  type: ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_CREATE,
-  payload: createData(
-    getFullPath(
-      ActionTypes.vpnClientConnectionsUrl(clientConnectionId, "devices"),
-    ),
-    payload,
-  ).then((response) => response),
+	type: ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_CREATE,
+	payload: createData(
+		getFullPath(
+			ActionTypes.vpnClientConnectionsUrl(clientConnectionId, "devices"),
+		),
+		payload,
+	).then((response) => response),
 });
 
 export const createVpnClientConnectionDeviceAndFetch = (
-  clientConnectionId,
-  payload,
+	clientConnectionId,
+	payload,
 ) => {
-  return (dispatch) => {
-    const response = dispatch(
-      createVpnClientConnectionDevice(clientConnectionId, payload),
-    );
+	return (dispatch) => {
+		const response = dispatch(
+			createVpnClientConnectionDevice(clientConnectionId, payload),
+		);
 
-    response.then(
-      () => {
-        dispatch(fetchVpnClientConnectionDevices(clientConnectionId));
-        dispatch(fetchVpnClientConnectionsNextIp(clientConnectionId));
-        successNotification("");
-      },
-      (error) => errorNotification(error),
-    );
-  };
+		return response.then(() => {
+			dispatch(fetchVpnClientConnectionDevices(clientConnectionId));
+			dispatch(fetchVpnClientConnectionsNextIp(clientConnectionId));
+			showSuccessNotification("");
+		}, handleError);
+	};
 };
 
 const createQRcode = (deviceId, payload) => ({
-  type: ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_QR_CODE_URL,
-  payload: createData(
-    getFullPath(ActionTypes.vpnClientConnectionDevicesUrl(deviceId, "qr")),
-    payload,
-  ).then((res) => res.text()),
+	type: ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_QR_CODE_URL,
+	payload: createData(
+		getFullPath(ActionTypes.vpnClientConnectionDevicesUrl(deviceId, "qr")),
+		payload,
+	).then((res) => res.text()),
 });
 
 const createConfiguration = (deviceId, payload) => ({
-  type: ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_CONFIGURATION,
-  payload: createData(
-    getFullPath(ActionTypes.vpnClientConnectionDevicesUrl(deviceId, "config")),
-    payload,
-  ).then((res) => res.text()),
+	type: ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_CONFIGURATION,
+	payload: createData(
+		getFullPath(ActionTypes.vpnClientConnectionDevicesUrl(deviceId, "config")),
+		payload,
+	).then((res) => res.text()),
 });
 
 export const createQRcodeAndFetch = (deviceId, payload) => {
-  return (dispatch) => {
-    const responseQR = dispatch(createQRcode(deviceId, payload));
-    const responseConfig = dispatch(createConfiguration(deviceId, payload));
-    Promise.all([responseQR, responseConfig]).then(
-      () => successNotification(""),
-      (error) => errorNotification(error),
-    );
-  };
+	return (dispatch) => {
+		const responseQR = dispatch(createQRcode(deviceId, payload));
+		const responseConfig = dispatch(createConfiguration(deviceId, payload));
+		return Promise.all([responseQR, responseConfig]).then(
+			() => showSuccessNotification(""),
+			handleError,
+		);
+	};
 };
 
 const updateVpnClientConnectionDevice = (deviceId, payload) => ({
-  type: ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_UPDATE,
-  payload: updateData(
-    getFullPath(ActionTypes.vpnClientConnectionDevicesUrl(deviceId)),
-    payload,
-  ).then((response) => response),
+	type: ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_UPDATE,
+	payload: updateData(
+		getFullPath(ActionTypes.vpnClientConnectionDevicesUrl(deviceId)),
+		payload,
+	).then((response) => response),
 });
 
 export const updateVpnClientConnectionDeviceAndFetch = (
-  deviceId,
-  clientConnectionId,
-  payload,
+	deviceId,
+	clientConnectionId,
+	payload,
 ) => {
-  return (dispatch) => {
-    const response = dispatch(
-      updateVpnClientConnectionDevice(deviceId, payload),
-    );
+	return (dispatch) => {
+		const response = dispatch(
+			updateVpnClientConnectionDevice(deviceId, payload),
+		);
 
-    response.then(
-      () => {
-        dispatch(fetchVpnClientConnectionDevices(clientConnectionId));
-        dispatch(fetchVpnClientConnectionsNextIp(clientConnectionId));
-        successNotification("");
-      },
-      (error) => errorNotification(error),
-    );
-  };
+		return response.then(() => {
+			dispatch(fetchVpnClientConnectionDevices(clientConnectionId));
+			dispatch(fetchVpnClientConnectionsNextIp(clientConnectionId));
+			showSuccessNotification("");
+		}, handleError);
+	};
 };
 
 const deleteVpnClientConnectionDevice = (deviceId) => ({
-  type: ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_DELETE,
-  payload: deleteData(
-    getFullPath(ActionTypes.vpnClientConnectionDevicesUrl(deviceId)),
-  ),
+	type: ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_DELETE,
+	payload: deleteData(
+		getFullPath(ActionTypes.vpnClientConnectionDevicesUrl(deviceId)),
+	),
 });
 
 export const deleteVpnClientConnectionDeviceAndFetch = (
-  deviceId,
-  clientConnectionId,
+	deviceId,
+	clientConnectionId,
 ) => {
-  return (dispatch) => {
-    const response = dispatch(deleteVpnClientConnectionDevice(deviceId));
+	return (dispatch) => {
+		const response = dispatch(deleteVpnClientConnectionDevice(deviceId));
 
-    response.then(
-      () => {
-        dispatch(fetchVpnClientConnectionDevices(clientConnectionId));
-        dispatch(fetchVpnClientConnectionsNextIp(clientConnectionId));
-        successNotification("");
-      },
-      (error) => errorNotification(error),
-    );
-  };
+		return response.then(() => {
+			dispatch(fetchVpnClientConnectionDevices(clientConnectionId));
+			dispatch(fetchVpnClientConnectionsNextIp(clientConnectionId));
+			showSuccessNotification("");
+		}, handleError);
+	};
 };
 
 export const fetchVpnPeerGateways = (gatewayId) => ({
-  type: ActionTypes.VPN_PEER_GATEWAYS_FETCH,
-  payload: fetchData(
-    getFullPath(ActionTypes.vpnGatewayUrl(gatewayId, "remote_gateways")),
-  ).then((response) => response),
+	type: ActionTypes.VPN_PEER_GATEWAYS_FETCH,
+	payload: fetchData(
+		getFullPath(ActionTypes.vpnGatewayUrl(gatewayId, "remote_gateways")),
+	).then((response) => response),
 });
 
 const createVpnPeerGateway = (gatewayId, payload) => ({
-  type: ActionTypes.VPN_PEER_GATEWAY_CREATE,
-  payload: createData(
-    getFullPath(ActionTypes.vpnGatewayUrl(gatewayId, "remote_gateways")),
-    payload,
-  ).then((response) => response),
+	type: ActionTypes.VPN_PEER_GATEWAY_CREATE,
+	payload: createData(
+		getFullPath(ActionTypes.vpnGatewayUrl(gatewayId, "remote_gateways")),
+		payload,
+	).then((response) => response),
 });
 
 export const createVpnPeerGatewayAndFetch = (gatewayId, payload) => {
-  return (dispatch) => {
-    const response = dispatch(createVpnPeerGateway(gatewayId, payload));
+	return (dispatch) => {
+		const response = dispatch(createVpnPeerGateway(gatewayId, payload));
 
-    response.then(
-      () => {
-        dispatch(fetchVpnPeerGateways(gatewayId));
-        successNotification("");
-      },
-      (error) => errorNotification(error),
-    );
-  };
+		return response.then(() => {
+			dispatch(fetchVpnPeerGateways(gatewayId));
+			showSuccessNotification("");
+		}, handleError);
+	};
 };
 
 const updateVpnPeerGateway = (peerGatewayId, payload) => ({
-  type: ActionTypes.VPN_PEER_GATEWAY_UPDATE,
-  payload: updateData(
-    getFullPath(ActionTypes.vpnPeerGatewaysUrl(peerGatewayId)),
-    payload,
-  ).then((response) => response),
+	type: ActionTypes.VPN_PEER_GATEWAY_UPDATE,
+	payload: updateData(
+		getFullPath(ActionTypes.vpnPeerGatewaysUrl(peerGatewayId)),
+		payload,
+	).then((response) => response),
 });
 
 export const updateVpnPeerGatewayAndFetch = (
-  gatewayId,
-  peerGatewayId,
-  payload,
+	gatewayId,
+	peerGatewayId,
+	payload,
 ) => {
-  return (dispatch) => {
-    const response = dispatch(updateVpnPeerGateway(peerGatewayId, payload));
+	return (dispatch) => {
+		const response = dispatch(updateVpnPeerGateway(peerGatewayId, payload));
 
-    response.then(
-      () => {
-        dispatch(fetchVpnPeerGateways(gatewayId));
-        successNotification("");
-      },
-      (error) => errorNotification(error),
-    );
-  };
+		return response.then(() => {
+			dispatch(fetchVpnPeerGateways(gatewayId));
+			showSuccessNotification("");
+		}, handleError);
+	};
 };
 
 const deleteVpnPeerGateway = (peerGatewayId) => ({
-  type: ActionTypes.VPN_PEER_GATEWAY_DELETE,
-  payload: deleteData(
-    getFullPath(ActionTypes.vpnPeerGatewaysUrl(peerGatewayId)),
-  ),
+	type: ActionTypes.VPN_PEER_GATEWAY_DELETE,
+	payload: deleteData(
+		getFullPath(ActionTypes.vpnPeerGatewaysUrl(peerGatewayId)),
+	),
 });
 
 export const deleteVpnPeerGatewayAndFetch = (peerGatewayId, gatewayId) => {
-  return (dispatch) => {
-    const response = dispatch(deleteVpnPeerGateway(peerGatewayId));
+	return (dispatch) => {
+		const response = dispatch(deleteVpnPeerGateway(peerGatewayId));
 
-    response.then(
-      () => {
-        dispatch(fetchVpnPeerGateways(gatewayId));
-        successNotification("");
-      },
-      (error) => errorNotification(error),
-    );
-  };
+		return response.then(() => {
+			dispatch(fetchVpnPeerGateways(gatewayId));
+			showSuccessNotification("");
+		}, handleError);
+	};
 };
 
 export const fetchVpnNatMapping = (gatewayId) => ({
-  type: ActionTypes.VPN_NAT_MAPPING_FETCH,
-  payload: fetchData(
-    getFullPath(ActionTypes.vpnGatewayUrl(gatewayId, "nat_maps ")),
-  ).then((response) => response),
+	type: ActionTypes.VPN_NAT_MAPPING_FETCH,
+	payload: fetchData(
+		getFullPath(ActionTypes.vpnGatewayUrl(gatewayId, "nat_maps ")),
+	).then((response) => response),
 });
 
 const createVpnNatMapping = (gatewayId, payload) => ({
-  type: ActionTypes.VPN_NAT_MAPPING_CREATE,
-  payload: createData(
-    getFullPath(ActionTypes.vpnGatewayUrl(gatewayId, "nat_maps")),
-    payload,
-  ).then((response) => response),
+	type: ActionTypes.VPN_NAT_MAPPING_CREATE,
+	payload: createData(
+		getFullPath(ActionTypes.vpnGatewayUrl(gatewayId, "nat_maps")),
+		payload,
+	).then((response) => response),
 });
 
 export const createVpnNatMappingAndFetch = (gatewayId, payload) => {
-  return (dispatch) => {
-    const response = dispatch(createVpnNatMapping(gatewayId, payload));
+	return (dispatch) => {
+		const response = dispatch(createVpnNatMapping(gatewayId, payload));
 
-    response.then(
-      () => {
-        dispatch(fetchVpnNatMapping(gatewayId));
-        successNotification("");
-      },
-      (error) => errorNotification(error),
-    );
-  };
+		return response.then(() => {
+			dispatch(fetchVpnNatMapping(gatewayId));
+			showSuccessNotification("");
+		}, handleError);
+	};
 };
 
 const updateVpnNatMapping = (natMappingId, payload) => ({
-  type: ActionTypes.VPN_NAT_MAPPING_UPDATE,
-  payload: updateData(
-    getFullPath(ActionTypes.vpnNatMappingUrl(natMappingId)),
-    payload,
-  ).then((response) => response),
+	type: ActionTypes.VPN_NAT_MAPPING_UPDATE,
+	payload: updateData(
+		getFullPath(ActionTypes.vpnNatMappingUrl(natMappingId)),
+		payload,
+	).then((response) => response),
 });
 
 export const updateVpnNatMappingAndFetch = (
-  gatewayId,
-  natMappingId,
-  payload,
+	gatewayId,
+	natMappingId,
+	payload,
 ) => {
-  return (dispatch) => {
-    const response = dispatch(updateVpnNatMapping(natMappingId, payload));
+	return (dispatch) => {
+		const response = dispatch(updateVpnNatMapping(natMappingId, payload));
 
-    response.then(
-      () => {
-        dispatch(fetchVpnNatMapping(gatewayId));
-        successNotification("");
-      },
-      (error) => errorNotification(error),
-    );
-  };
+		return response.then(() => {
+			dispatch(fetchVpnNatMapping(gatewayId));
+			showSuccessNotification("");
+		}, handleError);
+	};
 };
 
 const deleteVpnNatMapping = (natMappingId) => ({
-  type: ActionTypes.VPN_NAT_MAPPING_DELETE,
-  payload: deleteData(getFullPath(ActionTypes.vpnNatMappingUrl(natMappingId))),
+	type: ActionTypes.VPN_NAT_MAPPING_DELETE,
+	payload: deleteData(getFullPath(ActionTypes.vpnNatMappingUrl(natMappingId))),
 });
 
 export const deleteVpnNatMappingAndFetch = (natMappingId, gatewayId) => {
-  return (dispatch) => {
-    const response = dispatch(deleteVpnNatMapping(natMappingId));
+	return (dispatch) => {
+		const response = dispatch(deleteVpnNatMapping(natMappingId));
 
-    response.then(
-      () => {
-        dispatch(fetchVpnNatMapping(gatewayId));
-        successNotification("");
-      },
-      (error) => errorNotification(error),
-    );
-  };
+		return response.then(() => {
+			dispatch(fetchVpnNatMapping(gatewayId));
+			showSuccessNotification("");
+		}, handleError);
+	};
 };

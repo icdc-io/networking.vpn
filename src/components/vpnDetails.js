@@ -1,235 +1,226 @@
-/* eslint-disable */
-import React, { useEffect, useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "container/Tabs";
+import { Pen } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { Header, Menu } from "semantic-ui-react";
 import {
-  fetchVpnClientConnections,
-  fetchVpnGateway,
-  fetchVpnNatMapping,
-  fetchVpnPeerGateways,
+	fetchVpnClientConnections,
+	fetchVpnGateway,
+	fetchVpnNatMapping,
+	fetchVpnPeerGateways,
 } from "../AppActions";
+import { apiButtonInfo } from "../constants/apiButtonInfo";
+import GeneralModal from "../general/GeneralModal";
 import ButtonBack from "../general/buttonBack";
 import svgVpn from "../static/svgVpn.svg";
+import GatewayForm from "./GatewayForm";
+import VpnApiButton from "./VpnApiButton";
 import { dataStatusCheck, formatVpnGatewaysData } from "./tools";
 import { capitalizeFirstLetter, longDash } from "./tools";
 import VpnDetailsTable from "./vpnDetailsTable";
-import VpnModal from "./vpnModal";
-
-const ApiButton = React.lazy(() => import("container/ApiButton"));
 
 const VpnDetails = () => {
-  const { t } = useTranslation();
-  const { id } = useParams();
-  const dispatch = useDispatch();
-  const gateway = useSelector((state) =>
-    formatVpnGatewaysData(state.VpnStore.gateway),
-  );
-  const gatewayFetchStatus = useSelector(
-    (state) => state.VpnStore.gatewayFetchStatus,
-  );
-  const user = useSelector((state) => state.host.user);
-  const gatewayPublicHostname = gateway.hostname;
-  const tabs = ["clientConnections", "peerGateways", "natMapping"];
-  const [activeTab, setActiveTab] = useState(tabs[0]);
-  const [tableData, setTableData] = useState({
-    reduxStateName: "vpnClientConnections",
-    fetchStatus: "vpnCLientConnectionsFetchStatus",
-  });
-  const baseUrls = useSelector((state) => state.host.baseUrls);
+	const { t } = useTranslation();
+	const { id } = useParams();
+	const dispatch = useDispatch();
+	const gateway = useSelector((state) =>
+		formatVpnGatewaysData(state.VpnStore.gateway),
+	);
+	const gatewayFetchStatus = useSelector(
+		(state) => state.VpnStore.gatewayFetchStatus,
+	);
+	const user = useSelector((state) => state.host.user);
+	const gatewayPublicHostname = gateway.hostname;
+	const tabs = ["clientConnections", "peerGateways", "natMapping"];
+	const [activeTab, setActiveTab] = useState(tabs[0]);
+	const [tableData, setTableData] = useState({
+		reduxStateName: "vpnClientConnections",
+		fetchStatus: "vpnCLientConnectionsFetchStatus",
+	});
+	const natModalRef = useRef();
 
-  useEffect(() => {
-    user.location && dispatch(fetchVpnGateway(id));
-  }, [dispatch, id, user]);
+	useEffect(() => {
+		user.location && dispatch(fetchVpnGateway(id));
+	}, [dispatch, id, user]);
 
-  useEffect(() => {
-    switch (activeTab) {
-      case "clientConnections":
-        dispatch(fetchVpnClientConnections(id));
-        setTableData({
-          ...tableData,
-          reduxStateName: "vpnClientConnections",
-          fetchStatus: "vpnClientConnectionsFetchStatus",
-        });
-        return;
-      case "peerGateways":
-        dispatch(fetchVpnPeerGateways(id));
-        setTableData({
-          ...tableData,
-          reduxStateName: "vpnPeerGateways",
-          fetchStatus: "vpnPeerGatewaysFetchStatus",
-        });
-        return;
-      case "natMapping":
-        dispatch(fetchVpnNatMapping(id));
-        setTableData({
-          ...tableData,
-          reduxStateName: "vpnNatMapping",
-          fetchStatus: "vpnNatMappingFetchSatus",
-        });
-        return;
-    }
-  }, [dispatch, activeTab, id, user, user.location, user.role, user.account]);
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		switch (activeTab) {
+			case "clientConnections":
+				dispatch(fetchVpnClientConnections(id));
+				setTableData({
+					...tableData,
+					reduxStateName: "vpnClientConnections",
+					fetchStatus: "vpnClientConnectionsFetchStatus",
+				});
+				return;
+			case "peerGateways":
+				dispatch(fetchVpnPeerGateways(id));
+				setTableData({
+					...tableData,
+					reduxStateName: "vpnPeerGateways",
+					fetchStatus: "vpnPeerGatewaysFetchStatus",
+				});
+				return;
+			case "natMapping":
+				dispatch(fetchVpnNatMapping(id));
+				setTableData({
+					...tableData,
+					reduxStateName: "vpnNatMapping",
+					fetchStatus: "vpnNatMappingFetchSatus",
+				});
+				return;
+		}
+	}, [dispatch, activeTab, id, user, user.location, user.role, user.account]);
 
-  const menuItems = [
-    {
-      name: "clientConnections",
-      menuItem: t("clientConnections"),
-      headers: ["name", "deviceSubnet", "gateway_ip", "endpoint", ""],
-      formFields: ["name", "subnet", "gateway_ip", "port", "mtu"],
-      createModalFields: ["name", "deviceSubnet", "gateway_ip", "port", "mtu"],
-      addContentMessage: "addClientConnection",
-    },
-    {
-      name: "peerGateways",
-      menuItem: t("peerGateways"),
-      headers: [
-        "name",
-        "deviceSubnet",
-        "gateway_ip",
-        "peerEndpoint",
-        "publicKey",
-        "routeSubnets",
-        "",
-      ],
-      formFields: [
-        "name",
-        "subnet",
-        "gateway_ip",
-        "peerEndpoint",
-        "publicKey",
-        "routeSubnets",
-      ],
-      createModalFields: [
-        "name",
-        "deviceSubnet",
-        "gateway_ip",
-        "peerEndpoint",
-        "publicKey",
-        "routeSubnets",
-      ],
-      addContentMessage: "addPeerGateway",
-    },
-    {
-      name: "natMapping",
-      menuItem: t("natMapping"),
-      headers: ["hostname", "vpn_ip", "localIp", ""],
-      formFields: ["vpn_ip", "localIp", "hostname"],
-      createModalFields: ["vpn_ip", "localIp", "hostname"],
-      addContentMessage: "addNatMapping",
-    },
-  ];
+	const menuItems = [
+		{
+			name: "clientConnections",
+			menuItem: t("clientConnections"),
+			headers: ["name", "deviceSubnet", "gateway_ip", "endpoint", ""],
+			formFields: ["name", "subnet", "gateway_ip", "port", "mtu"],
+			createModalFields: ["name", "deviceSubnet", "gateway_ip", "port", "mtu"],
+			addContentMessage: "addClientConnection",
+		},
+		{
+			name: "peerGateways",
+			menuItem: t("peerGateways"),
+			headers: [
+				"name",
+				"deviceSubnet",
+				"gateway_ip",
+				"peerEndpoint",
+				"publicKey",
+				"routeSubnets",
+				"",
+			],
+			formFields: [
+				"name",
+				"subnet",
+				"gateway_ip",
+				"peerEndpoint",
+				"publicKey",
+				"routeSubnets",
+			],
+			createModalFields: [
+				"name",
+				"deviceSubnet",
+				"gateway_ip",
+				"peerEndpoint",
+				"publicKey",
+				"routeSubnets",
+			],
+			addContentMessage: "addPeerGateway",
+		},
+		{
+			name: "natMapping",
+			menuItem: t("natMapping"),
+			headers: ["hostname", "vpn_ip", "localIp", ""],
+			formFields: ["vpn_ip", "localIp", "hostname"],
+			createModalFields: ["vpn_ip", "localIp", "hostname"],
+			addContentMessage: "addNatMapping",
+		},
+	];
 
-  return (
-    <div className="vpn-details-wrapper">
-      <ButtonBack back={t("back")} path={".."} />
+	const onEditNat = (natData) => (_e) => {
+		if (natModalRef.current) {
+			natModalRef.current.handleClick(natData);
+		}
+	};
 
-      {dataStatusCheck(
-        gatewayFetchStatus,
-        t,
-        <>
-          <div className="gateway-title-wrapper">
-            <div className="gateway-title">
-              <img src={svgVpn} alt="Vpn" />
-              <Header as="h3" className="title" color="blue">
-                {capitalizeFirstLetter(gateway.name || "")}
-              </Header>
-            </div>
-            <div>
-              <React.Suspense fallback={null}>
-                <ApiButton
-                  element="vpnGateway"
-                  user={user}
-                  locationUrl={baseUrls[user.location]}
-                />
-              </React.Suspense>
-            </div>
-          </div>
-          <Header as="h4" style={{ marginTop: 16 }}>
-            {t("vpnDetails")}
-          </Header>
-          <div className="vpn-details-container">
-            <div className="vpn-details">
-              <div>{t("cloudGatewayInstance")}</div>
-              <div>{t("publicKey")}</div>
-              <div>{t("publicHostnameVpn")}</div>
-              <div>{t("internalAddress")}</div>
-              <div>{t("natSubnet")}</div>
-            </div>
-            <div className="vpn-details">
-              <div>{gateway.cloudGatewayInstance || longDash}</div>
-              <div>{gateway.publicKey || longDash}</div>
-              <div>{gateway.hostname || longDash}</div>
-              <div>{gateway.internalAddress || longDash}</div>
-              <div>
-                {gateway.natSubnet || longDash}{" "}
-                <VpnModal
-                  button
-                  pencil
-                  edit
-                  data={gateway}
-                  formFields={["natSubnet"]}
-                  editContentMessage={"editNatSubnet"}
-                  managementName="gateway"
-                />
-              </div>
-            </div>
-          </div>
-          <div className="menu-container">
-            <Menu pointing secondary color="blue" className="submenu" compact>
-              {menuItems.map((item, key) => (
-                <Menu.Item
-                  key={key}
-                  name={item.menuItem}
-                  active={activeTab === item.name}
-                  onClick={() => setActiveTab(item.name)}
-                />
-              ))}
-            </Menu>
-            <span />
-          </div>
-          <div className="sub-menu-container">
-            <React.Suspense fallback={null}>
-              <ApiButton
-                element={
-                  activeTab === "clientConnections"
-                    ? "vpnConnection"
-                    : activeTab === "peerGateways"
-                      ? "vpnRemoteGateways"
-                      : "vpnNatMapping"
-                }
-                gatewayId={id}
-                user={user}
-                locationUrl={baseUrls[user.location]}
-              />
-            </React.Suspense>
-            {menuItems.map(
-              (item, key) =>
-                activeTab === item.name && (
-                  <VpnModal
-                    key={key}
-                    formFields={item.createModalFields}
-                    addContentMessage={item.addContentMessage}
-                    managementName={activeTab}
-                    natSubnet={gateway.natSubnet}
-                  />
-                ),
-            )}
-          </div>
-          <VpnDetailsTable
-            tableName={activeTab}
-            headers={
-              menuItems.filter((item) => item.name === activeTab)[0].headers
-            }
-            reduxStateName={tableData.reduxStateName || []}
-            reduxFetchStatus={tableData.fetchStatus}
-            gatewayPublicHostname={gatewayPublicHostname}
-          />
-        </>,
-      )}
-    </div>
-  );
+	return (
+		<div className="vpn-details-wrapper">
+			<ButtonBack back={t("back")} path={".."} />
+
+			{dataStatusCheck(
+				gatewayFetchStatus,
+				t,
+				<>
+					<div className="gateway-title-wrapper">
+						<div className="gateway-title">
+							<img src={svgVpn} alt="Vpn" />
+							<h3 className="title" color="blue">
+								{capitalizeFirstLetter(gateway.name || "")}
+							</h3>
+						</div>
+						<div>
+							<React.Suspense fallback={null}>
+								<VpnApiButton info={apiButtonInfo.vpnGateway} />
+							</React.Suspense>
+						</div>
+					</div>
+					<br />
+					<h4>{t("vpnDetails")}</h4>
+					<div className="vpn-details-container">
+						<div className="vpn-details">
+							<div>{t("cloudGatewayInstance")}</div>
+							<div>{t("publicKey")}</div>
+							<div>{t("publicHostnameVpn")}</div>
+							<div>{t("internalAddress")}</div>
+							<div>{t("natSubnet")}</div>
+						</div>
+						<div className="vpn-details">
+							<div>{gateway.cloudGatewayInstance || longDash}</div>
+							<div>{gateway.publicKey || longDash}</div>
+							<div>{gateway.hostname || longDash}</div>
+							<div>{gateway.internalAddress || longDash}</div>
+							<div>
+								{gateway.natSubnet || longDash}{" "}
+								<button onClick={onEditNat(gateway)} type="button">
+									<Pen size={16} />
+								</button>
+								{/* <VpnModal
+									button
+									pencil
+									edit
+									data={gateway}
+									formFields={["natSubnet"]}
+									editContentMessage={"editNatSubnet"}
+									managementName="gateway"
+								/> */}
+							</div>
+						</div>
+					</div>
+
+					<Tabs
+						value={activeTab}
+						onValueChange={setActiveTab}
+						className="vpn-tabs h-full"
+					>
+						<TabsList>
+							{tabs.map((item) => (
+								<TabsTrigger key={item} value={item} className="tab-trigger">
+									{t(item)}
+								</TabsTrigger>
+							))}
+						</TabsList>
+						<hr className="" />
+						{tabs.map((item) => (
+							<TabsContent key={item} value={item} className="h-full">
+								<VpnDetailsTable
+									tableName={activeTab}
+									headers={
+										menuItems.filter((item) => item.name === activeTab)[0]
+											.headers
+									}
+									reduxStateName={tableData.reduxStateName || []}
+									reduxFetchStatus={tableData.fetchStatus}
+									gatewayPublicHostname={gatewayPublicHostname}
+								/>
+							</TabsContent>
+						))}
+					</Tabs>
+					<span />
+				</>,
+			)}
+			<GeneralModal ref={natModalRef} title="editGateway">
+				{(initialState, onCancel) => (
+					<GatewayForm initialValues={initialState} onCancel={onCancel} edit />
+				)}
+			</GeneralModal>
+		</div>
+	);
 };
 
 export default VpnDetails;

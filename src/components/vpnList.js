@@ -1,158 +1,185 @@
+import OptionsMenu from "container/OptionsMenu";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "container/Table";
 import _ from "lodash";
 import PropTypes from "prop-types";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 // import DeleteModal from '../../GeneralComponents/deleteModal';
 import { Link } from "react-router-dom";
-import { Table } from "semantic-ui-react";
+import { editVpnGatewayAndFetch } from "../AppActions";
+import GeneralModal from "../general/GeneralModal";
 import CustomPagination from "../general/customPagination";
-import OptionsMenu from "../general/optionsMenu";
 import svgVpn from "../static/svgVpn.svg";
 import searchMethod from "../utilities/searchFunction";
+import GatewayForm from "./GatewayForm";
 import { longDash } from "./tools";
 import { formatVpnGatewaysData } from "./tools";
 
 const VpnList = ({ items: gatewaysData, searchTerm }) => {
-  const { t } = useTranslation();
-  const [direction, setDirection] = useState("ascending");
-  const [column, setColumn] = useState(null);
-  const [gateways, setGateways] = useState([]);
-  const [activePageNumber, setActivePageNumber] = useState(1);
-  const totalPaginationPages = 8;
-  const pageViseted = totalPaginationPages * (activePageNumber - 1);
+	const { t } = useTranslation();
+	const [direction, setDirection] = useState("ascending");
+	const [column, setColumn] = useState(null);
+	const [gateways, setGateways] = useState([]);
+	const [activePageNumber, setActivePageNumber] = useState(1);
+	const totalPaginationPages = 8;
+	const pageViseted = totalPaginationPages * (activePageNumber - 1);
+	const gatewayModalRef = useRef();
 
-  useEffect(() => {
-    setGateways(formatVpnGatewaysData(gatewaysData));
-  }, [gatewaysData]);
+	useEffect(() => {
+		setGateways(formatVpnGatewaysData(gatewaysData));
+	}, [gatewaysData]);
 
-  const headers = [
-    { name: "name", headerName: "name", sortable: true },
-    { name: "publicKey", headerName: "publicKey", sortable: false },
-    { name: "hostname", headerName: "publicHostnameVpn", sortable: false },
-    { name: "natSubnet", headerName: "natSubnet", sortable: false },
-    { name: "menu", headerName: "", sortable: false },
-  ];
+	const headers = [
+		{ name: "name", headerName: "name", sortable: true },
+		{ name: "publicKey", headerName: "publicKey", sortable: false },
+		{ name: "hostname", headerName: "publicHostnameVpn", sortable: false },
+		{ name: "natSubnet", headerName: "natSubnet", sortable: false },
+		{ name: "menu", headerName: "", sortable: false },
+	];
 
-  const handleSort = (columnName) => {
-    if (column !== columnName) {
-      setColumn(columnName);
-      setGateways(_.sortBy(gateways, [columnName]));
-      setDirection("ascending");
-      return;
-    }
+	const handleSort = (columnName) => {
+		if (column !== columnName) {
+			setColumn(columnName);
+			setGateways(_.sortBy(gateways, [columnName]));
+			setDirection("ascending");
+			return;
+		}
 
-    direction === "ascending"
-      ? setDirection("descending")
-      : setDirection("ascending");
-    setGateways(gateways.reverse());
-  };
+		direction === "ascending"
+			? setDirection("descending")
+			: setDirection("ascending");
+		setGateways(gateways.reverse());
+	};
 
-  const displayHeaders = headers.map((item, key) => (
-    <Table.HeaderCell
-      key={key}
-      sorted={column === item.name ? direction : null}
-      onClick={() => {
-        if (item.sortable) {
-          handleSort(item.name);
-        }
-      }}
-    >
-      {item.headerName ? t(item.headerName) : ""}
-    </Table.HeaderCell>
-  ));
+	const displayHeaders = headers.map((item, key) => (
+		<TableHead
+			key={item.name}
+			sorted={column === item.name ? direction : null}
+			onClick={() => {
+				if (item.sortable) {
+					handleSort(item.name);
+				}
+			}}
+		>
+			{item.headerName ? t(item.headerName) : ""}
+		</TableHead>
+	));
 
-  const tableCells = (gateway) => {
-    const tableRow = headers.map((header, key) => {
-      let content = gateway[header.name];
+	const onEditGateway = (gatewayData) => (_e) => {
+		if (gatewayModalRef.current) {
+			gatewayModalRef.current.handleClick(gatewayData);
+		}
+	};
 
-      if (header.name === "name") {
-        content = (
-          <div className="gateway-name-container">
-            <img src={svgVpn} alt="Gateway" />
-            <Link to={`${gateway.id}`}>{content}</Link>
-          </div>
-        );
-      }
-      // if (header.name === 'natSubnet') {
-      //     content = <>{content} <VpnModal
-      //     button
-      //     pencil
-      //     edit
-      //     data={gateway}
-      //     formFields={['natSubnet']}
-      //     editContentMessage={'editNatSubnet'}
-      //     managementName='gateway'/></>;
-      // }
+	const options = [
+		{
+			text: "edit",
+			action: onEditGateway,
+		},
+	];
 
-      if (header.name === "menu") {
-        content = (
-          <OptionsMenu type="gateways" instance={gateway} options={["edit"]} />
-        );
-      }
-      // else if (header.name === 'deleteButton') {
-      //     content = (<DeleteModal icon type='gateway' instance={vpnGateway} />);
-      // }
+	const tableCells = (gateway) => {
+		const tableRow = headers.map((header, key) => {
+			let content = gateway[header.name];
 
-      return (
-        <Table.Cell
-          key={key}
-          textAlign={header.name === "menu" ? "right" : "left"}
-        >
-          {content || longDash}
-        </Table.Cell>
-      );
-    });
-    return tableRow;
-  };
+			if (header.name === "name") {
+				content = (
+					<div className="gateway-name-container">
+						<img src={svgVpn} alt="Gateway" />
+						<Link to={`${gateway.id}`}>{content}</Link>
+					</div>
+				);
+			}
+			// if (header.name === 'natSubnet') {
+			//     content = <>{content} <VpnModal
+			//     button
+			//     pencil
+			//     edit
+			//     data={gateway}
+			//     formFields={['natSubnet']}
+			//     editContentMessage={'editNatSubnet'}
+			//     managementName='gateway'/></>;
+			// }
 
-  const searchTableData = searchTerm
-    ? searchMethod(
-        gateways,
-        searchTerm,
-        ["name", "publicKey", "hostname", "natSubnet"],
-        ["natSubnet"],
-      )
-    : gateways;
+			if (header.name === "menu") {
+				content = <OptionsMenu instance={gateway} options={options} />;
+			}
+			// else if (header.name === 'deleteButton') {
+			//     content = (<DeleteModal icon type='gateway' instance={vpnGateway} />);
+			// }
 
-  const displayTableData = searchTableData
-    .slice(pageViseted, pageViseted + totalPaginationPages)
-    .map((item, key) => <Table.Row key={key}>{tableCells(item)}</Table.Row>);
+			return (
+				<TableCell
+					key={header.name}
+					align={header.name === "menu" ? "right" : "left"}
+				>
+					{content || longDash}
+				</TableCell>
+			);
+		});
+		return tableRow;
+	};
 
-  return (
-    <>
-      <div className="table-container">
-        <Table
-          className="vpn-list-table"
-          selectable={false}
-          padded
-          sortable
-          basic="very"
-        >
-          <Table.Header>
-            <Table.Row>{displayHeaders}</Table.Row>
-          </Table.Header>
-          <Table.Body>{displayTableData}</Table.Body>
-        </Table>
+	const searchTableData = searchTerm
+		? searchMethod(
+				gateways,
+				searchTerm,
+				["name", "publicKey", "hostname", "natSubnet"],
+				["natSubnet"],
+			)
+		: gateways;
 
-        {searchTerm && searchTableData.length === 0 && (
-          <div className="empty-table">{t("noSearchResults")}</div>
-        )}
-      </div>
+	const displayTableData =
+		searchTableData.length === 0 ? (
+			<TableRow>
+				<TableCell colspan="100" className="empty-table">
+					{t("listEmpty")}
+				</TableCell>
+			</TableRow>
+		) : (
+			searchTableData
+				.slice(pageViseted, pageViseted + totalPaginationPages)
+				// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+				.map((item, key) => <TableRow key={key}>{tableCells(item)}</TableRow>)
+		);
 
-      <CustomPagination
-        data={searchTableData}
-        totalPaginationPages={totalPaginationPages}
-        activePageNumber={activePageNumber}
-        setActivePageNumber={setActivePageNumber}
-        searchTerm={searchTerm}
-      />
-    </>
-  );
+	return (
+		<div className="vpn-list">
+			<div className="table-container ">
+				<Table className="vpn-list-table">
+					<TableHeader>
+						<TableRow>{displayHeaders}</TableRow>
+					</TableHeader>
+					<TableBody>{displayTableData}</TableBody>
+				</Table>
+			</div>
+
+			<CustomPagination
+				data={searchTableData}
+				totalPaginationPages={totalPaginationPages}
+				activePageNumber={activePageNumber}
+				setActivePageNumber={setActivePageNumber}
+				searchTerm={searchTerm}
+			/>
+			<GeneralModal title="editGateway" ref={gatewayModalRef}>
+				{(initialState, onCancel) => (
+					<GatewayForm initialValues={initialState} onCancel={onCancel} />
+				)}
+			</GeneralModal>
+		</div>
+	);
 };
 
 VpnList.propTypes = {
-  items: PropTypes.array,
-  searchTerm: PropTypes.string,
+	items: PropTypes.array,
+	searchTerm: PropTypes.string,
 };
 
 export default VpnList;

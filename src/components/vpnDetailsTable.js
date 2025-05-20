@@ -1,183 +1,435 @@
+import { Button } from "container/Button";
+import CopyButton from "container/CopyButton";
+import ErrorScreen from "container/ErrorScreen";
+import Loader from "container/Loader";
+import OptionsMenu from "container/OptionsMenu";
+import Popup from "container/Popup";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "container/Table";
+import { isAdminRights } from "container/roleUtils";
+import { CircleHelp } from "lucide-react";
 import { PropTypes } from "prop-types";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { Loader, Popup, Table } from "semantic-ui-react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useParams } from "react-router-dom";
+import {
+	deleteVpnClientConnectionAndFetch,
+	deleteVpnNatMappingAndFetch,
+	deleteVpnPeerGatewayAndFetch,
+} from "../AppActions";
+import { apiButtonInfo } from "../constants/apiButtonInfo";
 import { vpnClientConnectionDevicesPath } from "../constants/routes";
+import GeneralModal from "../general/GeneralModal";
 import CustomPagination from "../general/customPagination";
-import OptionsMenu from "../general/optionsMenu";
+import ClientConnectionsForm from "./ClientConnectionsForm";
+import NatMappingForm from "./NatMappingForm";
+import PeerGatewaysForm from "./PeerGatewaysForm";
+import VpnApiButton from "./VpnApiButton";
 import { longDash } from "./tools";
 import { formatTableData, truncate } from "./tools";
-import VpnCopyButton from "./vpnCopyButton";
+
+const headersInfo = {
+	clientConnections: [
+		{
+			name: "name",
+			value: "name",
+		},
+		{
+			name: "deviceSubnet",
+			value: "subnet",
+		},
+		{
+			name: "gateway_ip",
+			value: "gateway_ip",
+		},
+		{
+			name: "endpoint",
+			value: "endpoint",
+		},
+		{
+			name: "",
+			value: "",
+		},
+	],
+	peerGateways: [
+		{
+			name: "name",
+			value: "name",
+		},
+		{
+			name: "deviceSubnet",
+			value: "subnet",
+		},
+		{
+			name: "gateway_ip",
+			value: "gateway_ip",
+		},
+		{
+			name: "peerEndpoint",
+			value: "endpoint",
+		},
+		{
+			name: "publicKey",
+			value: "public_key",
+		},
+		{
+			name: "routeSubnets",
+			value: "subnets",
+		},
+		{
+			name: "",
+			value: "",
+		},
+	],
+	natMapping: [
+		{
+			name: "hostname",
+			value: "host",
+		},
+		{
+			name: "vpn_ip",
+			value: "vpn_ip",
+		},
+		{
+			name: "localIp",
+			value: "local_ip",
+		},
+		{
+			name: "",
+			value: "",
+		},
+	],
+};
 
 const VpnDetailsTable = ({
-  tableName,
-  headers,
-  reduxStateName,
-  reduxFetchStatus,
-  gatewayPublicHostname,
+	tableName,
+	reduxStateName,
+	reduxFetchStatus,
+	gatewayPublicHostname,
 }) => {
-  const { t } = useTranslation();
-  const [activePageNumber, setActivePageNumber] = useState(1);
-  const totalPaginationPages = 10;
-  const pageViseted = totalPaginationPages * (activePageNumber - 1);
-  const tableContentFromRedux =
-    useSelector((state) => state.VpnStore[reduxStateName]) || [];
-  const formattedTableContent =
-    tableContentFromRedux.length !== 0
-      ? formatTableData(tableContentFromRedux, tableName)
-      : [];
-  const fetchStatus = useSelector((state) => state.VpnStore[reduxFetchStatus]);
-  const user = useSelector((state) => state.host.user);
+	const { t } = useTranslation();
+	const { id } = useParams();
+	const [activePageNumber, setActivePageNumber] = useState(1);
+	const totalPaginationPages = 10;
+	const pageViseted = totalPaginationPages * (activePageNumber - 1);
+	const tableContentFromRedux =
+		useSelector((state) => state.VpnStore[reduxStateName]) || [];
+	const formattedTableContent = tableContentFromRedux;
+	const fetchStatus = useSelector((state) => state.VpnStore[reduxFetchStatus]);
+	const user = useSelector((state) => state.host.user);
+	const editModalRef = useRef();
+	const deleteModalRef = useRef();
+	const headers = headersInfo[tableName];
+	const dispatch = useDispatch();
+	const gateway = useSelector((state) => state.VpnStore.gateway);
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		setActivePageNumber(1);
+	}, [tableName]);
 
-  useEffect(() => {
-    setActivePageNumber(1);
-  }, [tableName]);
+	const displayHeaders = headers.map((header, key) => (
+		<TableHead key={header.name}>
+			{header.name !== "" ? t([header.name]) : ""}
+		</TableHead>
+	));
 
-  const displayHeaders = headers.map((header, key) => (
-    <Table.HeaderCell key={key}>
-      {header !== "" ? t([header]) : ""}
-    </Table.HeaderCell>
-  ));
+	const routeSubnetsPopup = (subnetsString) =>
+		subnetsString.split(",").map((subnetRoute, key) => (
+			// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+			<div key={key} className="flex">
+				<div>{subnetRoute}</div>&nbsp;&nbsp;
+				<CopyButton content={subnetRoute} />
+			</div>
+		));
 
-  const routeSubnetsPopup = (subnetsString) =>
-    subnetsString.split(",").map((subnetRoute, key) => (
-      <div key={key} className="flex">
-        <div>{subnetRoute}</div>
-        <VpnCopyButton copiedContent={subnetRoute} />
-      </div>
-    ));
+	const returnPopupContent = {
+		publicKey: (content) => ({
+			cellContent: truncate(content, 12),
+			popupContent: (
+				<div className="flex">
+					<div>{content}</div>&nbsp;&nbsp;
+					<CopyButton content={content} />
+				</div>
+			),
+		}),
+		routeSubnets: (content) => ({
+			cellContent: truncate(content),
+			popupContent: <div>{routeSubnetsPopup(content)}</div>,
+		}),
+	};
 
-  const returnPopupContent = {
-    publicKey: (content) => ({
-      cellContent: truncate(content, 12),
-      popupContent: (
-        <div className="flex">
-          <div>{content}</div>
-          <VpnCopyButton copiedContent={content} />
-        </div>
-      ),
-    }),
-    routeSubnets: (content) => ({
-      cellContent: truncate(content),
-      popupContent: <div>{routeSubnetsPopup(content)}</div>,
-    }),
-  };
+	const addPopup = (content, header) => {
+		const { cellContent, popupContent } = returnPopupContent[header](content);
 
-  const addPopup = (content, header) => {
-    const { cellContent, popupContent } = returnPopupContent[header](content);
+		return (
+			<div className="flex">
+				{cellContent || content}
+				&ensp;
+				{cellContent && (
+					<Popup content={popupContent}>
+						<button className="popup-dots" type="button">
+							...
+						</button>
+					</Popup>
+				)}
+			</div>
+		);
+	};
 
-    return (
-      <div className="flex">
-        {cellContent || content}
-        &ensp;
-        {cellContent && (
-          <Popup
-            on="click"
-            pinned
-            trigger={<div className="popup-dots">...</div>}
-            inverted
-            className="vpn"
-          >
-            {popupContent}
-          </Popup>
-        )}
-      </div>
-    );
-  };
+	const onEdit = (instanceData) => (_e) => {
+		if (editModalRef.current) {
+			editModalRef.current.handleClick(instanceData);
+		}
+	};
 
-  const tableCells = (data) =>
-    headers.map((header, key) => {
-      let content = data[header] || longDash;
-      if (["publicKey", "routeSubnets"].includes(header)) {
-        content = addPopup(content, header);
-      }
+	const onDelete = (instanceData) => (_e) => {
+		if (deleteModalRef.current) {
+			deleteModalRef.current.handleClick(instanceData);
+		}
+	};
 
-      if (tableName === "clientConnections" && header === "name") {
-        content = (
-          <Link to={vpnClientConnectionDevicesPath(data.id)}>{data.name}</Link>
-        );
-      } else if (tableName === "clientConnections" && header === "endpoint") {
-        content = `${gatewayPublicHostname}:${data.port}`;
-      } else if (header === "") {
-        let type = "clientConnections";
+	const modalInfo = {
+		clientConnections: {
+			createButton: "addClientConnection",
+			isAddingDisabled: false,
+			options: [
+				{
+					text: "edit",
+					action: onEdit,
+				},
+				{
+					text: "delete",
+					action: onDelete,
+					color: "red",
+				},
+			],
+			deleteInfo: {
+				title: "deleteClientConnection",
+				content: (instanceInfo) =>
+					t("deleteClientConnectionWarningMessage", {
+						name: instanceInfo.name,
+					}),
+				onSubmit: (instanceInfo) => {
+					return dispatch(
+						deleteVpnClientConnectionAndFetch(instanceInfo.id, id),
+					);
+				},
+			},
+			editInfo: {
+				form: ClientConnectionsForm,
+			},
+		},
+		peerGateways: {
+			createButton: "addPeerGateway",
+			isAddingDisabled: false,
+			options: [
+				{
+					text: "edit",
+					action: onEdit,
+				},
+				{
+					text: "delete",
+					action: onDelete,
+					color: "red",
+				},
+			],
+			deleteInfo: {
+				title: "deletePeerGateway",
+				content: (instanceInfo) =>
+					t("deletePeerGatewayWarningMessage", { name: instanceInfo.name }),
+				onSubmit: (instanceInfo) =>
+					dispatch(deleteVpnPeerGatewayAndFetch(instanceInfo.id, id)),
+			},
+			editInfo: {
+				form: PeerGatewaysForm,
+			},
+		},
+		natMapping: {
+			createButton: "addNatMapping",
+			isAddingDisabled: !gateway.nat_subnet,
+			options: [
+				{
+					text: "edit",
+					action: onEdit,
+				},
+				{
+					text: "delete",
+					action: onDelete,
+					color: "red",
+				},
+			],
+			deleteInfo: {
+				title: "deleteNatMapping",
+				content: (instanceInfo) =>
+					t("deleteNatMappingWarningMessage", { name: instanceInfo.host }),
+				onSubmit: (instanceInfo) =>
+					dispatch(deleteVpnNatMappingAndFetch(instanceInfo.id, id)),
+			},
+			editInfo: {
+				form: NatMappingForm,
+			},
+		},
+	};
 
-        if (tableName === "clientConnections") {
-          type = "vpnClientConnections";
-        } else if (tableName === "peerGateways") {
-          type = "vpnPeerGateways";
-        } else if (tableName === "natMapping") {
-          type = "vpnNatMapping";
-        }
+	const { options, deleteInfo, editInfo, createButton, isAddingDisabled } =
+		modalInfo[tableName];
+	const EditForm = editInfo.form;
 
-        content =
-          user.role === "admin" || user.role === "owner" ? (
-            <OptionsMenu
-              type={type}
-              instance={data}
-              options={["edit", "delete"]}
-            />
-          ) : (
-            ""
-          );
-      }
+	const tableCells = (data) =>
+		headers.map((header) => {
+			let content = data[header.value] || longDash;
+			if (["publicKey", "routeSubnets"].includes(header.name)) {
+				content = addPopup(content, header.name);
+			}
 
-      return (
-        <Table.Cell key={key} textAlign={header === "" ? "right" : "left"}>
-          {content}
-        </Table.Cell>
-      );
-    });
+			if (tableName === "clientConnections" && header.name === "name") {
+				content = (
+					<Link to={vpnClientConnectionDevicesPath(data.id)}>{data.name}</Link>
+				);
+			} else if (
+				tableName === "clientConnections" &&
+				header.name === "endpoint"
+			) {
+				content = `${gatewayPublicHostname}:${data.port}`;
+			} else if (header.name === "") {
+				let type = "clientConnections";
 
-  const displayTableData = formattedTableContent
-    .slice(pageViseted, pageViseted + totalPaginationPages)
-    .map((item, key) => <Table.Row key={key}>{tableCells(item)}</Table.Row>);
+				if (tableName === "clientConnections") {
+					type = "vpnClientConnections";
+				} else if (tableName === "peerGateways") {
+					type = "vpnPeerGateways";
+				} else if (tableName === "natMapping") {
+					type = "vpnNatMapping";
+				}
 
-  const determineServiceForEmptyState = {
-    clientConnections: { listName: t("emptyClientConnections") },
-    peerGateways: { listName: t("emptyPeerGateways") },
-    natMapping: { listName: t("emptyNatDevices") },
-  };
+				content = isAdminRights(user.role) ? (
+					<OptionsMenu
+						// type={type}
+						instance={data}
+						options={options}
+					/>
+				) : null;
+			}
 
-  return (
-    <>
-      <div
-        className="table-container"
-        style={totalPaginationPages >= 10 ? { minHeight: 390 } : {}}
-      >
-        <Table className="details-table" basic="very" padded>
-          <Table.Header>
-            <Table.Row>{displayHeaders}</Table.Row>
-          </Table.Header>
-          {fetchStatus !== "pending" && formattedTableContent.length !== 0 && (
-            <Table.Body>{displayTableData}</Table.Body>
-          )}
-        </Table>
-        {fetchStatus === "pending" && <Loader active inline="centered" />}
-        {formattedTableContent.length === 0 && fetchStatus === "fulfilled" && (
-          <div className="empty-table">
-            {t("emptyListMessage", determineServiceForEmptyState[tableName])}
-          </div>
-        )}
-      </div>
+			return (
+				<TableCell
+					key={header.name}
+					align={header.name === "" ? "right" : "left"}
+				>
+					{content}
+				</TableCell>
+			);
+		});
 
-      <CustomPagination
-        data={formattedTableContent}
-        totalPaginationPages={10}
-        setActivePageNumber={setActivePageNumber}
-        activePageNumber={activePageNumber}
-      />
-    </>
-  );
+	const displayTableData = formattedTableContent
+		.slice(pageViseted, pageViseted + totalPaginationPages)
+		// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+		.map((item, key) => <TableRow key={key}>{tableCells(item)}</TableRow>);
+
+	const determineServiceForEmptyState = {
+		clientConnections: { listName: t("emptyClientConnections") },
+		peerGateways: { listName: t("emptyPeerGateways") },
+		natMapping: { listName: t("emptyNatDevices") },
+	};
+
+	return (
+		<>
+			<div className="sub-menu-container">
+				<VpnApiButton info={apiButtonInfo[tableName]?.(id)} />
+				{isAddingDisabled ? (
+					<Popup content={t("natPopup")}>
+						<Button className="disabled-btn ">
+							{t(createButton)}&nbsp;&nbsp;
+							<CircleHelp size={16} />
+						</Button>
+					</Popup>
+				) : (
+					<Button onClick={onEdit()}>{t(createButton)}</Button>
+				)}
+				{/* {menuItems.map(
+                        (item) =>
+                          activeTab === item.name && (
+                            <VpnModal
+                              key={item}
+                              formFields={item.createModalFields}
+                              addContentMessage={item.addContentMessage}
+                              managementName={activeTab}
+                              natSubnet={gateway.natSubnet}
+                            />
+                          ),
+                      )} */}
+			</div>
+			<div
+				className="table-container"
+				style={totalPaginationPages >= 10 ? { minHeight: 390 } : {}}
+			>
+				<Table className="details-table">
+					<TableHeader>
+						<TableRow>{displayHeaders}</TableRow>
+					</TableHeader>
+					{fetchStatus === "fulfilled" &&
+						formattedTableContent.length !== 0 && (
+							<TableBody>{displayTableData}</TableBody>
+						)}
+				</Table>
+
+				{fetchStatus === "rejected" && <ErrorScreen />}
+
+				<div className="empty-table">
+					{formattedTableContent.length === 0 &&
+						fetchStatus === "fulfilled" && (
+							<span>
+								{t(
+									"emptyListMessage",
+									determineServiceForEmptyState[tableName],
+								)}
+							</span>
+						)}
+					{fetchStatus === "pending" && <Loader />}
+				</div>
+			</div>
+
+			<CustomPagination
+				data={formattedTableContent}
+				totalPaginationPages={10}
+				setActivePageNumber={setActivePageNumber}
+				activePageNumber={activePageNumber}
+			/>
+
+			<GeneralModal ref={editModalRef}>
+				{(initialState, onCancel) => (
+					<EditForm
+						initialValues={initialState}
+						onCancel={onCancel}
+						onSubmit={editInfo.onSubmit}
+					/>
+				)}
+			</GeneralModal>
+			<GeneralModal
+				ref={deleteModalRef}
+				title={deleteInfo.title}
+				onSubmit={deleteInfo.onSubmit}
+				isDelete
+			>
+				{(initialState) => <p>{deleteInfo.content(initialState)}</p>}
+			</GeneralModal>
+		</>
+	);
 };
 
 VpnDetailsTable.propTypes = {
-  tableName: PropTypes.string,
-  headers: PropTypes.array,
-  reduxStateName: PropTypes.string,
-  reduxFetchStatus: PropTypes.string,
-  gatewayPublicHostname: PropTypes.string,
+	tableName: PropTypes.string,
+	headers: PropTypes.array,
+	reduxStateName: PropTypes.string,
+	reduxFetchStatus: PropTypes.string,
+	gatewayPublicHostname: PropTypes.string,
 };
 
 export default VpnDetailsTable;

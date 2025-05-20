@@ -1,60 +1,59 @@
+import Paginator from "container/Paginator";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
-import { Pagination } from "semantic-ui-react";
 
 const CustomPagination = ({
-  data,
-  totalPaginationPages,
-  activePageNumber,
-  setActivePageNumber,
-  searchTerm,
+	data,
+	totalPaginationPages,
+	activePageNumber,
+	setActivePageNumber,
+	searchTerm,
 }) => {
-  const [hidden, setHidden] = useState("");
-  const [oldActivePage, setOldActivePage] = useState(1);
-  const pageCount = Math.ceil(data.length / totalPaginationPages);
+	const [hidden, setHidden] = useState("");
+	const [oldActivePage, setOldActivePage] = useState(1);
+	const pageCount = Math.ceil(data.length / totalPaginationPages);
 
-  useEffect(() => {
-    setActivePageNumber(activePageNumber);
-  }, [activePageNumber]);
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		setActivePageNumber(activePageNumber);
+	}, [activePageNumber]);
 
-  const changePage = (e, { activePage }) => {
-    setActivePageNumber(activePage);
-    setOldActivePage(activePage);
-  };
+	const changePage = (activePage) => {
+		setActivePageNumber(activePage);
+		setOldActivePage(activePage);
+	};
 
-  useEffect(() => {
-    data.length <= totalPaginationPages ? setHidden("hidden") : setHidden("");
-  }, [data]);
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		data.length <= totalPaginationPages ? setHidden("hidden") : setHidden("");
+	}, [data]);
 
-  useEffect(() => {
-    if (activePageNumber !== oldActivePage && searchTerm === "") {
-      setActivePageNumber(oldActivePage);
-    } else {
-      setActivePageNumber(1);
-    }
-  }, [searchTerm]);
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		if (activePageNumber !== oldActivePage && searchTerm === "") {
+			setActivePageNumber(oldActivePage);
+		} else {
+			setActivePageNumber(1);
+		}
+	}, [searchTerm]);
 
-  return (
-    <div className={`custom-pagination ${hidden}`}>
-      <Pagination
-        activePage={activePageNumber}
-        firstItem={null}
-        lastItem={null}
-        pointing
-        secondary
-        totalPages={pageCount}
-        onPageChange={changePage}
-      />
-    </div>
-  );
+	return (
+		<div className={`custom-pagination ${hidden}`}>
+			<Paginator
+				currentPage={activePageNumber}
+				onPageChange={changePage}
+				totalPages={pageCount}
+			/>
+		</div>
+	);
 };
 
 CustomPagination.propTypes = {
-  data: PropTypes.array,
-  totalPaginationPages: PropTypes.number,
-  activePageNumber: PropTypes.any,
-  setActivePageNumber: PropTypes.any,
-  searchTerm: PropTypes.any,
+	data: PropTypes.array,
+	totalPaginationPages: PropTypes.number,
+	activePageNumber: PropTypes.any,
+	setActivePageNumber: PropTypes.any,
+	searchTerm: PropTypes.any,
 };
 
 export default CustomPagination;
