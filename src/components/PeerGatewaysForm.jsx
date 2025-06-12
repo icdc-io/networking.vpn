@@ -24,17 +24,13 @@ import {
 import { ComboboxFormField } from "./ComboboxFormField";
 import { InputFormField } from "./InputFormField";
 import { MultiSelectInputFormField } from "./MultiSelectInputFormField";
+import { PeerGatewaySearch } from "./PeerGatewaySearch";
 
-// endpoint: "sys.vpn.zby.icdc.io:2200";
-// gateway_ip: "10.254.38.28";
-// name: "zbyy";
-// public_key: "NPMQfjHY1MHsRfnCN0geIJJsYSxE/uPcUloN2pAW3Cw=";
-// subnet: "10.254.38.0/24";
-// subnets: "10.254.64.0/24,10.254.0.0/19";
 const fieldTypes = {
 	input: InputFormField,
 	combobox: ComboboxFormField,
 	multiselect: MultiSelectInputFormField,
+	peerGatewaySearch: PeerGatewaySearch,
 };
 const fieldsInfo = [
 	{
@@ -81,7 +77,7 @@ const fieldsInfo = [
 		name: "endpoint",
 		placeholder: "enterPeerEndpoint",
 		label: "peerEndpoint",
-		type: fieldTypes.combobox,
+		type: fieldTypes.peerGatewaySearch,
 		rules: {
 			// required: "required",
 			validate: peerEndpoint,

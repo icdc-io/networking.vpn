@@ -47,6 +47,7 @@ export const ComboboxFormField = ({ fieldInfo, form }) => {
 								placeholder={fieldInfo.placeholder}
 								formatOption={fieldInfo.formatOption}
 								className={fieldInfo.className}
+								onQueryChange={fieldInfo.onQueryChange}
 							/>
 						</FormControl>
 						{fieldInfo.description && (
