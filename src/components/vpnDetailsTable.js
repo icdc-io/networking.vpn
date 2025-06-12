@@ -16,7 +16,7 @@ import { isAdminRights } from "container/roleUtils";
 import { CircleHelp } from "lucide-react";
 import { PropTypes } from "prop-types";
 import React, { useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import {
@@ -212,10 +212,12 @@ const VpnDetailsTable = ({
 			],
 			deleteInfo: {
 				title: "deleteClientConnection",
-				content: (instanceInfo) =>
-					t("deleteClientConnectionWarningMessage", {
-						name: instanceInfo.name,
-					}),
+				content: (instanceInfo) => (
+					<Trans
+						i18nKey={"deleteClientConnectionWarningMessage"}
+						values={{ name: instanceInfo.name }}
+					/>
+				),
 				onSubmit: (instanceInfo) => {
 					return dispatch(
 						deleteVpnClientConnectionAndFetch(instanceInfo.id, id),
@@ -242,8 +244,12 @@ const VpnDetailsTable = ({
 			],
 			deleteInfo: {
 				title: "deletePeerGateway",
-				content: (instanceInfo) =>
-					t("deletePeerGatewayWarningMessage", { name: instanceInfo.name }),
+				content: (instanceInfo) => (
+					<Trans
+						i18nKey={"deletePeerGatewayWarningMessage"}
+						values={{ name: instanceInfo.name }}
+					/>
+				),
 				onSubmit: (instanceInfo) =>
 					dispatch(deleteVpnPeerGatewayAndFetch(instanceInfo.id, id)),
 			},
@@ -267,8 +273,12 @@ const VpnDetailsTable = ({
 			],
 			deleteInfo: {
 				title: "deleteNatMapping",
-				content: (instanceInfo) =>
-					t("deleteNatMappingWarningMessage", { name: instanceInfo.host }),
+				content: (instanceInfo) => (
+					<Trans
+						i18nKey={"deleteNatMappingWarningMessage"}
+						values={{ name: instanceInfo.host }}
+					/>
+				),
 				onSubmit: (instanceInfo) =>
 					dispatch(deleteVpnNatMappingAndFetch(instanceInfo.id, id)),
 			},
@@ -328,22 +338,41 @@ const VpnDetailsTable = ({
 			);
 		});
 
-	const displayTableData = formattedTableContent
-		.slice(pageViseted, pageViseted + totalPaginationPages)
-		// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-		.map((item, key) => <TableRow key={key}>{tableCells(item)}</TableRow>);
-
 	const determineServiceForEmptyState = {
 		clientConnections: { listName: t("emptyClientConnections") },
 		peerGateways: { listName: t("emptyPeerGateways") },
 		natMapping: { listName: t("emptyNatDevices") },
 	};
 
+	const withContent =
+		fetchStatus === "fulfilled" && formattedTableContent.length > 0;
+
+	const displayTableData = withContent ? (
+		formattedTableContent
+			.slice(pageViseted, pageViseted + totalPaginationPages)
+			// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+			.map((item, key) => <TableRow key={key}>{tableCells(item)}</TableRow>)
+	) : (
+		<TableRow>
+			<TableCell colSpan={100}>
+				{fetchStatus === "rejected" ? (
+					<ErrorScreen />
+				) : fetchStatus === "pending" ? (
+					<Loader />
+				) : (
+					<div className="empty-table">
+						{t("emptyListMessage", determineServiceForEmptyState[tableName])}
+					</div>
+				)}
+			</TableCell>
+		</TableRow>
+	);
+
 	return (
 		<>
 			<div className="sub-menu-container">
 				<VpnApiButton info={apiButtonInfo[tableName]?.(id)} />
-				{isAddingDisabled ? (
+				{!isAdminRights(user.role) ? null : isAddingDisabled ? (
 					<Popup content={t("natPopup")}>
 						<Button className="disabled-btn ">
 							{t(createButton)}&nbsp;&nbsp;
@@ -366,42 +395,26 @@ const VpnDetailsTable = ({
                           ),
                       )} */}
 			</div>
-			<div
-				className="table-container"
-				style={totalPaginationPages >= 10 ? { minHeight: 390 } : {}}
-			>
-				<Table className="details-table">
+			<div className="details-table-wrapper">
+				<Table
+					className="details-table"
+					containerClassName={withContent ? "" : "h-full"}
+				>
 					<TableHeader>
 						<TableRow>{displayHeaders}</TableRow>
 					</TableHeader>
-					{fetchStatus === "fulfilled" &&
-						formattedTableContent.length !== 0 && (
-							<TableBody>{displayTableData}</TableBody>
-						)}
+					<TableBody>{displayTableData}</TableBody>
 				</Table>
-
-				{fetchStatus === "rejected" && <ErrorScreen />}
-
-				<div className="empty-table">
-					{formattedTableContent.length === 0 &&
-						fetchStatus === "fulfilled" && (
-							<span>
-								{t(
-									"emptyListMessage",
-									determineServiceForEmptyState[tableName],
-								)}
-							</span>
-						)}
-					{fetchStatus === "pending" && <Loader />}
-				</div>
 			</div>
 
-			<CustomPagination
-				data={formattedTableContent}
-				totalPaginationPages={10}
-				setActivePageNumber={setActivePageNumber}
-				activePageNumber={activePageNumber}
-			/>
+			{withContent && (
+				<CustomPagination
+					data={formattedTableContent}
+					totalPaginationPages={10}
+					setActivePageNumber={setActivePageNumber}
+					activePageNumber={activePageNumber}
+				/>
+			)}
 
 			<GeneralModal ref={editModalRef}>
 				{(initialState, onCancel) => (

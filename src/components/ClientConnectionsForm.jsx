@@ -158,9 +158,7 @@ const ClientConnectionsForm = ({ initialValues, onCancel }) => {
 								{t("cancel")}
 							</Button>
 						</DialogClose>
-						<Button type="submit" disabled={!form.formState.isDirty}>
-							{t("save")}
-						</Button>
+						<Button type="submit">{t("save")}</Button>
 					</DialogFooter>
 				</form>
 			</Form>

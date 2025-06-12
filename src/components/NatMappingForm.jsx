@@ -26,6 +26,7 @@ const fieldsInfo = [
 		label: "vpn_ip",
 		placeholder: "enterVpnIp",
 		rules: {
+			required: "required",
 			pattern: {
 				value: ipPattern,
 				message: "ipValidation",
@@ -37,6 +38,7 @@ const fieldsInfo = [
 		label: "localIp",
 		placeholder: "enterLocalIp",
 		rules: {
+			required: "required",
 			pattern: {
 				value: ipPattern,
 				message: "ipValidation",
@@ -48,6 +50,7 @@ const fieldsInfo = [
 		label: "hostname",
 		placeholder: "enterHostname",
 		rules: {
+			required: "required",
 			maxLength: 63,
 			pattern: {
 				value: hostnamePattern,
@@ -141,7 +144,7 @@ const NatMappingForm = ({ initialValues, onCancel }) => {
 				if (unavailableSubnets.includes(+lastOctet)) {
 					binaryIp++;
 				} else {
-					return fromBinaryIp;
+					return { [fieldKey]: fromBinaryIp };
 				}
 			}
 		}
@@ -151,7 +154,7 @@ const NatMappingForm = ({ initialValues, onCancel }) => {
 
 	const form = useForm({
 		defaultValues: fieldsInfo.reduce((acc, curr) => {
-			acc[curr.name] = "";
+			acc[curr.name] = nextIp[curr.name] || "";
 			return acc;
 		}, {}),
 	});
@@ -163,7 +166,7 @@ const NatMappingForm = ({ initialValues, onCancel }) => {
 			form.reset({
 				host: initialValues.host,
 				local_ip: initialValues.local_ip,
-				vpn_ip: getIp(addr, vpnNatMapping, "vpn_ip", natSubnetValue),
+				vpn_ip: initialValues.vpn_ip,
 			});
 		}
 	}, [initialValues]);
@@ -175,7 +178,7 @@ const NatMappingForm = ({ initialValues, onCancel }) => {
 			isEdit
 				? updateVpnNatMappingAndFetch(id, initialValues.id, payload)
 				: createVpnNatMappingAndFetch(id, payload),
-		);
+		).then(onCancel);
 	};
 
 	return (
@@ -212,9 +215,7 @@ const NatMappingForm = ({ initialValues, onCancel }) => {
 								{t("cancel")}
 							</Button>
 						</DialogClose>
-						<Button type="submit" disabled={!form.formState.isDirty}>
-							{t("save")}
-						</Button>
+						<Button type="submit">{t("save")}</Button>
 					</DialogFooter>
 				</form>
 			</Form>

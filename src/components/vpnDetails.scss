@@ -1,9 +1,9 @@
 $base-blue-color: #2185d0;
 
 .vpn-details-wrapper {
-  .ui.header.title {
-    margin-top: 0;
-  }
+	height: 100%;
+	display: flex;
+	flex-direction: column;
   .gateway-title-wrapper {
     display: flex;
     justify-content: space-between;

@@ -119,6 +119,9 @@ const PrivateKeyForm = ({ initialValues, onCancel }) => {
 						/>
 					)}
 					{[configStatus, urlQRFetchStatus].includes("pending") && <Loader />}
+					{["", "fulfilled"].includes(configStatus) && !configs && (
+						<div className="privateKeyInfo">{t("privateKeyInfo")}</div>
+					)}
 					{configs && configStatus === "fulfilled" && (
 						<>
 							<Label>

@@ -122,7 +122,6 @@ const VpnDeviceForm = ({ initialValues, onCancel }) => {
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (initialValues) {
-			console.log(initialValues);
 			form.reset({
 				name: initialValues.name,
 				ip: initialValues.ip,

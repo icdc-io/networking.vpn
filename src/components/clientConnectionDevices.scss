@@ -25,15 +25,15 @@
   }
 }
 
+.devices-table-wrapper {
+	min-height: 712px;
+}
+
 .devices-table {
-  margin-top: 15px;
-
-  tbody {
-    tr:hover {
-      background: none !important;
-    }
-  }
-
+	height: 100%;
+	td {
+		height: 67px;
+	}
   .flex {
     align-items: center;
   }

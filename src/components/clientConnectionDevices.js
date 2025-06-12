@@ -1,5 +1,6 @@
 import { Button } from "container/Button";
 import CopyButton from "container/CopyButton";
+import ErrorScreen from "container/ErrorScreen";
 import Loader from "container/Loader";
 import OptionsMenu from "container/OptionsMenu";
 import Popup from "container/Popup";
@@ -12,7 +13,7 @@ import {
 	TableRow,
 } from "container/Table";
 import React, { useEffect, useState, useRef } from "react";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import {
@@ -351,10 +352,28 @@ const ClientConnectionDevices = () => {
 			);
 		});
 
-	const displayTableData = vpnClientConnectionDevicesData
-		.slice(pageViseted, pageViseted + totalPaginationPages)
-		// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-		.map((item, key) => <TableRow key={key}>{tableCells(item)}</TableRow>);
+	const withContent =
+		devicesFetchStatus === "fulfilled" &&
+		vpnClientConnectionDevicesData.length > 0;
+
+	const displayTableData = withContent ? (
+		vpnClientConnectionDevicesData
+			.slice(pageViseted, pageViseted + totalPaginationPages)
+			// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+			.map((item, key) => <TableRow key={key}>{tableCells(item)}</TableRow>)
+	) : (
+		<TableRow>
+			<TableCell colSpan={100}>
+				{devicesFetchStatus === "rejected" ? (
+					<ErrorScreen />
+				) : devicesFetchStatus === "pending" ? (
+					<Loader />
+				) : (
+					<div className="empty-table">{t("listEmpty")}</div>
+				)}
+			</TableCell>
+		</TableRow>
+	);
 
 	const onDeleteSubmit = (instance) => {
 		return dispatch(
@@ -366,36 +385,33 @@ const ClientConnectionDevices = () => {
 		<>
 			<ButtonBack back={t("back")} path={".."} />
 
-			{dataStatusCheck(
-				clientConnectionFetchStatus,
-				t,
-				<>
-					<h3 className="title" color="blue">
-						{capitalizeFirstLetter(vpnClientConnectionData.name || longDash)}
-					</h3>
-					<h4>{t("clientConnectionDetails")}</h4>
-					<div className="details-container">
-						<div className="details">
-							<div>{t("subnet")}</div>
-							<div>{t("endpoint")}</div>
-						</div>
-						<div className="details">
-							<div>{vpnClientConnectionData.subnet || longDash}</div>
-							<div>
-								{`${vpnGatewayData.hostname}:${vpnClientConnectionData.port}` ||
-									longDash}
-							</div>
-						</div>
+			<h3 className="title" color="blue">
+				{capitalizeFirstLetter(vpnClientConnectionData.name || longDash)}
+			</h3>
+			<h4>{t("clientConnectionDetails")}</h4>
+			<div className="details-container">
+				<div className="details">
+					<div>{t("subnet")}</div>
+					<div>{t("endpoint")}</div>
+				</div>
+				<div className="details">
+					<div>{vpnClientConnectionData.subnet || longDash}</div>
+					<div>
+						{vpnGatewayData.hostname
+							? `${vpnGatewayData.hostname}:${vpnClientConnectionData.port}`
+							: longDash}
 					</div>
-					<div className="customized-hr" />
-					<div className="table-title-container">
-						<h4 style={{ marginTop: 16 }}>{t("devices")}</h4>
-						<div className="table-title-container-controls">
-							<VpnApiButton info={apiButtonInfo.vpnDevices(connectionId)} />
-							<Button type="button" onClick={onAddDevice}>
-								{t("addDevice")}
-							</Button>
-							{/* <VpnModal
+				</div>
+			</div>
+			<div className="customized-hr" />
+			<div className="table-title-container">
+				<h4>{t("devices")}</h4>
+				<div className="table-title-container-controls">
+					<VpnApiButton info={apiButtonInfo.vpnDevices(connectionId)} />
+					<Button type="button" onClick={onAddDevice}>
+						{t("addDevice")}
+					</Button>
+					{/* <VpnModal
 								formFields={[
 									"name",
 									"ip",
@@ -406,39 +422,37 @@ const ClientConnectionDevices = () => {
 								addContentMessage={"addDevice"}
 								managementName="vpnDevices"
 							/> */}
-						</div>
-					</div>
+				</div>
+			</div>
 
-					<div
-						className="table-container"
-						style={totalPaginationPages >= 10 ? { minHeight: 390 } : {}}
-					>
-						<Table className="devices-table">
-							<TableHeader>
-								<TableRow>{displayHeaders}</TableRow>
-							</TableHeader>
-							{devicesFetchStatus !== "pending" && (
-								<TableBody>{displayTableData}</TableBody>
-							)}
-						</Table>
-					</div>
+			<div className="devices-table-wrapper">
+				<Table
+					className="devices-table"
+					containerClassName={withContent ? "" : "h-full"}
+				>
+					<TableHeader>
+						<TableRow>{displayHeaders}</TableRow>
+					</TableHeader>
 
-					{devicesFetchStatus === "pending" && <Loader />}
+					<TableBody>{displayTableData}</TableBody>
+				</Table>
+			</div>
 
-					<CustomPagination
-						data={vpnClientConnectionDevicesData}
-						totalPaginationPages={10}
-						setActivePageNumber={setActivePageNumber}
-						activePageNumber={activePageNumber}
-					/>
-				</>,
+			{withContent && (
+				<CustomPagination
+					data={vpnClientConnectionDevicesData}
+					totalPaginationPages={10}
+					setActivePageNumber={setActivePageNumber}
+					activePageNumber={activePageNumber}
+				/>
 			)}
+
 			<GeneralModal ref={configsModalRef} className="configs_modal">
 				{(initialState, onCancel) => (
 					<PrivateKeyForm initialValues={initialState} onCancel={onCancel} />
 				)}
 			</GeneralModal>
-			<GeneralModal ref={deviceModalRef} className="configs_modal">
+			<GeneralModal ref={deviceModalRef}>
 				{(initialState, onCancel) => (
 					<VpnDeviceForm initialValues={initialState} onCancel={onCancel} />
 				)}
@@ -450,7 +464,12 @@ const ClientConnectionDevices = () => {
 				isDelete
 			>
 				{(initialState) => (
-					<p>{t("deleteDeviceWarningMessage", { name: initialState.name })}</p>
+					<p>
+						<Trans
+							i18nKey={"deleteDeviceWarningMessage"}
+							values={{ name: initialState.name }}
+						/>
+					</p>
 				)}
 			</GeneralModal>
 		</>

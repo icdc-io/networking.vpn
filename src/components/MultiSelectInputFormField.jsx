@@ -90,7 +90,6 @@ export const MultiSelectInputFormField = ({ fieldInfo, form }) => {
 											<span>{el}</span>
 											<button
 												onClick={() => {
-													console.log(items.filter((item, key) => key !== i));
 													form.setValue(
 														tempName,
 														items.filter((item, key) => key !== i),

@@ -136,7 +136,7 @@ export const CustomAccordion = ({ configData, index, open, handleClick }) => {
 											: {}
 									}
 								>
-									{t("download")}
+									{t("download")}&nbsp;
 									<Download size={16} />
 								</Button>
 							</div>

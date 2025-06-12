@@ -173,8 +173,7 @@ const PeerGatewaysForm = ({ initialValues, onCancel }) => {
 			isEdit
 				? updateVpnPeerGatewayAndFetch(id, initialValues.id, payload)
 				: createVpnPeerGatewayAndFetch(id, payload),
-		);
-		onCancel();
+		).then(onCancel);
 	};
 
 	return (
@@ -221,9 +220,7 @@ const PeerGatewaysForm = ({ initialValues, onCancel }) => {
 								{t("cancel")}
 							</Button>
 						</DialogClose>
-						<Button type="submit" disabled={!form.formState.isDirty}>
-							{t("save")}
-						</Button>
+						<Button type="submit">{t("save")}</Button>
 					</DialogFooter>
 				</form>
 			</Form>

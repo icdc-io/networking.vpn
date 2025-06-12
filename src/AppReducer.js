@@ -89,20 +89,20 @@ export const VpnStore = (state = initialState, action) => {
 				vpnClientConnectionFetchStatus: "fulfilled",
 			});
 
-		case `${ActionTypes.VPN_CLIENT_CONNECTION_CREATE}_PENDING`:
-			return state.set("vpnClientConnectionsFetchStatus", "pending");
-		case `${ActionTypes.VPN_CLIENT_CONNECTION_CREATE}_REJECTED`:
-			return state.set("vpnClientConnectionsFetchStatus", "rejected");
+		// case `${ActionTypes.VPN_CLIENT_CONNECTION_CREATE}_PENDING`:
+		// 	return state.set("vpnClientConnectionsFetchStatus", "pending");
+		// case `${ActionTypes.VPN_CLIENT_CONNECTION_CREATE}_REJECTED`:
+		// 	return state.set("vpnClientConnectionsFetchStatus", "rejected");
 		case `${ActionTypes.VPN_CLIENT_CONNECTION_CREATE}_FULFILLED`:
 			return Immutable.merge(state, {
 				vpnClientConnections: [action.payload, ...state.vpnClientConnections],
 				vpnClientConnectionsFetchStatus: "fulfilled",
 			});
 
-		case `${ActionTypes.VPN_CLIENT_CONNECTION_UPDATE}_PENDING`:
-			return state.set("vpnClientConnectionsFetchStatus", "pending");
-		case `${ActionTypes.VPN_CLIENT_CONNECTION_UPDATE}_REJECTED`:
-			return state.set("vpnClientConnectionsFetchStatus", "rejected");
+		// case `${ActionTypes.VPN_CLIENT_CONNECTION_UPDATE}_PENDING`:
+		// 	return state.set("vpnClientConnectionsFetchStatus", "pending");
+		// case `${ActionTypes.VPN_CLIENT_CONNECTION_UPDATE}_REJECTED`:
+		// 	return state.set("vpnClientConnectionsFetchStatus", "rejected");
 		case `${ActionTypes.VPN_CLIENT_CONNECTION_UPDATE}_FULFILLED`:
 			return Immutable.merge(state, {
 				vpnClientConnections: [...state.vpnClientConnections, action.payload],
@@ -185,20 +185,20 @@ export const VpnStore = (state = initialState, action) => {
 				vpnPeerGatewaysFetchStatus: "fulfilled",
 			});
 
-		case `${ActionTypes.VPN_PEER_GATEWAY_CREATE}_PENDING`:
-			return state.set("vpnPeerGatewaysFetchStatus", "pending");
-		case `${ActionTypes.VPN_PEER_GATEWAY_CREATE}_REJECTED`:
-			return state.set("vpnPeerGatewaysFetchStatus", "rejected");
+		// case `${ActionTypes.VPN_PEER_GATEWAY_CREATE}_PENDING`:
+		// 	return state.set("vpnPeerGatewaysFetchStatus", "pending");
+		// case `${ActionTypes.VPN_PEER_GATEWAY_CREATE}_REJECTED`:
+		// 	return state.set("vpnPeerGatewaysFetchStatus", "rejected");
 		case `${ActionTypes.VPN_PEER_GATEWAY_CREATE}_FULFILLED`:
 			return Immutable.merge(state, {
 				vpnPeerGateways: [action.payload, ...state.vpnPeerGateways],
 				vpnPeerGatewaysFetchStatus: "fulfilled",
 			});
 
-		case `${ActionTypes.VPN_PEER_GATEWAY_UPDATE}_PENDING`:
-			return state.set("vpnPeerGatewaysFetchStatus", "pending");
-		case `${ActionTypes.VPN_PEER_GATEWAY_UPDATE}_REJECTED`:
-			return state.set("vpnPeerGatewaysFetchStatus", "rejected");
+		// case `${ActionTypes.VPN_PEER_GATEWAY_UPDATE}_PENDING`:
+		// 	return state.set("vpnPeerGatewaysFetchStatus", "pending");
+		// case `${ActionTypes.VPN_PEER_GATEWAY_UPDATE}_REJECTED`:
+		// 	return state.set("vpnPeerGatewaysFetchStatus", "rejected");
 		case `${ActionTypes.VPN_PEER_GATEWAY_UPDATE}_FULFILLED`:
 			return Immutable.merge(state, {
 				vpnPeerGateways: [...state.vpnPeerGateways, action.payload],
@@ -215,20 +215,20 @@ export const VpnStore = (state = initialState, action) => {
 				vpnNatMappingFetchSatus: "fulfilled",
 			});
 
-		case `${ActionTypes.VPN_NAT_MAPPING_CREATE}_PENDING`:
-			return state.set("vpnNatMappingFetchSatus", "pending");
-		case `${ActionTypes.VPN_NAT_MAPPING_CREATE}_REJECTED`:
-			return state.set("vpnNatMappingFetchSatus", "rejected");
+		// case `${ActionTypes.VPN_NAT_MAPPING_CREATE}_PENDING`:
+		// 	return state.set("vpnNatMappingFetchSatus", "pending");
+		// case `${ActionTypes.VPN_NAT_MAPPING_CREATE}_REJECTED`:
+		// 	return state.set("vpnNatMappingFetchSatus", "rejected");
 		case `${ActionTypes.VPN_NAT_MAPPING_CREATE}_FULFILLED`:
 			return Immutable.merge(state, {
 				vpnNatMapping: [...state.vpnNatMapping, action.payload],
 				vpnNatMappingFetchSatus: "fulfilled",
 			});
 
-		case `${ActionTypes.VPN_NAT_MAPPING_UPDATE}_PENDING`:
-			return state.set("vpnNatMappingFetchSatus", "pending");
-		case `${ActionTypes.VPN_NAT_MAPPING_UPDATE}_REJECTED`:
-			return state.set("vpnNatMappingFetchSatus", "rejected");
+		// case `${ActionTypes.VPN_NAT_MAPPING_UPDATE}_PENDING`:
+		// 	return state.set("vpnNatMappingFetchSatus", "pending");
+		// case `${ActionTypes.VPN_NAT_MAPPING_UPDATE}_REJECTED`:
+		// 	return state.set("vpnNatMappingFetchSatus", "rejected");
 		case `${ActionTypes.VPN_NAT_MAPPING_UPDATE}_FULFILLED`:
 			return Immutable.merge(state, {
 				vpnNatMapping: [...state.vpnNatMapping, action.payload],

@@ -164,6 +164,10 @@
   @import url("./general/customAccordion.scss");
 }
 
+.configs_modal {
+	max-width: 600px;
+}
+
 .networking_vpn_modal {
   // .ui.form.vpn-form .field {
   //   margin-top: 1rem;
@@ -177,10 +181,6 @@
   //   font-weight: 700;
   //   text-transform: none;
   // }
-
-  .configs_modal {
-    min-width: 600px;
-  }
 
 	.multiselect_input {
 		padding: 4px 12px;
@@ -295,7 +295,6 @@
     line-height: 164.69%;
     color: #b99e59;
     padding: 14px;
-    margin-top: 20px;
   }
 
   .ui.form div.hostname-field {

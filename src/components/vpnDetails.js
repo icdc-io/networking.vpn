@@ -1,4 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "container/Tabs";
+import { isAdminRights } from "container/roleUtils";
 import { Pen } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -36,7 +37,7 @@ const VpnDetails = () => {
 	const [activeTab, setActiveTab] = useState(tabs[0]);
 	const [tableData, setTableData] = useState({
 		reduxStateName: "vpnClientConnections",
-		fetchStatus: "vpnCLientConnectionsFetchStatus",
+		fetchStatus: "vpnClientConnectionsFetchStatus",
 	});
 	const natModalRef = useRef();
 
@@ -167,9 +168,11 @@ const VpnDetails = () => {
 							<div>{gateway.internalAddress || longDash}</div>
 							<div>
 								{gateway.natSubnet || longDash}{" "}
-								<button onClick={onEditNat(gateway)} type="button">
-									<Pen size={16} />
-								</button>
+								{isAdminRights(user.role) && (
+									<button onClick={onEditNat(gateway)} type="button">
+										<Pen size={16} />
+									</button>
+								)}
 								{/* <VpnModal
 									button
 									pencil
@@ -196,20 +199,26 @@ const VpnDetails = () => {
 							))}
 						</TabsList>
 						<hr className="" />
-						{tabs.map((item) => (
-							<TabsContent key={item} value={item} className="h-full">
-								<VpnDetailsTable
-									tableName={activeTab}
-									headers={
-										menuItems.filter((item) => item.name === activeTab)[0]
-											.headers
-									}
-									reduxStateName={tableData.reduxStateName || []}
-									reduxFetchStatus={tableData.fetchStatus}
-									gatewayPublicHostname={gatewayPublicHostname}
-								/>
-							</TabsContent>
-						))}
+						{tabs
+							.filter((tab) => tab === activeTab)
+							.map((item) => (
+								<TabsContent
+									key={item}
+									value={item}
+									className="h-full flex flex-col gap-4"
+								>
+									<VpnDetailsTable
+										tableName={activeTab}
+										headers={
+											menuItems.filter((item) => item.name === activeTab)[0]
+												.headers
+										}
+										reduxStateName={tableData.reduxStateName || []}
+										reduxFetchStatus={tableData.fetchStatus}
+										gatewayPublicHostname={gatewayPublicHostname}
+									/>
+								</TabsContent>
+							))}
 					</Tabs>
 					<span />
 				</>,
