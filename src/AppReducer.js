@@ -1,11 +1,12 @@
 import Immutable from "seamless-immutable";
 /* eslint camelcase: 0 */
 import * as ActionTypes from "./AppConstants";
+import { formatVpnGatewaysData } from "./components/tools";
 
 // eslint-disable-next-line new-cap
 const initialState = Immutable({
 	gateways: [],
-	gatewaysFetchStatus: "",
+	gatewaysFetchStatus: "pending",
 	gateway: {},
 	gatewayFetchStatus: "",
 	vpnClientConnections: [],
@@ -35,7 +36,7 @@ export const VpnStore = (state = initialState, action) => {
 			return state.set("gatewaysFetchStatus", "rejected");
 		case `${ActionTypes.VPN_GATEWAYS_FETCH}_FULFILLED`:
 			return Immutable.merge(state, {
-				gateways: action.payload,
+				gateways: formatVpnGatewaysData(action.payload),
 				gatewaysFetchStatus: "fulfilled",
 			});
 
@@ -55,7 +56,7 @@ export const VpnStore = (state = initialState, action) => {
 			return state.set("gatewaysFetchStatus", "rejected");
 		case `${ActionTypes.VPN_GATEWAY_UPDATE}_FULFILLED`:
 			return Immutable.merge(state, {
-				gateways: [...state.gateways, action.payload],
+				gateways: [...state.gateways, formatVpnGatewaysData(action.payload)],
 				gatewaysFetchStatus: "fulfilled",
 			});
 

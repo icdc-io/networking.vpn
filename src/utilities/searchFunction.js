@@ -1,7 +1,11 @@
 import PropTypes from "prop-types";
 
-const searchMethod = (data, searchTerm, fields, searchingFromStartFields) =>
-	data.filter((value) => {
+const searchMethod = (data, searchTerm, fields, searchingFromStartFields) => {
+	if (!data || !data.length) return [];
+
+	if (!searchTerm) return data;
+
+	return data.filter((value) => {
 		if (searchTerm === "") {
 			return true;
 		}
@@ -19,6 +23,7 @@ const searchMethod = (data, searchTerm, fields, searchingFromStartFields) =>
 						](searchTerm.toLowerCase()),
 		);
 	});
+};
 
 searchMethod.propTypes = {
 	data: PropTypes.any,

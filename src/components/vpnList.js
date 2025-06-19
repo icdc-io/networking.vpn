@@ -1,4 +1,7 @@
+import ErrorScreen from "container/ErrorScreen";
+import Loader from "container/Loader";
 import OptionsMenu from "container/OptionsMenu";
+import Paginator from "container/Paginator";
 import {
 	Table,
 	TableBody,
@@ -11,18 +14,23 @@ import _ from "lodash";
 import PropTypes from "prop-types";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-// import DeleteModal from '../../GeneralComponents/deleteModal';
 import { Link } from "react-router-dom";
 import { editVpnGatewayAndFetch } from "../AppActions";
 import GeneralModal from "../general/GeneralModal";
-import CustomPagination from "../general/customPagination";
 import svgVpn from "../static/svgVpn.svg";
 import searchMethod from "../utilities/searchFunction";
 import GatewayForm from "./GatewayForm";
 import { longDash } from "./tools";
-import { formatVpnGatewaysData } from "./tools";
 
-const VpnList = ({ items: gatewaysData, searchTerm }) => {
+const headers = [
+	{ name: "name", headerName: "name", sortable: true },
+	{ name: "publicKey", headerName: "publicKey", sortable: false },
+	{ name: "hostname", headerName: "publicHostnameVpn", sortable: false },
+	{ name: "natSubnet", headerName: "natSubnet", sortable: false },
+	{ name: "menu", headerName: "", sortable: false },
+];
+
+const VpnList = ({ items: gatewaysData, status }) => {
 	const { t } = useTranslation();
 	const [direction, setDirection] = useState("ascending");
 	const [column, setColumn] = useState(null);
@@ -33,16 +41,9 @@ const VpnList = ({ items: gatewaysData, searchTerm }) => {
 	const gatewayModalRef = useRef();
 
 	useEffect(() => {
-		setGateways(formatVpnGatewaysData(gatewaysData));
+		setGateways(gatewaysData);
+		setActivePageNumber(1);
 	}, [gatewaysData]);
-
-	const headers = [
-		{ name: "name", headerName: "name", sortable: true },
-		{ name: "publicKey", headerName: "publicKey", sortable: false },
-		{ name: "hostname", headerName: "publicHostnameVpn", sortable: false },
-		{ name: "natSubnet", headerName: "natSubnet", sortable: false },
-		{ name: "menu", headerName: "", sortable: false },
-	];
 
 	const handleSort = (columnName) => {
 		if (column !== columnName) {
@@ -127,28 +128,20 @@ const VpnList = ({ items: gatewaysData, searchTerm }) => {
 		return tableRow;
 	};
 
-	const searchTableData = searchTerm
-		? searchMethod(
-				gateways,
-				searchTerm,
-				["name", "publicKey", "hostname", "natSubnet"],
-				["natSubnet"],
-			)
-		: gateways;
+	const displayTableData = gateways
+		.slice(pageViseted, pageViseted + totalPaginationPages)
+		// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+		.map((item, key) => <TableRow key={key}>{tableCells(item)}</TableRow>);
 
-	const displayTableData =
-		searchTableData.length === 0 ? (
+	const fullCellWidth = (content) => {
+		return (
 			<TableRow>
-				<TableCell colspan="100" className="empty-table">
-					{t("listEmpty")}
+				<TableCell colSpan={100}>
+					<div className="empty-cell">{content}</div>
 				</TableCell>
 			</TableRow>
-		) : (
-			searchTableData
-				.slice(pageViseted, pageViseted + totalPaginationPages)
-				// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-				.map((item, key) => <TableRow key={key}>{tableCells(item)}</TableRow>)
 		);
+	};
 
 	return (
 		<div className="vpn-list">
@@ -157,17 +150,28 @@ const VpnList = ({ items: gatewaysData, searchTerm }) => {
 					<TableHeader>
 						<TableRow>{displayHeaders}</TableRow>
 					</TableHeader>
-					<TableBody>{displayTableData}</TableBody>
+					<TableBody>
+						{status === "pending"
+							? fullCellWidth(<Loader />)
+							: status === "rejected"
+								? fullCellWidth(<ErrorScreen />)
+								: gateways.length
+									? displayTableData
+									: fullCellWidth(
+											<h3 className="empty-table">{t("listEmpty")}</h3>,
+										)}
+					</TableBody>
 				</Table>
 			</div>
-
-			<CustomPagination
-				data={searchTableData}
-				totalPaginationPages={totalPaginationPages}
-				activePageNumber={activePageNumber}
-				setActivePageNumber={setActivePageNumber}
-				searchTerm={searchTerm}
-			/>
+			{gateways.length > totalPaginationPages && (
+				<div className={"custom-pagination"}>
+					<Paginator
+						currentPage={activePageNumber}
+						onPageChange={setActivePageNumber}
+						totalPages={Math.ceil(gateways.length / totalPaginationPages)}
+					/>
+				</div>
+			)}
 			<GeneralModal title="editGateway" ref={gatewayModalRef}>
 				{(initialState, onCancel) => (
 					<GatewayForm initialValues={initialState} onCancel={onCancel} />
@@ -179,7 +183,7 @@ const VpnList = ({ items: gatewaysData, searchTerm }) => {
 
 VpnList.propTypes = {
 	items: PropTypes.array,
-	searchTerm: PropTypes.string,
+	status: PropTypes.string,
 };
 
 export default VpnList;

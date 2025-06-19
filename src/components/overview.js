@@ -22,16 +22,15 @@ const VpnOverview = () => {
 		<Segment className="networking_vpn h-full">
 			<React.Suspense fallback={null}>
 				<Routes>
-					<Route path={"/"} Component={RootComponent}>
-						<Route index Component={Vpn} />
-						<Route path={vpnGatewayPath()} Component={RootComponent}>
-							<Route index Component={VpnDetails} />
-							<Route
-								path={`${vpnClientConnectionDevicesPath()}`}
-								Component={ClientConnectionDevices}
-							/>
-						</Route>
+					<Route index Component={Vpn} />
+					<Route path={vpnGatewayPath()} Component={RootComponent}>
+						<Route index Component={VpnDetails} />
+						<Route
+							path={`${vpnClientConnectionDevicesPath()}`}
+							Component={ClientConnectionDevices}
+						/>
 					</Route>
+
 					<Route
 						path="*"
 						element={<Navigate to={vpnGatewaysPath()} replace />}
