@@ -151,7 +151,6 @@ const VpnDetails = () => {
 							</React.Suspense>
 						</div>
 					</div>
-					<br />
 					<h4>{t("vpnDetails")}</h4>
 					<div className="vpn-details-container">
 						<div className="vpn-details">

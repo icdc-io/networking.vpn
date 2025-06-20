@@ -395,10 +395,9 @@ const VpnDetailsTable = ({
                           ),
                       )} */}
 			</div>
-			<div className="details-table-wrapper">
+			<div className={"details-table-wrapper"}>
 				<Table
-					className="details-table"
-					containerClassName={withContent ? "" : "h-full"}
+					className={(withContent ? "" : "no-content ") + " details-table"}
 				>
 					<TableHeader>
 						<TableRow>{displayHeaders}</TableRow>

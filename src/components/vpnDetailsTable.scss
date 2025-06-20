@@ -2,34 +2,39 @@
 	min-height: 572px;
 }
 .details-table {
-	height: 100%;
+	th {
+		height: 40px;
+	}
 	td {
 		height: 53px;
+	}
+	&.no-content tbody {
+		height: 200px;
 	}
 }
 
 .TooltipContent.vpn {
-  max-width: 300px;
-  left: -12px;
+	max-width: 300px;
+	left: -12px;
 }
 
 .ui.inverted.popup.vpn {
-  left: -12px !important;
-  max-width: 300px;
+	left: -12px !important;
+	max-width: 300px;
 
-  .flex {
-    overflow-wrap: break-word;
-    word-break: break-all;
-    align-items: end;
+	.flex {
+		overflow-wrap: break-word;
+		word-break: break-all;
+		align-items: end;
 
-    div {
-      margin-right: 10px;
-    }
-  }
+		div {
+			margin-right: 10px;
+		}
+	}
 
-  .ui.button.copy-popup-button {
-    background: transparent;
-    padding: 0px;
-    margin: 0 0 5px auto;
-  }
+	.ui.button.copy-popup-button {
+		background: transparent;
+		padding: 0px;
+		margin: 0 0 5px auto;
+	}
 }
