@@ -53,7 +53,7 @@ export const VpnStore = (state = initialState, action) => {
 		case `${ActionTypes.VPN_GATEWAY_UPDATE}_PENDING`:
 			return state.set("gatewaysFetchStatus", "pending");
 		case `${ActionTypes.VPN_GATEWAY_UPDATE}_REJECTED`:
-			return state.set("gatewaysFetchStatus", "rejected");
+			return state.set("gatewaysFetchStatus", "fulfilled");
 		case `${ActionTypes.VPN_GATEWAY_UPDATE}_FULFILLED`:
 			return Immutable.merge(state, {
 				gateways: [...state.gateways, formatVpnGatewaysData(action.payload)],

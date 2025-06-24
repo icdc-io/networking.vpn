@@ -10,10 +10,12 @@ import {
 	TableHeader,
 	TableRow,
 } from "container/Table";
+import { isAdminRights } from "container/roleUtils";
 import _ from "lodash";
 import PropTypes from "prop-types";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { editVpnGatewayAndFetch } from "../AppActions";
 import GeneralModal from "../general/GeneralModal";
@@ -32,6 +34,7 @@ const headers = [
 
 const VpnList = ({ items: gatewaysData, status }) => {
 	const { t } = useTranslation();
+	const userRole = useSelector((state) => state.host.user.role);
 	const [direction, setDirection] = useState("ascending");
 	const [column, setColumn] = useState(null);
 	const [gateways, setGateways] = useState([]);
@@ -110,7 +113,11 @@ const VpnList = ({ items: gatewaysData, status }) => {
 			// }
 
 			if (header.name === "menu") {
-				content = <OptionsMenu instance={gateway} options={options} />;
+				content = isAdminRights(userRole) ? (
+					<OptionsMenu instance={gateway} options={options} />
+				) : (
+					" "
+				);
 			}
 			// else if (header.name === 'deleteButton') {
 			//     content = (<DeleteModal icon type='gateway' instance={vpnGateway} />);
