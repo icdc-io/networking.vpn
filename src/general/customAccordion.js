@@ -19,16 +19,11 @@ export const CustomAccordion = ({ configData, index, open, handleClick }) => {
 	const file = new Blob([configData.config], { type: "text/plain" });
 	const link = URL.createObjectURL(file);
 
-	const copy = (value) => {
-		navigator.clipboard.writeText(value).catch((err) => {
-			console.log("Something went wrong", err); // eslint-disable-line no-console
-		});
-	};
-
 	const fileName = `${user.account}-${user.location}-${connectionName}`.slice(
 		0,
 		15,
 	);
+
 	return (
 		<div className="accordion">
 			{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
@@ -93,7 +88,7 @@ export const CustomAccordion = ({ configData, index, open, handleClick }) => {
 								<CodeSnippet
 									title={t("configFile")}
 									content={configData.config}
-									copyFuncion={copy}
+									noFormatting={true}
 								/>
 							</div>
 							{
