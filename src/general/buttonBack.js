@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const ButtonBack = ({ back, path }) => {
 	return (
-		<Link to={path} relative="route">
+		<Link to={path} relative="route" className="w-fit">
 			<Button variant="back">{back}</Button>
 		</Link>
 	);
