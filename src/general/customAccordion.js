@@ -23,7 +23,7 @@ export const CustomAccordion = ({ configData, index, open, handleClick }) => {
 		0,
 		15,
 	);
-	console.log(configData.config);
+
 	return (
 		<div className="accordion">
 			{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
