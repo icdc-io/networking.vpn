@@ -428,7 +428,7 @@ const ClientConnectionDevices = () => {
 			<div className="devices-table-wrapper">
 				<Table
 					className="devices-table"
-					containerClassName={withContent ? "" : "h-full"}
+					containerClassName={withContent ? "" : "no-content"}
 				>
 					<TableHeader>
 						<TableRow>{displayHeaders}</TableRow>
