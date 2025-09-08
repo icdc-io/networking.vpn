@@ -12,7 +12,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "container/Table";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -135,19 +135,28 @@ const ClientConnectionDevices = () => {
 		dispatch(fetchVpnClientConnectionsNextIp(connectionId));
 	}, []);
 
-	const wsConnect = async () => {
+	const wsConnect = useCallback(async () => {
+		// Закрываем существующее соединение, если оно есть
+		if (ws.current && ws.current.readyState !== WebSocket.CLOSED) {
+			ws.current.close();
+			ws.current = null;
+		}
+
 		if (user.account && devicesIds) {
 			const token = await getToken();
 			ws.current = new WebSocket(
 				`ws${protocol}://${locationUrl}/ws/wireguard_manager/stats?${devicesIds}`,
 				["actioncable-v1-json", token, user.account, user.role],
 			);
+
 			ws.current.onopen = () => {
 				const subscribe_msg = {
 					command: "subscribe",
 					identifier: JSON.stringify({ channel: "DeviceStatisticChannel" }),
 				};
-				ws.current.send(JSON.stringify(subscribe_msg));
+				if (ws.current && ws.current.readyState === WebSocket.OPEN) {
+					ws.current.send(JSON.stringify(subscribe_msg));
+				}
 			};
 
 			ws.current.onmessage = (e) => {
@@ -163,18 +172,39 @@ const ClientConnectionDevices = () => {
 				setStats(message.message?.stats || []);
 			};
 		}
-	};
+	}, [user.account, devicesIds, protocol, locationUrl]);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
-		wsConnect();
-		//ws.current.onclose = () => console.log('Соединение закрыто');
-	}, [user.account, devicesIds]);
+		let timeoutId;
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+		const connectWithDelay = () => {
+			timeoutId = setTimeout(() => {
+				wsConnect();
+			}, 100);
+		};
+
+		if (user.account && devicesIds) {
+			connectWithDelay();
+		}
+
+		return () => {
+			if (timeoutId) {
+				clearTimeout(timeoutId);
+			}
+
+			if (ws.current) {
+				ws.current.close();
+				ws.current = null;
+			}
+		};
+	}, [wsConnect]);
+
 	useEffect(() => {
-		return function cleanup() {
-			ws.current?.close();
+		return () => {
+			if (ws.current) {
+				ws.current.close();
+				ws.current = null;
+			}
 			dispatch(cleanVpnClientConnectionDeviceStatus());
 		};
 	}, []);
