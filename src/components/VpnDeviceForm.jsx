@@ -151,8 +151,9 @@ const VpnDeviceForm = ({ initialValues, onCancel }) => {
 						payload,
 					)
 				: createVpnClientConnectionDeviceAndFetch(connectionId, payload),
-		);
-		onCancel();
+		)
+			.then(onCancel)
+			.catch((e) => console.log(e));
 	};
 
 	return (
