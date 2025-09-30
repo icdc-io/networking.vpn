@@ -289,7 +289,7 @@ const ClientConnectionDevices = () => {
 				{cellContent || content}
 				&ensp;
 				{cellContent && (
-					<Popup content={popupContent} className="private-key-popup">
+					<Popup content={popupContent} className="networking-vpn-popup">
 						<button type="button" className="popup-dots">
 							...
 						</button>
