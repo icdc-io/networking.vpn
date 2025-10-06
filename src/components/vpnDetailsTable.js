@@ -143,7 +143,7 @@ const VpnDetailsTable = ({
 	const routeSubnetsPopup = (subnetsString) =>
 		subnetsString.split(",").map((subnetRoute, key) => (
 			// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-			<div key={key} className="flex">
+			<div key={key} className="flex items-center justify-between">
 				<div>{subnetRoute}</div>&nbsp;&nbsp;
 				<CopyButton content={subnetRoute} />
 			</div>
@@ -153,7 +153,7 @@ const VpnDetailsTable = ({
 		publicKey: (content) => ({
 			cellContent: truncate(content, 12),
 			popupContent: (
-				<div className="flex">
+				<div className="flex items-center">
 					<div>{content}</div>&nbsp;&nbsp;
 					<CopyButton content={content} />
 				</div>
@@ -161,7 +161,9 @@ const VpnDetailsTable = ({
 		}),
 		routeSubnets: (content) => ({
 			cellContent: truncate(content),
-			popupContent: <div>{routeSubnetsPopup(content)}</div>,
+			popupContent: (
+				<div className="flex gap-2 flex-col">{routeSubnetsPopup(content)}</div>
+			),
 		}),
 	};
 
@@ -173,7 +175,7 @@ const VpnDetailsTable = ({
 				{cellContent || content}
 				&ensp;
 				{cellContent && (
-					<Popup content={popupContent}>
+					<Popup content={popupContent} className="networking-vpn-popup">
 						<button className="popup-dots" type="button">
 							...
 						</button>

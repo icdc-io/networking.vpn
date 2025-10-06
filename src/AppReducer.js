@@ -136,7 +136,7 @@ export const VpnStore = (state = initialState, action) => {
 		case `${ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_CREATE}_PENDING`:
 			return state.set("vpnClientConnectionDevicesFetchStatus", "pending");
 		case `${ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_CREATE}_REJECTED`:
-			return state.set("vpnClientConnectionDevicesFetchStatus", "rejected");
+			return state.set("vpnClientConnectionDevicesFetchStatus", "fulfilled");
 		case `${ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_CREATE}_FULFILLED`:
 			return Immutable.merge(state, {
 				vpnClientConnectionDevices: [
@@ -149,7 +149,7 @@ export const VpnStore = (state = initialState, action) => {
 		case `${ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_UPDATE}_PENDING`:
 			return state.set("vpnClientConnectionDevicesFetchStatus", "pending");
 		case `${ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_UPDATE}_REJECTED`:
-			return state.set("vpnClientConnectionDevicesFetchStatus", "rejected");
+			return state.set("vpnClientConnectionDevicesFetchStatus", "fulfilled");
 		case `${ActionTypes.VPN_CLIENT_CONNECTION_DEVICE_UPDATE}_FULFILLED`:
 			return Immutable.merge(state, {
 				// vpnClientConnectionDevices: [action.payload, ...state.vpnClientConnectionDevices],

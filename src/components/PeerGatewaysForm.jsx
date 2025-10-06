@@ -110,7 +110,7 @@ const fieldsInfo = [
 	},
 ];
 
-const returnBaseUrlForRemote = (baseUrl) => {
+export const returnBaseUrlForRemote = (baseUrl) => {
 	return baseUrl ? baseUrl.substr(baseUrl.indexOf(".") + 1) : "";
 };
 
