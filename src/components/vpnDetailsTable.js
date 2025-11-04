@@ -4,6 +4,7 @@ import ErrorScreen from "container/ErrorScreen";
 import Loader from "container/Loader";
 import OptionsMenu from "container/OptionsMenu";
 import Popup from "container/Popup";
+import { isAdminRights } from "container/roleUtils";
 import {
 	Table,
 	TableBody,
@@ -12,10 +13,9 @@ import {
 	TableHeader,
 	TableRow,
 } from "container/Table";
-import { isAdminRights } from "container/roleUtils";
 import { CircleHelp } from "lucide-react";
 import { PropTypes } from "prop-types";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
@@ -26,14 +26,13 @@ import {
 } from "../AppActions";
 import { apiButtonInfo } from "../constants/apiButtonInfo";
 import { vpnClientConnectionDevicesPath } from "../constants/routes";
-import GeneralModal from "../general/GeneralModal";
 import CustomPagination from "../general/customPagination";
+import GeneralModal from "../general/GeneralModal";
 import ClientConnectionsForm from "./ClientConnectionsForm";
 import NatMappingForm from "./NatMappingForm";
 import PeerGatewaysForm from "./PeerGatewaysForm";
+import { longDash, truncate } from "./tools";
 import VpnApiButton from "./VpnApiButton";
-import { longDash } from "./tools";
-import { formatTableData, truncate } from "./tools";
 
 const headersInfo = {
 	clientConnections: [
@@ -129,12 +128,11 @@ const VpnDetailsTable = ({
 	const headers = headersInfo[tableName];
 	const dispatch = useDispatch();
 	const gateway = useSelector((state) => state.VpnStore.gateway);
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		setActivePageNumber(1);
 	}, [tableName]);
 
-	const displayHeaders = headers.map((header, key) => (
+	const displayHeaders = headers.map((header) => (
 		<TableHead key={header.name}>
 			{header.name !== "" ? t([header.name]) : ""}
 		</TableHead>
@@ -142,7 +140,6 @@ const VpnDetailsTable = ({
 
 	const routeSubnetsPopup = (subnetsString) =>
 		subnetsString.split(",").map((subnetRoute, key) => (
-			// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 			<div key={key} className="flex items-center justify-between">
 				<div>{subnetRoute}</div>&nbsp;&nbsp;
 				<CopyButton content={subnetRoute} />
@@ -311,7 +308,7 @@ const VpnDetailsTable = ({
 			) {
 				content = `${gatewayPublicHostname}:${data.port}`;
 			} else if (header.name === "") {
-				let type = "clientConnections";
+				//let type = "clientConnections";
 
 				if (tableName === "clientConnections") {
 					type = "vpnClientConnections";
@@ -352,7 +349,6 @@ const VpnDetailsTable = ({
 	const displayTableData = withContent ? (
 		formattedTableContent
 			.slice(pageViseted, pageViseted + totalPaginationPages)
-			// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 			.map((item, key) => <TableRow key={key}>{tableCells(item)}</TableRow>)
 	) : (
 		<TableRow>

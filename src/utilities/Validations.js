@@ -1,6 +1,7 @@
 //import { validationMessages } from '../AppConstants';
 //let locale = localStorage.getItem('icdc-lang') || 'en';
 import ipRegex from "ip-regex";
+
 const MIN_PORT = 0;
 const MAX_PORT = 65535;
 
@@ -245,12 +246,16 @@ export const ports = (value) => {
 		number(leftValue) === undefined && number(rightValue) === undefined;
 	const leftLessThanRight =
 		splitedValue.length > 1 &&
+		// biome-ignore lint/correctness/useParseIntRadix: radix is not used
 		Number.parseInt(leftValue) <= Number.parseInt(rightValue);
 	const inRangeLeftValue =
+		// biome-ignore lint/correctness/useParseIntRadix: radix is not used
 		Number.parseInt(leftValue) >= 0 && Number.parseInt(leftValue) <= 65535;
 	const inRangeBothValues =
 		inRangeLeftValue &&
+		// biome-ignore lint/correctness/useParseIntRadix: radix is not used
 		Number.parseInt(rightValue) >= 0 &&
+		// biome-ignore lint/correctness/useParseIntRadix: radix is not used
 		Number.parseInt(rightValue) <= 65535;
 
 	if (value !== "" && value !== null) {

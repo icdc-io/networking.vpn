@@ -85,14 +85,13 @@ export const MultiSelectInputFormField = ({ fieldInfo, form }) => {
 									cmdk-input-wrapper=""
 								>
 									{items.map((el, i) => (
-										// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 										<div className="subnet" key={i}>
 											<span>{el}</span>
 											<button
 												onClick={() => {
 													form.setValue(
 														tempName,
-														items.filter((item, key) => key !== i),
+														items.filter((_item, key) => key !== i),
 													);
 												}}
 												type="button"

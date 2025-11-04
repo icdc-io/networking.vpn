@@ -1,6 +1,6 @@
 import Loader from "container/Loader";
 import PropTypes from "prop-types";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { VpnStore } from "./AppReducer";
 import VpnOverview from "./components/overview";
 import "./App.scss";
@@ -8,7 +8,6 @@ import "./App.scss";
 const Balancer = ({ store }) => {
 	const [isLoaded, setIsLoaded] = useState(false);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		store.injectReducer("VpnStore", VpnStore);
 		setIsLoaded(true);

@@ -2,14 +2,13 @@ import {
 	CategoryScale,
 	Chart as ChartJS,
 	Filler,
-	LineElement,
 	LinearScale,
+	LineElement,
 	PointElement,
 	Title,
 	Tooltip,
 } from "chart.js";
 import { PropTypes } from "prop-types";
-import React from "react";
 import { Line } from "react-chartjs-2";
 import { useTranslation } from "react-i18next";
 import { longDash } from "./tools";

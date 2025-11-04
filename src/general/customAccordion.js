@@ -26,7 +26,7 @@ export const CustomAccordion = ({ configData, index, open, handleClick }) => {
 
 	return (
 		<div className="accordion">
-			{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+			{/** biome-ignore lint/a11y/noStaticElementInteractions: static element interactions are allowed */}
 			<section
 				style={
 					open

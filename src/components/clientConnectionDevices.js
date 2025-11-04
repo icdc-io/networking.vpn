@@ -12,7 +12,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "container/Table";
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -26,21 +26,22 @@ import {
 	updateVpnClientConnectionDeviceAndFetch,
 } from "../AppActions";
 import { apiButtonInfo } from "../constants/apiButtonInfo";
-import GeneralModal from "../general/GeneralModal";
 import ButtonBack from "../general/buttonBack";
 import CustomPagination from "../general/customPagination";
-import PrivateKeyForm from "./PrivateKeyForm";
-import VpnApiButton from "./VpnApiButton";
-import VpnDeviceForm from "./VpnDeviceForm";
+import GeneralModal from "../general/GeneralModal";
 import DeviceStatistics from "./deviceStatistics";
+import PrivateKeyForm from "./PrivateKeyForm";
 import StatusLabel from "./statusLabel";
 import {
-	dataStatusCheck,
+	capitalizeFirstLetter,
 	formatClientConnectionData,
 	formatDevicesData,
 	formatVpnGatewaysData,
+	longDash,
+	truncate,
 } from "./tools";
-import { capitalizeFirstLetter, longDash, truncate } from "./tools";
+import VpnApiButton from "./VpnApiButton";
+import VpnDeviceForm from "./VpnDeviceForm";
 
 function getToken() {
 	return new Promise((resolve) => {
@@ -93,9 +94,6 @@ const ClientConnectionDevices = () => {
 	const devicesFetchStatus = useSelector(
 		(state) => state.VpnStore.vpnClientConnectionDevicesFetchStatus,
 	);
-	const clientConnectionFetchStatus = useSelector(
-		(state) => state.VpnStore.vpnClientConnectionFetchStatus,
-	);
 	// const gatewayFetchStatus = useSelector(state => state.VpnStore.gatewayFetchStatus);
 	const headers = [
 		"name",
@@ -130,7 +128,6 @@ const ClientConnectionDevices = () => {
 		.split("http")[1]
 		.split("://");
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		dispatch(fetchVpnClientConnectionsNextIp(connectionId));
 	}, []);
@@ -218,7 +215,6 @@ const ClientConnectionDevices = () => {
 		}
 	}, [dispatch, user, connectionId]);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		vpnClientConnectionData.gatewayId &&
 			dispatch(fetchVpnGateway(vpnClientConnectionData.gatewayId));
@@ -245,7 +241,7 @@ const ClientConnectionDevices = () => {
 		return;
 	};
 
-	const displayHeaders = headers.map((header, key) => (
+	const displayHeaders = headers.map((header) => (
 		<TableHead
 			key={header}
 			style={header === "status" ? { paddingLeft: 40 } : {}}
@@ -254,7 +250,7 @@ const ClientConnectionDevices = () => {
 		</TableHead>
 	));
 
-	const enableOrDisableDevice = (data) => (e) => {
+	const enableOrDisableDevice = (data) => (_e) => {
 		dispatch(
 			updateVpnClientConnectionDeviceAndFetch(data.id, data.connectionId, {
 				name: data.name,
@@ -346,7 +342,7 @@ const ClientConnectionDevices = () => {
 	};
 
 	const tableCells = (data) =>
-		headers.map((header, key) => {
+		headers.map((header) => {
 			const currentDevice = stats.find((el) => el.device_id === data.id);
 			let content = data[header] || longDash;
 			const currentHandshake = stats.length > 0 && currentDevice?.handshake;
@@ -389,7 +385,6 @@ const ClientConnectionDevices = () => {
 	const displayTableData = withContent ? (
 		vpnClientConnectionDevicesData
 			.slice(pageViseted, pageViseted + totalPaginationPages)
-			// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 			.map((item, key) => <TableRow key={key}>{tableCells(item)}</TableRow>)
 	) : (
 		<TableRow>

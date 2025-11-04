@@ -27,7 +27,6 @@ const initialState = Immutable({
 	vpnClientConnectionsNextIpStatus: "",
 });
 
-// biome-ignore lint/style/useDefaultParameterLast: <explanation>
 export const VpnStore = (state = initialState, action) => {
 	switch (action.type) {
 		case `${ActionTypes.VPN_GATEWAYS_FETCH}_PENDING`:

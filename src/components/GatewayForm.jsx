@@ -54,7 +54,6 @@ const GatewayForm = ({ initialValues, onCancel, edit }) => {
 		dispatch(editVpnGatewayAndFetch(id, payload)).then(onCancel);
 	};
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (initialValues) {
 			form.reset({

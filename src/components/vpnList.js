@@ -2,6 +2,7 @@ import ErrorScreen from "container/ErrorScreen";
 import Loader from "container/Loader";
 import OptionsMenu from "container/OptionsMenu";
 import Paginator from "container/Paginator";
+import { isAdminRights } from "container/roleUtils";
 import {
 	Table,
 	TableBody,
@@ -10,17 +11,14 @@ import {
 	TableHeader,
 	TableRow,
 } from "container/Table";
-import { isAdminRights } from "container/roleUtils";
 import _ from "lodash";
 import PropTypes from "prop-types";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { editVpnGatewayAndFetch } from "../AppActions";
 import GeneralModal from "../general/GeneralModal";
 import svgVpn from "../static/svgVpn.svg";
-import searchMethod from "../utilities/searchFunction";
 import GatewayForm from "./GatewayForm";
 import { longDash } from "./tools";
 
@@ -62,7 +60,7 @@ const VpnList = ({ items: gatewaysData, status }) => {
 		setGateways(gateways.reverse());
 	};
 
-	const displayHeaders = headers.map((item, key) => (
+	const displayHeaders = headers.map((item) => (
 		<TableHead
 			key={item.name}
 			sorted={column === item.name ? direction : null}
@@ -90,7 +88,7 @@ const VpnList = ({ items: gatewaysData, status }) => {
 	];
 
 	const tableCells = (gateway) => {
-		const tableRow = headers.map((header, key) => {
+		const tableRow = headers.map((header) => {
 			let content = gateway[header.name];
 
 			if (header.name === "name") {
@@ -137,7 +135,6 @@ const VpnList = ({ items: gatewaysData, status }) => {
 
 	const displayTableData = gateways
 		.slice(pageViseted, pageViseted + totalPaginationPages)
-		// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 		.map((item, key) => <TableRow key={key}>{tableCells(item)}</TableRow>);
 
 	const fullCellWidth = (content) => {

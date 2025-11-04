@@ -1,6 +1,5 @@
 import { Button } from "container/Button";
 import PropTypes from "prop-types";
-import React from "react";
 import { Link } from "react-router-dom";
 
 const ButtonBack = ({ back, path }) => {

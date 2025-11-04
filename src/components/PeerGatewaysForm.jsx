@@ -142,7 +142,6 @@ const PeerGatewaysForm = ({ initialValues, onCancel }) => {
 			value: `${user.account}.vpn.${returnBaseUrlForRemote(baseUrls[el])}:2200`,
 		}));
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (initialValues) {
 			form.reset({

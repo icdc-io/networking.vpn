@@ -100,7 +100,9 @@ const ClientConnectionsForm = ({ initialValues, onCancel }) => {
 			name: formValues.name,
 			subnet: formValues.subnet,
 			gateway_ip: formValues.gateway_ip,
+			// biome-ignore lint/correctness/useParseIntRadix: radix is not used
 			port: Number.parseInt(formValues.port),
+			// biome-ignore lint/correctness/useParseIntRadix: radix is not used
 			mtu: Number.parseInt(formValues.mtu),
 			masquerade: formValues.masquerade,
 		};
@@ -111,7 +113,6 @@ const ClientConnectionsForm = ({ initialValues, onCancel }) => {
 		).then(onCancel);
 	};
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (initialValues) {
 			form.reset({
