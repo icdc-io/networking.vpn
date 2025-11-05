@@ -16,7 +16,7 @@ export default ({ envMode }) => {
 			define: publicVars,
 		},
 		tools: {
-			rspack: (config, { appendPlugins, rspack, isProd }) => {
+			rspack: (config, { appendPlugins }) => {
 				config.output.publicPath = "auto";
 				appendPlugins([
 					new ModuleFederationPlugin(mfConfig),

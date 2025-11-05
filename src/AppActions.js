@@ -8,9 +8,9 @@ import {
 } from "container/Api";
 import * as ActionTypes from "./AppConstants";
 
-const errorNotification = (error) => {
-	showErrorNotification(error);
-};
+// const errorNotification = (error) => {
+// 	showErrorNotification(error);
+// };
 
 export const getFullPath = (url) => `/api/wireguard/v1${url}`;
 

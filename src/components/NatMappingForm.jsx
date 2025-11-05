@@ -18,6 +18,7 @@ import {
 import { hostnamePattern, ipPattern } from "../utilities/Validations";
 import { InputFormField } from "./InputFormField";
 import { formatVpnGatewaysData } from "./tools";
+
 const ipaddr = require("ipaddr.js");
 
 const fieldsInfo = [
@@ -160,7 +161,6 @@ const NatMappingForm = ({ initialValues, onCancel }) => {
 	});
 	const isEdit = !!initialValues;
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (initialValues) {
 			form.reset({

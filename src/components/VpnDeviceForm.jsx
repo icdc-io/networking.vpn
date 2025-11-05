@@ -97,7 +97,7 @@ const fieldsInfo = [
 const VpnDeviceForm = ({ initialValues, onCancel }) => {
 	const { t } = useTranslation();
 	const dispatch = useDispatch();
-	const { id, connectionId } = useParams();
+	const { connectionId } = useParams();
 	const next_ip = useSelector(
 		(state) => state.VpnStore.vpnClientConnectionsNextIp.next_ip,
 	);
@@ -119,7 +119,6 @@ const VpnDeviceForm = ({ initialValues, onCancel }) => {
 		),
 	});
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (initialValues) {
 			form.reset({
