@@ -308,7 +308,8 @@ const VpnDetailsTable = ({
 			) {
 				content = `${gatewayPublicHostname}:${data.port}`;
 			} else if (header.name === "") {
-				//let type = "clientConnections";
+				// biome-ignore lint/correctness/noUnusedVariables: used
+				let type = "clientConnections";
 
 				if (tableName === "clientConnections") {
 					type = "vpnClientConnections";
