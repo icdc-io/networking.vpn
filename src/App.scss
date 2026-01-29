@@ -203,11 +203,13 @@
 		gap: 0.5rem;
 
 		.input_container {
-			flex-grow: 1;
+			flex-basis: 276px;
+			flex-grow: 0;
 		}
 
 		.host_value {
-			height: 32px;
+			align-self: flex-start;
+    	margin-top: 32px;
 		}
 	}
 

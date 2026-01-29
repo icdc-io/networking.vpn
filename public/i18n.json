@@ -107,7 +107,9 @@
 			"vpnGateways": "VPN Gateways",
 			"uploadSpeed": "Upload",
 			"vpn_ip": "VPN IP",
-			"windowsTitle": "Windows/MAC config"
+			"windowsTitle": "Windows/MAC config",
+			"hostnameValidation": "Please use only letters (a-z, а-я), numbers (0-9), spaces, periods, hyphens allowed only inside a word (not at the start or end).",
+			"hostname": "Hostname"
 		}
 	},
 	"ru": {
@@ -218,7 +220,9 @@
 			"vpnGateways": "VPN-шлюзы",
 			"uploadSpeed": "Отдача",
 			"vpn_ip": "VPN IP",
-			"windowsTitle": "Windows/MAC конфигурация"
+			"windowsTitle": "Windows/MAC конфигурация",
+			"hostnameValidation": "ожалуйста, используйте только буквы (a–z, а-я), цифры (0–9), пробелы и точки. Дефисы допускаются только внутри слова (не в начале и не в конце).",
+			"hostname": "Имя сервера"
 		}
 	}
 }

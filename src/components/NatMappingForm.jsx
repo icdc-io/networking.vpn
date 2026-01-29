@@ -15,7 +15,7 @@ import {
 	createVpnNatMappingAndFetch,
 	updateVpnNatMappingAndFetch,
 } from "../AppActions";
-import { hostnamePattern, ipPattern } from "../utilities/Validations";
+import { hostnameValidation, ipPattern } from "../utilities/Validations";
 import { InputFormField } from "./InputFormField";
 import { formatVpnGatewaysData } from "./tools";
 
@@ -53,10 +53,8 @@ const fieldsInfo = [
 		rules: {
 			required: "required",
 			maxLength: 63,
-			pattern: {
-				value: hostnamePattern,
-				message: "hostnameValidation",
-			},
+			validate: (value) =>
+				hostnameValidation(value) ? undefined : "hostnameValidation",
 		},
 	},
 ];
