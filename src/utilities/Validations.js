@@ -113,7 +113,28 @@ export const nameWithoutDotsOrAt = (value) =>
 		? validateTranslations[getLang()].nameWithoutDotsOrAt
 		: undefined;
 
-export const hostnamePattern = /^[a-zA-Z0-9_.-]*$/;
+const punycodePattern = /^xn--[a-z0-9](?:[a-z0-9-]{0,59}[a-z0-9])$/i;
+const normalPattern = /^[\p{L}\p{N}](?:[\p{L}\p{N}-]{0,61}[\p{L}\p{N}])?$/u;
+
+export const hostnameValidation = (value) => {
+	if (!value) return false;
+
+	const labels = value.split(".");
+
+	return labels.every((label) => {
+		if (!label || label.length > 63) return false;
+
+		if (label.startsWith("xn--")) {
+			return punycodePattern.test(label);
+		}
+
+		if (label.slice(2, 4) === "--") {
+			return false;
+		}
+
+		return normalPattern.test(label);
+	});
+};
 
 export const hostname = (value) => {
 	const hostnameRegex = /^[a-zA-Z0-9_.-]*$/;
