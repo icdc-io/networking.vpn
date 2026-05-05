@@ -1,6 +1,7 @@
 //import { validationMessages } from '../AppConstants';
 //let locale = localStorage.getItem('icdc-lang') || 'en';
 import ipRegex from "ip-regex";
+
 const MIN_PORT = 0;
 const MAX_PORT = 65535;
 
@@ -112,7 +113,28 @@ export const nameWithoutDotsOrAt = (value) =>
 		? validateTranslations[getLang()].nameWithoutDotsOrAt
 		: undefined;
 
-export const hostnamePattern = /^[a-zA-Z0-9_.-]*$/;
+const punycodePattern = /^xn--[a-z0-9](?:[a-z0-9-]{0,59}[a-z0-9])$/i;
+const normalPattern = /^[\p{L}\p{N}](?:[\p{L}\p{N}-]{0,61}[\p{L}\p{N}])?$/u;
+
+export const hostnameValidation = (value) => {
+	if (!value) return false;
+
+	const labels = value.split(".");
+
+	return labels.every((label) => {
+		if (!label || label.length > 63) return false;
+
+		if (label.startsWith("xn--")) {
+			return punycodePattern.test(label);
+		}
+
+		if (label.slice(2, 4) === "--") {
+			return false;
+		}
+
+		return normalPattern.test(label);
+	});
+};
 
 export const hostname = (value) => {
 	const hostnameRegex = /^[a-zA-Z0-9_.-]*$/;
@@ -245,12 +267,16 @@ export const ports = (value) => {
 		number(leftValue) === undefined && number(rightValue) === undefined;
 	const leftLessThanRight =
 		splitedValue.length > 1 &&
+		// biome-ignore lint/correctness/useParseIntRadix: radix is not used
 		Number.parseInt(leftValue) <= Number.parseInt(rightValue);
 	const inRangeLeftValue =
+		// biome-ignore lint/correctness/useParseIntRadix: radix is not used
 		Number.parseInt(leftValue) >= 0 && Number.parseInt(leftValue) <= 65535;
 	const inRangeBothValues =
 		inRangeLeftValue &&
+		// biome-ignore lint/correctness/useParseIntRadix: radix is not used
 		Number.parseInt(rightValue) >= 0 &&
+		// biome-ignore lint/correctness/useParseIntRadix: radix is not used
 		Number.parseInt(rightValue) <= 65535;
 
 	if (value !== "" && value !== null) {

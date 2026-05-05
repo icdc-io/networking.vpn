@@ -1,5 +1,5 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "container/Tabs";
 import { isAdminRights } from "container/roleUtils";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "container/Tabs";
 import { Pen } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -12,13 +12,17 @@ import {
 	fetchVpnPeerGateways,
 } from "../AppActions";
 import { apiButtonInfo } from "../constants/apiButtonInfo";
-import GeneralModal from "../general/GeneralModal";
 import ButtonBack from "../general/buttonBack";
+import GeneralModal from "../general/GeneralModal";
 import svgVpn from "../static/svgVpn.svg";
 import GatewayForm from "./GatewayForm";
+import {
+	capitalizeFirstLetter,
+	dataStatusCheck,
+	formatVpnGatewaysData,
+	longDash,
+} from "./tools";
 import VpnApiButton from "./VpnApiButton";
-import { dataStatusCheck, formatVpnGatewaysData } from "./tools";
-import { capitalizeFirstLetter, longDash } from "./tools";
 import VpnDetailsTable from "./vpnDetailsTable";
 
 const VpnDetails = () => {
@@ -45,7 +49,6 @@ const VpnDetails = () => {
 		user.location && dispatch(fetchVpnGateway(id));
 	}, [dispatch, id, user]);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		switch (activeTab) {
 			case "clientConnections":

@@ -15,9 +15,10 @@ import {
 	createVpnNatMappingAndFetch,
 	updateVpnNatMappingAndFetch,
 } from "../AppActions";
-import { hostnamePattern, ipPattern } from "../utilities/Validations";
+import { hostnameValidation, ipPattern } from "../utilities/Validations";
 import { InputFormField } from "./InputFormField";
 import { formatVpnGatewaysData } from "./tools";
+
 const ipaddr = require("ipaddr.js");
 
 const fieldsInfo = [
@@ -52,10 +53,8 @@ const fieldsInfo = [
 		rules: {
 			required: "required",
 			maxLength: 63,
-			pattern: {
-				value: hostnamePattern,
-				message: "hostnameValidation",
-			},
+			validate: (value) =>
+				hostnameValidation(value) ? undefined : "hostnameValidation",
 		},
 	},
 ];
@@ -160,7 +159,6 @@ const NatMappingForm = ({ initialValues, onCancel }) => {
 	});
 	const isEdit = !!initialValues;
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (initialValues) {
 			form.reset({

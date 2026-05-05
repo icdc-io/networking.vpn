@@ -1,6 +1,6 @@
 import Paginator from "container/Paginator";
 import PropTypes from "prop-types";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const CustomPagination = ({
 	data,
@@ -13,7 +13,6 @@ const CustomPagination = ({
 	const [oldActivePage, setOldActivePage] = useState(1);
 	const pageCount = Math.ceil(data.length / totalPaginationPages);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		setActivePageNumber(activePageNumber);
 	}, [activePageNumber]);
@@ -23,12 +22,10 @@ const CustomPagination = ({
 		setOldActivePage(activePage);
 	};
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		data.length <= totalPaginationPages ? setHidden("hidden") : setHidden("");
 	}, [data]);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (activePageNumber !== oldActivePage && searchTerm === "") {
 			setActivePageNumber(oldActivePage);
