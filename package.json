@@ -25,6 +25,7 @@
 		"@rsbuild/plugin-sass": "^1.0.1-rc.2",
 		"dotenv-webpack": "^8.1.0",
 		"lefthook": "^1.7.15",
+		"prop-types": "^15.8.1",
 		"redux-logger": "^3.0.6",
 		"typescript": "^5.9.0"
 	},
