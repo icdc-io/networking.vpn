@@ -25,7 +25,9 @@
 		"@rsbuild/plugin-sass": "^1.0.1-rc.2",
 		"dotenv-webpack": "^8.1.0",
 		"lefthook": "^1.7.15",
-		"redux-logger": "^3.0.6"
+		"prop-types": "^15.8.1",
+		"redux-logger": "^3.0.6",
+		"typescript": "^5.9.0"
 	},
 	"dependencies": {
 		"@radix-ui/react-tooltip": "^1.1.2",
@@ -35,6 +37,7 @@
 		"lodash": "^4.17.21",
 		"lucide-react": "^0.447.0",
 		"react": "^18.2.0",
+		"react-dom": "^18.2.0",
 		"react-chartjs-2": "^4.3.1",
 		"react-dangerous-html": "^1.0.0",
 		"react-escape-outside": "^0.1.2",
